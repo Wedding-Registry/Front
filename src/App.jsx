@@ -5,6 +5,10 @@ import Layout from './pages/Layout'
 import Home from './pages/Home'
 import Admin from './pages/Admin'
 import NotFound from './pages/NotFound'
+import GalleryWedding from './pages/GalleryWedding';
+import GallerySupport from './pages/GallerySupport';
+import GoodsSupport from './pages/GoodsSupport';
+import GoodsProduct from './pages/GoodsProduct';
 
 function App() {
   return (
@@ -15,6 +19,10 @@ function App() {
           <Route index element={<Home />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/GalleryWedding" element={<GalleryWedding />} />
+          <Route path="/GallerySupport" element={<GallerySupport />} />
+          <Route path="/GoodsSupport" element={<GoodsSupport />} />
+          <Route path="/GoodsProduct" element={<GoodsProduct />} />
         </Route>
       </Routes>
     </div>
