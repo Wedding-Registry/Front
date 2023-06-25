@@ -137,13 +137,14 @@ const MainImage = styled.div`
 
 
 export default function MainContainer({token}) {
-  const [bordorIdModal,setBorderIdModal] = useState(false);
-
+  const [bordorIdModal,setBorderIdModal] = useState(true);
+  console.log(bordorIdModal);
   useEffect(()=>{
-    const token = getAccessToken();    
-    if(token !== null){
-      setBorderIdModal(true);
-    }
+    getAccessToken();
+    // const token = getAccessToken();    
+    // if(token !== null){      
+    //   setBorderIdModal(false);
+    // }
   },[])
   
   return (

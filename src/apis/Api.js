@@ -3,6 +3,7 @@ import { getAccessToken } from '../tokens/token';
 
 const token1 = getAccessToken();
 
+const BASE_URL = 'http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081';
 
 //상품 등록 게시판 생성
 async function addBorderIdApi(token){
@@ -18,7 +19,6 @@ async function addBorderIdApi(token){
       }
     );
     const data = res.data;
-    console.log(data);
     return data;
   } catch (error) {
     console.error(error);
@@ -26,57 +26,97 @@ async function addBorderIdApi(token){
 }
 
 //상품 전체 조회
-async function getGoodsProductApi() {
+async function getGoodsProductApi(token) {
   try {
-    const response = await fetch(`/GoodsProduct/all`);
-    const { data } = await response.json();
-    return {
-      data,
-    };
+    const response = await axios(`${BASE_URL}/usersgoods/all
+    `,{
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response;
   } catch (error) {
     console.error(error);
   }
 }
 
 //상품 등록
-async function postGoodsProductApi(url) {
+async function postGoodsProductApi(url,token) {
   //borderid는 상품 등록 게시판 생성 시 만들어짐
   try {
-    const response = await fetch(`/usersgoods/add/products`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        url: `${url}`,
-      }),
-    });
-    const { data } = await response.json();
-
-    return {
-      data,
-    };
+    const response = await axios.post(`${BASE_URL}/usersgoods/add/product`, 
+      {             
+				url: url,
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
+    const data = response.data;
+    return data;
   } catch (error) {
     console.error(error);
   }
 }
 
 //상품 삭제
-async function deleteGoodsAdd(userGoodsId) {
+async function deleteGoodsAdd(userGoodsId,token) {
   try {
-    const response = await fetch(`/usersgoods?usersGoodsId=${userGoodsId}`, {
+    const response = await fetch(`${BASE_URL}/usersgoods?usersGoodsId=${userGoodsId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Bearer ${token1}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     const { data } = await response.json();
     return { data };
   } catch (error) {
     console.log(error);
+  }
+}
+
+//후원가 수정
+async function updateGoodsPrice(token,userGoodsId,usersGoodsPrice){
+  try {
+    const response = await axios.post(`${BASE_URL}/usersgoods/cost/update?usersGoodsId=${userGoodsId}`,      
+      {             
+        usersGoodsPrice: usersGoodsPrice,
+      },
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+//상품이름 수정
+
+async function updateGoodsname(token,userGoodsId,usersGoodsName){
+  try {
+    const response = await axios.post(`${BASE_URL}/usersgoods/name/update?usersGoodsId=${userGoodsId}`,      
+      {             
+        usersGoodsName: usersGoodsName,
+      },
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.error(error);
   }
 }
 
@@ -113,8 +153,7 @@ async function postGalleryWeddingImageAdd(formData) {
         },
       }
     );
-    const data = res.data;
-    return data;
+    return res;
   } catch (e) {
     console.error(e);
   }
@@ -138,6 +177,8 @@ async function deleteGalleryWeddingImage(galleryImgId) {
   }
 }
 
+
+
 export {
   getGoodsProductApi,
   postGoodsProductApi,
@@ -145,5 +186,7 @@ export {
   postGalleryWeddingImageAdd,
   deleteGalleryWeddingImage,
   getGalleryWeddingImage,
-  addBorderIdApi
+  addBorderIdApi,
+  updateGoodsPrice,
+  updateGoodsname
 };

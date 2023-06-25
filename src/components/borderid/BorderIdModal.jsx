@@ -60,7 +60,6 @@ const WeddingText = styled.p`
 export default function BorderIdModal({setBorderIdModal,token}) {
   async function addBorderIdrender(token){
     const data = await addBorderIdApi(token);
-
     if(data.data.accessToken && data.data.accessToken){
       setAccessToken(data.data.refreshToken,data.data.accessToken);
       return;
@@ -73,6 +72,7 @@ export default function BorderIdModal({setBorderIdModal,token}) {
 
   const borderAddButton = () =>{
     addBorderIdrender(token);
+    console.log(123);
     setBorderIdModal(false);
   }
   return (

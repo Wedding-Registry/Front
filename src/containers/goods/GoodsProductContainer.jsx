@@ -6,8 +6,9 @@ import Share from "@/assets/icons/share.png";
 import ShareBox from "@/components/ShareBox";
 import styled from "styled-components";
 import Box from "@/components/box/Box";
-import GoodsModal from "@/components/goodsmodal/GoodsModal";
+
 import { getGoodsProductApi } from "../../apis/Api";
+import GoodsModal from '../../components/goodsmodal/GoodsModal';
 
 const GoodsText = styled.input`
   border: 0;
@@ -164,7 +165,7 @@ const CenterTextdiv = styled.div`
   margin-bottom: 1%;
 `;
 
-export default function GoodsProductContainer() {
+export default function GoodsProductContainer({token}) {
   const [sharebox, setSharebox] = useState(false);
   const [didmount, setDidmount] = useState(false);
   const [fetchdata, setFetchData] = useState([]);
@@ -175,10 +176,10 @@ export default function GoodsProductContainer() {
   const TOTAL_SLIDES = 1;
   const FIX_SIZE = 10;
   const slideRef = useRef(null);
-
-  async function renderProduct() {
-    const products = await getGoodsProductApi();
-    setFetchData(products);
+  
+  async function renderProduct(token) {
+    const products = await getGoodsProductApi(token);    
+    setFetchData(products.data);
   }
 
   useEffect(() => {
@@ -187,15 +188,16 @@ export default function GoodsProductContainer() {
 
   useEffect(() => {
     if (didmount) {
-      renderProduct();
+      renderProduct(token);
     }
   }, [didmount]);
 
   useEffect(() => {
     if (!isOpen) {
-      renderProduct();
+      renderProduct(token);
     }
   }, [isOpen]);
+
   const GoodsElementList = () => {
     let element = [];
     for (let i = 0; i < FIX_SIZE - arrayLength; i++) {
@@ -235,6 +237,7 @@ export default function GoodsProductContainer() {
     slideRef.current.style.transition = "all 0.5s ease-in-out";
     slideRef.current.style.transform = `translateX(-${currentSlide}00%)`; // 백틱을 사용하여 슬라이드로 이동하는 애니메이션을 만듭니다.
   }, [currentSlide]);
+
   return (
     <>
       <GoodsContainer>
@@ -313,7 +316,7 @@ export default function GoodsProductContainer() {
                         setIsOpen(true);
                       }}
                     >
-                      <Box url={value.usersGoodsImgUrl} />
+                      <Box url={value.usersGoodsImgUrl} setIsOpen={setIsOpen} isOpen={isOpen} setFetchData={setFetchData} fetchdata={fetchdata}token={token}/>                      
                       <ItemDiv>
                         <StyledTrack isTrue={false}>
                           <StyledRange width={value.usersGoodsPercent} />
@@ -323,13 +326,14 @@ export default function GoodsProductContainer() {
                             <p>{value.usersGoodsName}</p>
                           </div>
                           <div>
-                            <p>{value.usersGoodsPrice}원</p>
+                            <p>{value.usersGoodsPrice} 원</p>
                           </div>
                           <div>
                             <p style={{ marginTop: "50px" }}>
-                              {value.totalDonation}원 후원
+                              {value.usersGoodsTotalDonation}원 후원
                             </p>
                           </div>
+                          
                         </ValueItem>
                       </ItemDiv>
                     </BoxItem>
@@ -338,9 +342,9 @@ export default function GoodsProductContainer() {
               </>
             </BoxWapper>
           </BoxSlider>
-          <RiArrowDropRightLine onClick={nextSlide} size="40" />
-        </BoxContainer>
-        {isOpen ? <GoodsModal setIsOpen={setIsOpen} /> : <></>}
+          <RiArrowDropRightLine onClick={nextSlide} size="40" />          
+        </BoxContainer>   
+        {isOpen ? <GoodsModal setIsOpen={setIsOpen} setFetchData={setFetchData} fetchdata={fetchdata} token={token}/> : <></>}     
       </GoodsContainer>
     </>
   );

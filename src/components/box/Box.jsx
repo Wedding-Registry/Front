@@ -25,7 +25,7 @@ const Plusimg = styled.div`
   margin: auto;
 `;
 
-export default function Box({ url }) {
+export default function Box({ url}) {
   return (
     <>
       <Boxcontainer>
@@ -40,7 +40,7 @@ export default function Box({ url }) {
               <img src={Plus} style={{ width: "20px", height: "20px" }} />
             )}
           </Plusimg>
-        </Divbox>
+        </Divbox>    
       </Boxcontainer>
     </>
   );
