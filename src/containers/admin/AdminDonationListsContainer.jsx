@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Doughnut } from "react-chartjs-2";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
@@ -135,6 +135,25 @@ const options = {
   },
 };
 function AdminDonationListsContainer() {
+  const [val, setVal] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedValue, setEditedValue] = useState("");
+  const [data, setData] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const inputValue = (e) => {
+    setVal(e.target.value);
+  };
+
+  const editValue = (e, id) => {
+    console.log(e.target.value, id);
+    setEditedValue(e.target.value);
+    setData((prevItems) =>
+      prevItems.map((item) =>
+        item.accountTransferId === id ? editedValue : item
+      )
+    );
+  };
+
   const tempToken = import.meta.env.VITE_TEMPTOKEN;
   const fetchDonationData = async () => {
     const { data } = await axios.get(
@@ -145,6 +164,7 @@ function AdminDonationListsContainer() {
         },
       }
     );
+
     return data.data;
   };
 
@@ -158,13 +178,45 @@ function AdminDonationListsContainer() {
       }
     );
     console.log(data.data);
-
     return data.data;
   };
 
   const fetchDonationTransferData = async () => {
     const { data } = await axios.get(
       "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/donation/transfer/detail",
+      {
+        headers: {
+          Authorization: "Bearer " + tempToken,
+        },
+      }
+    );
+    setData(data.data);
+    return data.data;
+  };
+
+  const postDonationTransferData = async () => {
+    const { data } = await axios.post(
+      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/donation/transfer/detail",
+      {
+        transferMemo: val,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + tempToken,
+        },
+      }
+    );
+    location.reload();
+    return data.data;
+  };
+
+  const putDonationTransferData = async (id, value) => {
+    const { data } = await axios.put(
+      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/donation/transfer/detail",
+      {
+        accountTransferId: id,
+        transferMemo: value,
+      },
       {
         headers: {
           Authorization: "Bearer " + tempToken,
@@ -188,6 +240,12 @@ function AdminDonationListsContainer() {
     queryKey: ["donationDetailData"],
     queryFn: fetchDonationDetailData,
   });
+
+  const onClickEdit = (id) => {
+    putDonationTransferData(id, editedValue);
+    setIsEditing(false);
+    location.reload();
+  };
 
   const donationTable = {
     labels: donationQuery.data?.map((i) => `${i.usersGoodsName}`),
@@ -237,11 +295,45 @@ function AdminDonationListsContainer() {
           <h3>계좌 이체 후원자 리스트</h3>
           <div className="box">
             {donationTransferQuery.data?.map((i) => (
-              <p key={i.accountTransferId}>{i.transferMemo}</p>
+              <p key={i.accountTransferId} onClick={() => setIsEditing(true)}>
+                {i.transferMemo}
+                {isEditing === true ? (
+                  <>
+                    {editingId === i.accountTransferId ? (
+                      <>
+                        <input
+                          id={i.accountTransferId}
+                          value={data.transferMemo}
+                          onChange={(e) => editValue(e, i.accountTransferId)}
+                        />
+                        <span
+                          id={i.accountTransferId}
+                          onClick={() => onClickEdit(i.accountTransferId, i)}
+                        >
+                          수정하기
+                        </span>
+                      </>
+                    ) : (
+                      <button
+                        id={i.accountTransferId}
+                        onClick={() => setEditingId(i.accountTransferId)}
+                      >
+                        수정
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <button onClick={() => setEditingId(i.accountTransferId)}>
+                      수정
+                    </button>
+                  </>
+                )}
+              </p>
             ))}
             <div className="button">
-              <span>추가</span>
-              <span>수정</span>
+              <input type="text" onChange={inputValue} value={val} />
+              <span onClick={postDonationTransferData}>추가</span>
             </div>
           </div>
         </StyledArticle>
