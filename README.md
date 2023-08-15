@@ -205,5 +205,7 @@ export default HttpClient;
 ![image](https://github.com/Wedding-Registry/Front/assets/55516901/013fa310-c7e2-44e1-81b0-97202f15d66c)
 
 
+5. AWS S3를 통한 배포
+- Github actions를 통한 CI/CD
 
 리팩토링 진행,ts 추가
