@@ -120,5 +120,5 @@ export default function GalleryWeddingContainer() {
 }
 
 const Base = styled.div`
-  height: 92vh;
+  height: 90vh;
 `;

@@ -6,7 +6,10 @@ import styled from "styled-components";
 import { galleryWeddingImageState } from "../../state/galleryWeddingImageState";
 import { useRecoilState } from "recoil";
 import GalleryWeddingBox from "../../components/GalleryWeddingBox/GalleryWeddingBox";
-import { getGallerySupportImage, getGallerySupportUUID } from "../../apis/Api";
+import {
+  getGallerySupportImage,
+  getGallerySupportUUID,
+} from "../../services/guestWedding/GuestWeddungImgSerivce";
 import { useLocation } from "react-router";
 
 // Import Swiper styles
@@ -18,10 +21,10 @@ import "swiper/css/navigation";
 import "../style/styles.css";
 
 const Base = styled.div`
-  height: 92vh;
+  height: 90vh;
 `;
 
-export default function GallerySupportContainer({ token }) {
+export default function GallerySupportContainer() {
   const [imgData, setImgData] = useRecoilState(galleryWeddingImageState);
   const [invitationStatus, setInvitationStatus] = useState(true);
 
@@ -44,18 +47,15 @@ export default function GallerySupportContainer({ token }) {
     }
     return element;
   };
-  async function getImageDataRender(token) {
-    const getImage = await getGallerySupportImage(token);
+  async function getImageDataRender() {
+    const getImage = await getGallerySupportImage();
     if (getImage.success === false) {
-      const postStatus = await getGallerySupportUUID(token, uuid1, uuid2);
+      const postStatus = await getGallerySupportUUID(uuid1, uuid2);
       console.log(postStatus.data);
       localStorage.setItem("Guest-Info", Object.values(postStatus.data));
       const getLocalGeustInfo = localStorage.getItem("Guest-Info");
       if (getLocalGeustInfo) {
-        const guestImgData = await getGallerySupportImage(
-          token,
-          getLocalGeustInfo
-        );
+        const guestImgData = await getGallerySupportImage(getLocalGeustInfo);
         setImgData(guestImgData.data);
       }
     } else {
@@ -68,7 +68,7 @@ export default function GallerySupportContainer({ token }) {
 
   useEffect(() => {
     if (didMount) {
-      getImageDataRender(token);
+      getImageDataRender();
     }
   }, [didMount]);
 
