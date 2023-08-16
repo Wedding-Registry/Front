@@ -1,7 +1,97 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { AiOutlineClose } from "react-icons/ai";
-import { postGoodsDonation } from "../../apis/Api";
+import { postGoodsDonation } from "../../services/gustGoods/GuestGoodsProductSerivce";
+
+export default function GoodsSupportModal({
+  setIsOpen,
+  goodsSupportData,
+  usersGoodsId,
+  guestToken,
+  setGoodsSupportData,
+}) {
+  const [goodsSupportDataList, setGoodsSupportDataList] = useState([]);
+  const [donationText, setDonationText] = useState("");
+
+  async function postGoodsDonationRender(usersGoodsId, donation, guestToken) {
+    const donationData = await postGoodsDonation(
+      usersGoodsId,
+      donation,
+      guestToken
+    );
+    const data = goodsSupportData.map((goods) =>
+      goods.usersGoodsId === donationData.data.usersGoodsId
+        ? {
+            ...goods,
+            usersGoodsTotalDonation: donationData.data.usersGoodsTotalDonation,
+          }
+        : goods
+    );
+    setGoodsSupportData(data);
+  }
+  useEffect(() => {
+    const filterGoodsData = goodsSupportData?.filter(
+      (v) => v.usersGoodsId === usersGoodsId
+    );
+    setGoodsSupportDataList(filterGoodsData);
+    setDonationText(filterGoodsData[0].usersGoodsTotalDonation);
+  }, []);
+
+  const updateGoodsDonation = () => {
+    postGoodsDonationRender(usersGoodsId, donationText, guestToken);
+    setIsOpen(false);
+  };
+  const donationChange = (e) => {
+    const value = e.target.value;
+    setDonationText(value);
+  };
+  return (
+    <Base>
+      <Container>
+        <TextDiv>
+          {goodsSupportDataList.map((goods) => (
+            <div id={goods.usersGoodsId} key={goods.usersGoodsId}>
+              <GoodsImage url={goods.usersGoodsImgUrl} />
+              <div>
+                <p>상품 이름 :{goods.usersGoodsName}</p>
+                <GoodsDonationDiv>
+                  <GoodsText>
+                    후&nbsp; 원 &nbsp; 가 :{" "}
+                    <GoodsDonationInput
+                      value={donationText || ""}
+                      onChange={donationChange}
+                    />
+                    원
+                  </GoodsText>
+                </GoodsDonationDiv>
+              </div>
+              <div style={{ width: "100%" }}>
+                <OkorColsebuttonDiv>
+                  <div>
+                    <ApiButton onClick={updateGoodsDonation}>
+                      등록하기
+                    </ApiButton>
+                  </div>
+                </OkorColsebuttonDiv>
+              </div>
+            </div>
+          ))}
+          <AiOutlineClose
+            style={{
+              marginLeft: "auto",
+              position: "absolute",
+              top: "10%",
+              right: "5%",
+            }}
+            onClick={() => {
+              setIsOpen(false);
+            }}
+          />
+        </TextDiv>
+      </Container>
+    </Base>
+  );
+}
 
 const Base = styled.div`
   background: rgba(228, 230, 232, 0.7);
@@ -83,86 +173,3 @@ const GoodsDonationInput = styled.input`
   width: 100px;
   height: 20px;
 `;
-
-export default function GoodsSupportModal({
-  token,
-  setIsOpen,
-  goodsSupportData,
-  getGoodsListRender,
-  usersGoodsId,
-  guestToken,
-}) {
-  const [goodsSupportDataList, setGoodsSupportDataList] = useState([]);
-  const [donationText, setDonationText] = useState("");
-  async function postGoodsDonationRender(
-    token,
-    usersGoodsId,
-    donation,
-    guestToken
-  ) {
-    await postGoodsDonation(token, usersGoodsId, donation, guestToken);
-    await getGoodsListRender(token, guestToken);
-  }
-  useEffect(() => {
-    const filterGoodsData = goodsSupportData?.filter(
-      (v) => v.usersGoodsId === usersGoodsId
-    );
-    setGoodsSupportDataList(filterGoodsData);
-    setDonationText(filterGoodsData[0].usersGoodsTotalDonation);
-  }, []);
-
-  const updateGoodsDonation = () => {
-    postGoodsDonationRender(token, usersGoodsId, donationText, guestToken);
-    setIsOpen(false);
-  };
-  const donationChange = (e) => {
-    const value = e.target.value;
-    setDonationText(value);
-  };
-  return (
-    <Base>
-      <Container>
-        <TextDiv>
-          {goodsSupportDataList.map((goods) => (
-            <div id={goods.usersGoodsId} key={goods.usersGoodsId}>
-              <GoodsImage url={goods.usersGoodsImgUrl} />
-              <div>
-                <p>상품 이름 :{goods.usersGoodsName}</p>
-                <GoodsDonationDiv>
-                  <GoodsText>
-                    후&nbsp; 원 &nbsp; 가 :{" "}
-                    <GoodsDonationInput
-                      value={donationText || ""}
-                      onChange={donationChange}
-                    />
-                    원
-                  </GoodsText>
-                </GoodsDonationDiv>
-              </div>
-              <div style={{ width: "100%" }}>
-                <OkorColsebuttonDiv>
-                  <div>
-                    <ApiButton onClick={updateGoodsDonation}>
-                      등록하기
-                    </ApiButton>
-                  </div>
-                </OkorColsebuttonDiv>
-              </div>
-            </div>
-          ))}
-          <AiOutlineClose
-            style={{
-              marginLeft: "auto",
-              position: "absolute",
-              top: "10%",
-              right: "5%",
-            }}
-            onClick={() => {
-              setIsOpen(false);
-            }}
-          />
-        </TextDiv>
-      </Container>
-    </Base>
-  );
-}

@@ -1,5 +1,7 @@
 import axios from "axios";
-const tokenHandler = () => localStorage.getItem("accessToken");
+
+const INITIAL_TOKEN = "accessToken";
+const tokenHandler = () => localStorage.getItem(INITIAL_TOKEN);
 const baseURL = import.meta.env.VITE_HTTP_API_URL;
 // axios 생성
 const HttpClient = axios.create({
@@ -17,6 +19,7 @@ HttpClient.interceptors.request.use(
       config.headers["Content-Type"] = "application/json";
     }
     const token = tokenHandler();
+
     if (token !== null || token !== undefined) {
       config.headers.Authorization = `Bearer ${token}`;
     }
