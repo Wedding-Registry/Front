@@ -23,5 +23,5 @@ export default function GallerySupport() {
     }
     setTokenData(token);
   }, [tokenData]);
-  return <GallerySupportContainer token={tokenData} />;
+  return <GallerySupportContainer />;
 }
