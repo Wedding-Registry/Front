@@ -3,13 +3,14 @@ import GoodsSupportContainer from "../../containers/goods/GoodsSupportContainer"
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { prevUrlPathState } from "../../state/prevUrlPathState";
-import { getAccessToken } from "../../tokens/token";
+import { getAccessToken } from "../../repository/AuthTokenRepository";
+import { getGuestToken } from "../../repository/GuestAuthTokenRepository";
 
-const token = getAccessToken();
-const guestToken = localStorage.getItem("Guest-Info");
 export default function GoodsSupport() {
   const [tokenData, setTokenData] = useState();
   const [guestTokenData, setGuestTokenData] = useState();
+  const token = getAccessToken();
+  const guestToken = getGuestToken();
   const location = useLocation();
   const prevUrlPathName = location.pathname;
   const data = useSetRecoilState(prevUrlPathState);
@@ -23,8 +24,10 @@ export default function GoodsSupport() {
     }
     setTokenData(token);
   }, [tokenData]);
+
   useEffect(() => {
     setGuestTokenData(guestToken);
-  }, [guestToken]);
-  return <GoodsSupportContainer token={token} guestToken={guestTokenData} />;
+  }, [guestTokenData]);
+
+  return <GoodsSupportContainer guestToken={guestToken} />;
 }
