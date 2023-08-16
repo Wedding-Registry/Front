@@ -1,31 +1,10 @@
 import axios from "axios";
 
-//navbar 알림
-async function headerNavbarApi(token) {
-  try {
-    const res = await axios(
-      `http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/navbar/alarm/all`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const data = res.data;
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 //상품 등록 게시판 생성
 async function addBorderIdApi(token) {
   try {
     const res = await axios(
-      `http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/usersgoods/add/board`,
+      `http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/`,
       {
         method: "GET",
         headers: {
@@ -315,6 +294,7 @@ async function getGalleryWeddingImage(token) {
 
 //사진 등록
 async function postGalleryWeddingImageAdd(formData, token) {
+  console.log(formData);
   try {
     const res = await axios.post(
       `http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/gallery/img`,
@@ -500,6 +480,31 @@ async function getGoodsUrlUUID(token) {
   }
 }
 
+//후원 금액 등록 하기
+async function postGoodsDonation(token, userGoodsId, donation, guestToken) {
+  try {
+    const res = await axios.post(
+      `http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/invitation/weddingHall/donation`,
+      {
+        usersGoodsId: userGoodsId,
+        donation: donation,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+          "Guest-Info": `${guestToken}`,
+        },
+      }
+    );
+    const data = res.data;
+    return data;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export {
   getGoodsProductApi,
   postGoodsProductApi,
@@ -509,7 +514,6 @@ export {
   getGalleryWeddingImage,
   addBorderIdApi,
   getGoodsUrlUUID,
-  headerNavbarApi,
   getGallerySupportImage,
   getGallerySupportUUID,
   getGoodsSupportItemsList,
@@ -525,4 +529,5 @@ export {
   addHusbandAccount,
   addWifeName,
   addWifeAccount,
+  postGoodsDonation,
 };

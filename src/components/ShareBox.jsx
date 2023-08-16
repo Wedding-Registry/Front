@@ -27,6 +27,7 @@ export default function ShareBox({ token, setSharebox }) {
 
   async function getGoodsUrlUuidRender(token) {
     const UUID = await getGoodsUrlUUID(token);
+    console.log(UUID);
     setUUID(UUID.data);
   }
 

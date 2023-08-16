@@ -1,8 +1,58 @@
-import React, { useState } from "react";
+import React, { useCallback, useRef } from "react";
 import styled from "styled-components";
 
-import GalleryWeddingimageBox from "../galleryWedingImageBox/GalleryWeddingimageBox";
-import { getAccessToken } from "../../tokens/token";
+import Plus from "@/assets/icons/plus.png";
+import { addGalleryWeddingImage } from "../../services/weddingGallery/WeddingImgService";
+import { galleryWeddingImageState } from "../../state/galleryWeddingImageState";
+import { useSetRecoilState } from "recoil";
+
+export default function GalleryWeddingBox({ url }) {
+  const setImgData = useSetRecoilState(galleryWeddingImageState);
+  async function addGalleryWeddingImageRender(dataImage) {
+    const postImgData = await addGalleryWeddingImage(dataImage);
+    setImgData((prev) => [...prev, postImgData.data]);
+  }
+  const imageInput = useRef();
+
+  const onUploadImage = useCallback((e) => {
+    if (!e.target.files[0]) {
+      return;
+    }
+    if (e.target.files[0]) {
+      const formData = new FormData();
+      formData.append("galleryImg", e.target.files[0]);
+      addGalleryWeddingImageRender(formData);
+    }
+  }, []);
+
+  const onClickImage = useCallback(() => {
+    if (!imageInput.current) {
+      return;
+    }
+    imageInput.current.click();
+  }, []);
+  return (
+    <>
+      <Base>
+        <Imageinput>
+          <input
+            type="file"
+            name="thumbnail"
+            accept="image/jpg, image/png, image/jpeg"
+            id="ex_file"
+            ref={imageInput}
+            onChange={onUploadImage}
+          />
+        </Imageinput>
+        {url ? (
+          <Image src={url} />
+        ) : (
+          <PlusImage src={Plus} onClick={onClickImage} />
+        )}
+      </Base>
+    </>
+  );
+}
 
 const Base = styled.div`
   width: 500px;
@@ -26,23 +76,33 @@ const Image = styled.div`
   background-size: cover;
 `;
 
-export default function GalleryWeddingBox({ url, invitationStatus }) {
-  console.log(invitationStatus);
-  const token = getAccessToken();
-  const [isOpen, setIsOpen] = useState(false);
-
-  const getIsTrued = (data) => {
-    setIsOpen(data);
-  };
-
-  return (
-    <>
-      <Base onClick={() => (url ? <></> : setIsOpen(true))}>
-        {isOpen ? (
-          <GalleryWeddingimageBox getIsTrued={getIsTrued} token={token} />
-        ) : null}
-        {url ? <Image src={url} /> : <></>}
-      </Base>
-    </>
-  );
-}
+const PlusImage = styled.div`
+  background: ${(props) => `url(${props.src}) no-repeat center`};
+  width: 5%;
+  height: 5%;
+  background-size: cover;
+`;
+const Imageinput = styled.div`
+  margin: 0 8px 0 8px;
+  label {
+    display: inline-block;
+    font-size: inherit;
+    line-height: normal;
+    vertical-align: middle;
+    cursor: pointer;
+  }
+  input[type="file"] {
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+  img {
+    width: 20px;
+    height: 20px;
+  }
+`;

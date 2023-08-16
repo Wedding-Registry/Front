@@ -44,7 +44,7 @@ function App() {
       setBorder(true);
     }
   }, []);
-
+  console.log("app");
   return (
     <>
       <Reset />

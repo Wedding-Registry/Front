@@ -1,13 +1,326 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { AiOutlineClose } from "react-icons/ai";
-
-import logo from "@/assets/icons/logo.png";
 import {
   postGoodsProductApi,
-  updateGoodsPrice,
   updateGoodsname,
-} from "../../apis/Api";
+  updateGoodsPrice,
+} from "../../services/goods/GoodsProductService";
+
+import logo from "@/assets/icons/logo.png";
+
+//등록 상태
+//상품 등록 전에 빈 text랑 등록 확인 취소
+// 등록후 값이 변경되고 등록 확인 취소 버튼만 보인다.
+function CreateGoodsState({
+  getGoodsUrlItem,
+  setGetGoodsUrlItem,
+  setIsOpen,
+  postGoodsListRender,
+  goodsData,
+  deleteGoodsRender,
+}) {
+  const getGoodsUrl = (e) => {
+    setGetGoodsUrlItem(e.target.value);
+  };
+
+  const okButton = () => {
+    setIsOpen(false);
+  };
+
+  const deleteButton = async (id) => {
+    await deleteGoodsRender(id);
+    setIsOpen(false);
+  };
+
+  const registerGoodsButton = async () => {
+    await postGoodsListRender(getGoodsUrlItem);
+  };
+  return (
+    <>
+      {goodsData.length !== 0 && goodsData ? (
+        <div id={goodsData.usersGoodsId} key={goodsData.usersGoodsId}>
+          <GoodsImage url={goodsData.usersGoodsImgUrl} />
+          <div>
+            <p>상품 이름 :{goodsData.usersGoodsName}</p>
+            <GoodsDonationDiv>
+              <GoodsText>
+                후&nbsp; 원 &nbsp; 가 : {goodsData.usersGoodsPrice}원
+              </GoodsText>
+            </GoodsDonationDiv>
+          </div>
+          <div style={{ width: "100%" }}>
+            <OkorColsebuttonDiv>
+              <div>
+                <ApiButton onClick={registerGoodsButton}>등록하기</ApiButton>
+              </div>
+              <div style={{ position: "absolute", top: "85%", right: "10%" }}>
+                <ApiButton onClick={okButton}>확인</ApiButton>|
+                <ApiButton onClick={() => deleteButton(goodsData.usersGoodsId)}>
+                  취소
+                </ApiButton>
+              </div>
+            </OkorColsebuttonDiv>
+          </div>
+        </div>
+      ) : (
+        <>
+          {goodsData.length !== 0 && goodsData ? <></> : <Logo src={logo} />}
+          <Text onChange={getGoodsUrl} />
+          <div>
+            <p>
+              상품 이름 : <GoodsNameInput />
+            </p>
+            <GoodsDonationDiv>
+              <p>
+                후&nbsp; 원 &nbsp; 가 : <GoodsDonationInput />원
+              </p>
+            </GoodsDonationDiv>
+          </div>
+          <div style={{ width: "100%" }}>
+            <OkorColsebuttonDiv>
+              <div>
+                <ApiButton onClick={registerGoodsButton}>등록하기</ApiButton>
+              </div>
+              <div style={{ position: "absolute", top: "85%", right: "10%" }}>
+                <ApiButton>확인</ApiButton>|
+                <ApiButton onClick={() => deleteButton(goodsData.usersGoodsId)}>
+                  취소
+                </ApiButton>
+              </div>
+            </OkorColsebuttonDiv>
+          </div>
+        </>
+      )}
+    </>
+  );
+}
+
+// 수정 상태
+// text url 후원가 상품 이름
+// 수정 삭제하기 버튼 만들어짐
+
+function UpdateGoodsState({
+  isOpen,
+  fetchData,
+  setIsOpen,
+  setFetchData,
+  deleteGoodsRender,
+}) {
+  const [postFilterGoodsData, setPostFilterGoodsData] = useState([]);
+
+  const [editNameText, setEditNameText] = useState("");
+  const [editPriceText, setEditPriceText] = useState("");
+  const [editState, setEditState] = useState({
+    state: false,
+  });
+
+  //상품 가격 수정
+  async function updateGoodsPriceRender(usersGoodsId, usersGoodsName) {
+    const priceData = await updateGoodsPrice(usersGoodsId, usersGoodsName);
+    return priceData;
+  }
+  //상품이름 수정
+  async function updateGoodsNameRender(usersGoodsId, usersGoodsPrice) {
+    const nameData = await updateGoodsname(usersGoodsId, usersGoodsPrice);
+    return nameData;
+  }
+
+  const updateGoodsAllClick = async (usersGoodsId, name, price) => {
+    const priceData = await updateGoodsPriceRender(usersGoodsId, price);
+    if (priceData.success) {
+      setFetchData((prev) =>
+        prev.filter(
+          (goods) => goods.usersGoodsId === priceData.data.usersGoodsId
+        )
+      );
+    }
+    const nameData = await updateGoodsNameRender(usersGoodsId, name);
+    if (nameData.success) {
+      setFetchData((prev) =>
+        prev.filter(
+          (goods) => goods.usersGoodsId === nameData.data.usersGoodsId
+        )
+      );
+    }
+    setIsOpen(false);
+  };
+
+  const goodsDeleteButton = async (id) => {
+    await deleteGoodsRender(id);
+  };
+  const updateGoodsNameChange = (e) => {
+    const value = e.target.value;
+    setEditNameText(value);
+  };
+  const updateGoodsPriceChange = (e) => {
+    const value = e.target.value;
+    setEditPriceText(value);
+  };
+
+  useEffect(() => {
+    const filterGoodsData = fetchData?.filter(
+      (v) => v.usersGoodsId === isOpen.userGoodsId
+    );
+    setEditNameText(filterGoodsData[0].usersGoodsName);
+    setEditPriceText(filterGoodsData[0].usersGoodsPrice);
+    setPostFilterGoodsData(filterGoodsData);
+  }, []);
+
+  return (
+    <>
+      <GoodsDiv>
+        {editState.state
+          ? postFilterGoodsData &&
+            postFilterGoodsData.map((v) => (
+              <div key={v.usersGoodsId}>
+                <GoodsImage url={v.usersGoodsImgUrl} />
+                <GoodsDonationDiv>
+                  <p>
+                    상품 이름 :{" "}
+                    <GoodsNameInput
+                      name="name"
+                      value={editNameText}
+                      onChange={updateGoodsNameChange}
+                    />
+                  </p>
+                  <p>
+                    후&nbsp; 원 &nbsp; 가
+                    <GoodsDonationInput
+                      name="price"
+                      value={editPriceText}
+                      onChange={updateGoodsPriceChange}
+                    />
+                    원
+                  </p>
+                </GoodsDonationDiv>
+                <div style={{ width: "100%" }}>
+                  <OkorColsebuttonDiv>
+                    <div
+                      style={{ position: "absolute", top: "85%", right: "10%" }}
+                    >
+                      <ApiButton
+                        onClick={() =>
+                          updateGoodsAllClick(
+                            v.usersGoodsId,
+                            editNameText,
+                            editPriceText
+                          )
+                        }
+                      >
+                        수정하기
+                      </ApiButton>
+                      |
+                      <ApiButton
+                        onClick={() => goodsDeleteButton(v.usersGoodsId)}
+                      >
+                        삭제하기
+                      </ApiButton>
+                    </div>
+                  </OkorColsebuttonDiv>
+                </div>
+              </div>
+            ))
+          : postFilterGoodsData &&
+            postFilterGoodsData.map((v) => (
+              <div key={v.usersGoodsId} id={v.usersGoodsId}>
+                <GoodsImage url={v.usersGoodsImgUrl} />
+                <GoodsDonationDiv>
+                  <p>
+                    상품 이름 :{" "}
+                    <GoodsNameInput
+                      value={editNameText}
+                      onChange={updateGoodsNameChange}
+                      name="name"
+                      onFocus={() => setEditState({ state: true })}
+                    />
+                  </p>
+                  <p>
+                    후&nbsp; 원 &nbsp; 가
+                    <GoodsDonationInput
+                      value={editPriceText}
+                      onChange={updateGoodsPriceChange}
+                      name="price"
+                      onFocus={() => setEditState({ state: true })}
+                    />
+                    원
+                  </p>
+                </GoodsDonationDiv>
+                <div style={{ width: "100%" }}>
+                  <OkorColsebuttonDiv>
+                    <div
+                      style={{ position: "absolute", top: "85%", right: "10%" }}
+                    >
+                      <ApiButton>수정하기</ApiButton>|
+                      <ApiButton
+                        onClick={() => goodsDeleteButton(v.usersGoodsId)}
+                      >
+                        삭제하기
+                      </ApiButton>
+                    </div>
+                  </OkorColsebuttonDiv>
+                </div>
+              </div>
+            ))}
+      </GoodsDiv>
+    </>
+  );
+}
+
+export default function GoodsModal({
+  setIsOpen,
+  setFetchData,
+  isOpen,
+  fetchData,
+  deleteGoodsRender,
+}) {
+  const [getGoodsUrlItem, setGetGoodsUrlItem] = useState("");
+  const [goodsData, setGoodsData] = useState([]);
+
+  async function postGoodsListRender(url) {
+    const goodsItems = await postGoodsProductApi(url);
+    setGoodsData(goodsItems.data);
+  }
+
+  return (
+    <Base>
+      <Container>
+        <TextDiv>
+          {fetchData && fetchData ? <></> : <Logo src={logo} />}
+          <AiOutlineClose
+            style={{
+              marginLeft: "auto",
+              position: "absolute",
+              top: "10%",
+              right: "5%",
+            }}
+            onClick={() => {
+              setIsOpen(false);
+            }}
+          />
+          {isOpen.state === "View" ? (
+            <UpdateGoodsState
+              setIsOpen={setIsOpen}
+              setFetchData={setFetchData}
+              isOpen={isOpen}
+              fetchData={fetchData}
+              deleteGoodsRender={deleteGoodsRender}
+            />
+          ) : (
+            <CreateGoodsState
+              setIsOpen={setIsOpen}
+              setGetGoodsUrlItem={setGetGoodsUrlItem}
+              postGoodsListRender={postGoodsListRender}
+              getGoodsUrlItem={getGoodsUrlItem}
+              goodsData={goodsData}
+              deleteGoodsRender={deleteGoodsRender}
+            />
+          )}
+        </TextDiv>
+      </Container>
+    </Base>
+  );
+}
 
 const Base = styled.div`
   background: rgba(228, 230, 232, 0.7);
@@ -69,6 +382,7 @@ const GoodsNameInput = styled.input`
   outline: none;
   width: 400px;
   height: 20px;
+  margin-bottom: 10px;
 `;
 
 const GoodsDonationInput = styled.input`
@@ -121,341 +435,3 @@ const GoodsText = styled.p`
   justify-content: center;
   display: flex;
 `;
-//등록 상태
-//상품 등록 전에 빈 text랑 등록 확인 취소
-// 등록후 값이 변경되고 등록 확인 취소 버튼만 보인다.
-function CreateGoodsState({
-  getGoodsUrlItem,
-  setGetGoodsUrlItem,
-  setIsOpen,
-  token,
-  postGoodsListRender,
-  goodsData,
-  deleteGoodsRender,
-  setFetchData,
-}) {
-  const getGoodsUrl = (e) => {
-    setGetGoodsUrlItem(e.target.value);
-  };
-
-  const okButton = () => {
-    setIsOpen(false);
-  };
-
-  const deleteButton = (token, id) => {
-    deleteGoodsRender(token, id);
-    setFetchData((prev) => prev.filter((goods) => goods.id !== id));
-    setIsOpen(false);
-  };
-
-  const registerGoodsButton = async () => {
-    await postGoodsListRender(getGoodsUrlItem, token);
-  };
-  return (
-    <>
-      {goodsData.length !== 0 && goodsData ? (
-        <div id={goodsData.usersGoodsId}>
-          <GoodsImage url={goodsData.usersGoodsImgUrl} />
-          <div>
-            <p>상품 이름 :{goodsData.usersGoodsName}</p>
-            <GoodsDonationDiv>
-              <GoodsText>
-                후&nbsp; 원 &nbsp; 가 : {goodsData.usersGoodsPrice}원
-              </GoodsText>
-            </GoodsDonationDiv>
-          </div>
-          <div style={{ width: "100%" }}>
-            <OkorColsebuttonDiv>
-              <div>
-                <ApiButton onClick={registerGoodsButton}>등록하기</ApiButton>
-              </div>
-              <div style={{ position: "absolute", top: "85%", right: "10%" }}>
-                <ApiButton onClick={okButton}>확인</ApiButton>|
-                <ApiButton
-                  onClick={() => deleteButton(token, goodsData.usersGoodsId)}
-                >
-                  취소
-                </ApiButton>
-              </div>
-            </OkorColsebuttonDiv>
-          </div>
-        </div>
-      ) : (
-        <>
-          {goodsData.length !== 0 && goodsData ? <></> : <Logo src={logo} />}
-          <Text onChange={getGoodsUrl} />
-          <div>
-            <p>
-              상품 이름 : <GoodsNameInput />
-            </p>
-            <GoodsDonationDiv>
-              <p>
-                후&nbsp; 원 &nbsp; 가 : <GoodsDonationInput />원
-              </p>
-            </GoodsDonationDiv>
-          </div>
-          <div style={{ width: "100%" }}>
-            <OkorColsebuttonDiv>
-              <div>
-                <ApiButton onClick={registerGoodsButton}>등록하기</ApiButton>
-              </div>
-              <div style={{ position: "absolute", top: "85%", right: "10%" }}>
-                <ApiButton>확인</ApiButton>|
-                <ApiButton
-                  onClick={() => deleteButton(token, goodsData.usersGoodsId)}
-                >
-                  취소
-                </ApiButton>
-              </div>
-            </OkorColsebuttonDiv>
-          </div>
-        </>
-      )}
-    </>
-  );
-}
-
-// 수정 상태
-// text url 후원가 상품 이름
-// 수정 삭제하기 버튼 만들어짐
-
-function UpdateGoodsState({
-  token,
-  isOpen,
-  fetchData,
-  setIsOpen,
-  setFetchData,
-  deleteGoodsRender,
-  renderProduct,
-}) {
-  const [postFilterGoodsData, setPostFilterGoodsData] = useState([]);
-
-  const [editNameText, setEditNameText] = useState("");
-  const [editPriceText, setEditPriceText] = useState("");
-  const [editState, setEditState] = useState({
-    state: false,
-  });
-
-  //상품 가격 수정
-  async function updateGoodsPriceRender(token, usersGoodsId, usersGoodsName) {
-    await updateGoodsPrice(token, usersGoodsId, usersGoodsName);
-    setIsOpen(false);
-  }
-  //상품이름 수정
-  async function updateGoodsNameRender(token, usersGoodsId, usersGoodsPrice) {
-    await updateGoodsname(token, usersGoodsId, usersGoodsPrice);
-    setIsOpen(false);
-  }
-
-  const updateGoodsAllClick = async (token, usersGoodsId, name, price) => {
-    const priceData = updateGoodsPriceRender(token, usersGoodsId, price);
-    if (priceData) {
-      setFetchData(priceData.data);
-    }
-    const nameData = updateGoodsNameRender(token, usersGoodsId, name);
-    if (nameData) {
-      setFetchData(nameData.data);
-    }
-    await renderProduct();
-    setIsOpen(false);
-  };
-
-  const goodsDeleteButton = (token, id) => {
-    deleteGoodsRender(token, id);
-    setIsOpen(false);
-    setFetchData((prev) => prev.filter((goods) => goods.usersGoodsId !== id));
-  };
-  const updateGoodsNameChange = (e) => {
-    const value = e.target.value;
-    setEditNameText(value);
-  };
-  const updateGoodsPriceChange = (e) => {
-    const value = e.target.value;
-    setEditPriceText(value);
-  };
-
-  useEffect(() => {
-    const filterGoodsData = fetchData?.filter(
-      (v) => v.usersGoodsId === isOpen.userGoodsId
-    );
-    setEditNameText(filterGoodsData[0].usersGoodsName);
-    setEditPriceText(filterGoodsData[0].usersGoodsPrice);
-    setPostFilterGoodsData(filterGoodsData);
-  }, []);
-
-  return (
-    <>
-      <GoodsDiv>
-        {editState.state
-          ? postFilterGoodsData &&
-            postFilterGoodsData.map((v) => (
-              <div key={v.usersGoodsId}>
-                <GoodsImage url={v.usersGoodsImgUrl} />
-                <div>
-                  <p>
-                    상품 이름 :{" "}
-                    <GoodsNameInput
-                      name="name"
-                      value={editNameText}
-                      onChange={updateGoodsNameChange}
-                    />
-                  </p>
-                  <GoodsDonationDiv>
-                    <p>
-                      후&nbsp; 원 &nbsp; 가
-                      <GoodsDonationInput
-                        name="price"
-                        value={editPriceText}
-                        onChange={updateGoodsPriceChange}
-                      />
-                      원
-                    </p>
-                  </GoodsDonationDiv>
-                </div>
-                <div style={{ width: "100%" }}>
-                  <OkorColsebuttonDiv>
-                    <div
-                      style={{ position: "absolute", top: "85%", right: "10%" }}
-                    >
-                      <ApiButton
-                        onClick={() =>
-                          updateGoodsAllClick(
-                            token,
-                            v.usersGoodsId,
-                            editNameText,
-                            editPriceText
-                          )
-                        }
-                      >
-                        수정하기
-                      </ApiButton>
-                      |
-                      <ApiButton
-                        onClick={() => goodsDeleteButton(token, v.usersGoodsId)}
-                      >
-                        삭제하기
-                      </ApiButton>
-                    </div>
-                  </OkorColsebuttonDiv>
-                </div>
-              </div>
-            ))
-          : postFilterGoodsData &&
-            postFilterGoodsData.map((v) => (
-              <div key={v.usersGoodsId} id={v.usersGoodsId}>
-                <GoodsImage url={v.usersGoodsImgUrl} />
-                <div>
-                  <GoodsDonationDiv>
-                    <p>
-                      상품 이름 :{" "}
-                      <GoodsNameInput
-                        value={editNameText}
-                        onChange={updateGoodsNameChange}
-                        name="name"
-                        onFocus={() => setEditState({ state: true })}
-                      />
-                    </p>
-                    <p>
-                      후&nbsp; 원 &nbsp; 가
-                      <GoodsDonationInput
-                        value={editPriceText}
-                        onChange={updateGoodsPriceChange}
-                        name="price"
-                        onFocus={() => setEditState({ state: true })}
-                      />
-                      원
-                    </p>
-                  </GoodsDonationDiv>
-                </div>
-                <div style={{ width: "100%" }}>
-                  <OkorColsebuttonDiv>
-                    <div
-                      style={{ position: "absolute", top: "85%", right: "10%" }}
-                    >
-                      <ApiButton>수정하기</ApiButton>|
-                      <ApiButton
-                        onClick={() => goodsDeleteButton(token, v.usersGoodsId)}
-                      >
-                        삭제하기
-                      </ApiButton>
-                    </div>
-                  </OkorColsebuttonDiv>
-                </div>
-              </div>
-            ))}
-      </GoodsDiv>
-    </>
-  );
-}
-
-export default function GoodsModal({
-  setIsOpen,
-  setFetchData,
-  token,
-  usersGoodsId,
-  usersGoodsImgUrl,
-  usersGoodsName,
-  usersGoodsPrice,
-  isOpen,
-  fetchData,
-  renderProduct,
-  deleteGoodsRender,
-}) {
-  const [getGoodsUrlItem, setGetGoodsUrlItem] = useState("");
-  const [goodsData, setGoodsData] = useState([]);
-
-  async function postGoodsListRender(url, token) {
-    const goodsItems = await postGoodsProductApi(url, token);
-    setGoodsData(goodsItems.data);
-  }
-
-  return (
-    <Base>
-      <Container>
-        <TextDiv>
-          {fetchData && fetchData ? <></> : <Logo src={logo} />}
-          <AiOutlineClose
-            style={{
-              marginLeft: "auto",
-              position: "absolute",
-              top: "10%",
-              right: "5%",
-            }}
-            onClick={() => {
-              setIsOpen(false);
-            }}
-          />
-          {isOpen.state === "View" ? (
-            <UpdateGoodsState
-              setIsOpen={setIsOpen}
-              token={token}
-              setGetGoodsUrlItem={setGetGoodsUrlItem}
-              postGoodsListRender={postGoodsListRender}
-              setFetchData={setFetchData}
-              getGoodsUrlItem={getGoodsUrlItem}
-              usersGoodsId={usersGoodsId}
-              usersGoodsImgUrl={usersGoodsImgUrl}
-              usersGoodsName={usersGoodsName}
-              usersGoodsPrice={usersGoodsPrice}
-              isOpen={isOpen}
-              fetchData={fetchData}
-              deleteGoodsRender={deleteGoodsRender}
-              renderProduct={renderProduct}
-            />
-          ) : (
-            <CreateGoodsState
-              setIsOpen={setIsOpen}
-              token={token}
-              setGetGoodsUrlItem={setGetGoodsUrlItem}
-              postGoodsListRender={postGoodsListRender}
-              getGoodsUrlItem={getGoodsUrlItem}
-              setFetchData={setFetchData}
-              goodsData={goodsData}
-              deleteGoodsRender={deleteGoodsRender}
-            />
-          )}
-        </TextDiv>
-      </Container>
-    </Base>
-  );
-}

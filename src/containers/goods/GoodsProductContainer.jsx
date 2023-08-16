@@ -6,191 +6,22 @@ import Share from "@/assets/icons/share.png";
 import ShareBox from "@/components/ShareBox";
 import styled from "styled-components";
 import Box from "@/components/box/Box";
-
 import {
-  addHusbandAccount,
+  getGoodsProductList,
+  deleteGoods,
+} from "../../services/goods/GoodsProductService";
+import {
+  getWeddingHall,
+  updateWeddingHallLocation,
   addHusbandName,
-  addWeddingHallLocation,
-  addWeddingHallTime,
-  addWifeAccount,
   addWifeName,
-  deleteGoodsAdd,
-  getGoodsProductApi,
-} from "../../apis/Api";
+  addWifeAccount,
+  addHusbandAccount,
+  addWeddingHallTime,
+} from "../../services/goods/GoodsMarriedService";
 import GoodsModal from "../../components/goodsmodal/GoodsModal";
-import { getWeddingHall } from "../../apis/Api";
 
-const GoodsText = styled.input`
-  border: 0;
-  border-bottom: 1px solid black;
-  outline: none;
-  width: 100px;
-  margin-bottom: 5px;
-  text-align: center;
-  background-color: transparent;
-`;
-
-const GoodsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const GoodsWeddingText = styled.input`
-  outline: none;
-  border: none;
-  background-color: #ebebeb;
-  width: 80px;
-  border-radius: 10px 0 0 10px;
-  height: 33px;
-  text-align: center;
-`;
-
-const GoodsWeddingbank = styled.input`
-  outline: none;
-  border: none;
-  background-color: #ebebeb;
-  width: 80px;
-  height: 33px;
-  text-align: center;
-  margin-left: 5px;
-`;
-
-const GoodsWeddingaccountnumber = styled.input`
-  outline: none;
-  border: none;
-  background-color: #ebebeb;
-  width: 200px;
-  border-radius: 0 10px 10px 0;
-  margin-left: 5px;
-  height: 33px;
-  text-align: center;
-`;
-
-const GoodsWeddingadress = styled.input`
-  outline: none;
-  border: none;
-  background-color: #ebebeb;
-  width: 200px;
-  border-radius: 10px;
-  margin-left: 5px;
-  height: 33px;
-  text-align: center;
-`;
-
-const GoodsSharelink = styled.span`
-  font-size: 20px;
-  font-weight: 400px;
-  font-size: 14px;
-  line-height: 25px;
-`;
-
-const GoodsShareLinkdiv = styled.div`
-  width: 100%;
-  text-align: right;
-  margin-right: 8%;
-  height: 6rem;
-`;
-
-const GoodsWeddingdiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  width: 100%;
-  margin-right: 8%;
-`;
-
-const BoxWapper = styled.div`
-  display: flex;
-  height: 50vh;
-  margin-top: 20px;
-  width: 100%;
-`;
-
-const BoxContainer = styled.div`
-  display: flex;
-  margin-top: 20px;
-  width: 100%;
-`;
-
-const BoxItem = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  &:nth-child(odd) {
-    margin-top: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  &:nth-child(even) {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-bottom: 150px;
-  }
-`;
-
-const ItemDiv = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 10px;
-`;
-
-const StyledTrack = styled.div`
-  width: 5px;
-  height: 100px;
-  background-color: #ebebeb;
-  border-radius: 15px;
-  transform: rotate(180deg);
-  margin-right: 8px;
-`;
-
-const StyledRange = styled.div`
-  display: flex;
-  width: 100%;
-  height: ${({ width }) => `${width}%`};
-  background: linear-gradient(to right, blue, blue);
-`;
-
-const ValueItem = styled.div`
-  width: 130px;
-  display: inline-block;
-  font-style: normal;
-  font-weight: 400px;
-  font-size: 14px;
-  line-height: 17px;
-`;
-
-const BoxSlider = styled.div`
-  width: 100%;
-  height: 50%;
-  overflow-x: hidden;
-  margin-bottom: 10%;
-`;
-
-const CenterTextdiv = styled.div`
-  margin-bottom: 1%;
-  position: relative;
-  width: 450px;
-  height: 130px;
-`;
-
-const AddMarriedButton = styled.button`
-  border: none;
-  background: none;
-`;
-
-const AddMarriedButtonDiv = styled.div`
-  position: absolute;
-  top: 0;
-  margin-top: 65px;
-  right: 0;
-`;
-
-export default function GoodsProductContainer({ token }) {
+export default function GoodsProductContainer() {
   const [sharebox, setSharebox] = useState(false);
   const [didmount, setDidmount] = useState(false);
   const [fetchData, setFetchData] = useState([]);
@@ -227,55 +58,55 @@ export default function GoodsProductContainer({ token }) {
   const slideRef = useRef(null);
 
   //상품전체조회
-  async function renderProduct(token) {
-    const products = await getGoodsProductApi(token);
+  async function renderProduct() {
+    const products = await getGoodsProductList();
+
     setFetchData(products.data);
   }
   //이름 계좌 시간 전체 조회
-  async function getWeddingHallRender(token) {
-    const weddingHallData = await getWeddingHall(token);
+  async function getWeddingHallRender() {
+    const weddingHallData = await getWeddingHall();
     setMarriedWeddingData(weddingHallData);
   }
   //남편 이름 등록
-  async function addHusbandNameRender(token, name) {
-    await addHusbandName(token, name);
-    getWeddingHallRender(token);
+  async function addHusbandNameRender(name) {
+    await addHusbandName(name);
+    getWeddingHallRender();
   }
   // 신부 이름 등록
-  async function addWifeNameRender(token, name) {
-    await addWifeName(token, name);
-    getWeddingHallRender(token);
+  async function addWifeNameRender(name) {
+    await addWifeName(name);
+    getWeddingHallRender();
   }
 
   // 신부 계좌,은행 등록
-  async function addWifeAccountRender(token, account, bank) {
-    await addWifeAccount(token, account, bank);
-    getWeddingHallRender(token);
+  async function addWifeAccountRender(account, bank) {
+    await addWifeAccount(account, bank);
+    getWeddingHallRender();
   }
   // 신랑 계좌,은행 등록
-  async function addHusbandAccountRender(token, account, bank) {
-    await addHusbandAccount(token, account, bank);
-    getWeddingHallRender(token);
+  async function addHusbandAccountRender(account, bank) {
+    await addHusbandAccount(account, bank);
+    getWeddingHallRender();
   }
   //예식장 주소 및 날짜 변경
-  async function addWeddingHallLocationRender(token, address) {
-    await addWeddingHallLocation(token, address);
+  async function addWeddingHallLocationRender(address) {
+    await updateWeddingHallLocation(address);
 
-    await getWeddingHallRender(token);
+    await getWeddingHallRender();
   }
   // 예식 시간
-  async function addWeddingHallTimeRender(token, locationText) {
+  async function addWeddingHallTimeRender(locationText) {
     if (locationText !== "") {
       const [year, time] = locationText.split("T");
       const yyyymmdd = year.split("-").join("");
       const hhmm = time.split(":").join("");
-      const data = await addWeddingHallTime(token, yyyymmdd, hhmm);
+      const data = await addWeddingHallTime(yyyymmdd, hhmm);
       setDateText(data.data?.weddingDate);
       setTimeText(data.data?.weddingTime);
-      getWeddingHallRender(token);
+      getWeddingHallRender();
     }
-
-    await getWeddingHallRender(token);
+    await getWeddingHallRender();
   }
   // 신부 이름 text
   const wifeTextChange = (e) => {
@@ -314,25 +145,31 @@ export default function GoodsProductContainer({ token }) {
   const addressChange = (e) => {
     const value = e.target.value;
     setAddressText(value);
-    addWeddingHallLocationRender(token, addressText);
   };
   // 결혼식 날짜 Change 이벤트
   const dateTimeChange = (e) => {
     const value = e.target.value;
     setLocationText(value);
-    addWeddingHallTimeRender(token, locationText);
+    addWeddingHallTimeRender(locationText);
   };
   //이름 계좌 시간 전체 등록 버튼
-  const addMarriedInformationClick = async (token) => {
+  const addMarriedInformationClick = async () => {
     //신랑 이름 등록
-    await addHusbandNameRender(token, husbandNameText);
+    await addHusbandNameRender(husbandNameText);
     //신부 이름 등록
-    await addWifeNameRender(token, wifeNameText);
+    await addWifeNameRender(wifeNameText);
     //신부 계좌 등록
-    await addWifeAccountRender(token, wifeAccountText, wifeBankText);
+    await addWifeAccountRender(wifeAccountText, wifeBankText);
     //신랑 계좌 등록
-    await addHusbandAccountRender(token, husbandAccountText, husbandBankText);
-    await getWeddingHallRender(token);
+    await addHusbandAccountRender(husbandAccountText, husbandBankText);
+    await getWeddingHallRender();
+  };
+
+  //엔터키
+  const activeEnter = (e) => {
+    if (e.key === "Enter") {
+      addWeddingHallLocationRender(addressText);
+    }
   };
 
   useEffect(() => {
@@ -341,14 +178,14 @@ export default function GoodsProductContainer({ token }) {
 
   useEffect(() => {
     if (didmount) {
-      renderProduct(token);
-      getWeddingHallRender(token);
+      renderProduct();
+      getWeddingHallRender();
     }
   }, [didmount]);
 
   useEffect(() => {
     if (!isOpen) {
-      renderProduct(token);
+      renderProduct();
     }
   }, [isOpen]);
 
@@ -424,11 +261,12 @@ export default function GoodsProductContainer({ token }) {
     marriedWeddingTimeHandler();
   }, [marriedWeddingData]);
 
-  async function deleteGoodsRender(token, id) {
-    const data = await deleteGoodsAdd(token, id);
+  async function deleteGoodsRender(id) {
+    const data = await deleteGoods(id);
     if (data.data === null) {
       setFetchData((prev) => prev.filter((goods) => goods.usersGoodsId !== id));
     }
+    setIsOpen(false);
   }
 
   return (
@@ -449,104 +287,102 @@ export default function GoodsProductContainer({ token }) {
             />
             링크 공유하기
           </GoodsSharelink>
-          <div>{sharebox ? <ShareBox /> : null}</div>
+          <div>{sharebox ? <ShareBox setSharebox={setSharebox} /> : null}</div>
         </GoodsShareLinkdiv>
-        {marriedWeddingData.data && (
-          <>
-            <div>
-              <GoodsText
-                placeholder="신부이름"
-                style={{
-                  marginBottom: "20px",
-                }}
-                onChange={(e) => {
-                  wifeTextChange(e);
-                  setIsEditing({ wife: true });
-                }}
-                defaultValue={wifeNameText}
+
+        <>
+          <div>
+            <GoodsText
+              placeholder="신부이름"
+              style={{
+                marginBottom: "20px",
+              }}
+              onChange={(e) => {
+                wifeTextChange(e);
+                setIsEditing({ wife: true });
+              }}
+              defaultValue={wifeNameText}
+            />
+            <br />
+            <GoodsText
+              placeholder="신랑 이름"
+              onChange={(e) => husbandTextChange(e)}
+              defaultValue={husbandNameText}
+            />
+          </div>
+          <GoodsWeddingdiv>
+            <GoodsWeddingadress
+              placeholder="예식장 주소(Enter키를 눌러 저장해주세요)"
+              style={{
+                marginBottom: "20px",
+              }}
+              onChange={(e) => addressChange(e)}
+              defaultValue={addressText || ""}
+              onKeyDown={(e) => activeEnter(e)}
+            />
+            <input
+              type="datetime-local"
+              style={{
+                width: "270px",
+                borderRadius: "10px",
+                backgroundColor: "#EBEBEB",
+                height: "33px",
+                border: "1px solid #EBEBEB",
+                textAlign: "center",
+              }}
+              onChange={(e) => dateTimeChange(e)}
+              value={dateText + "T" + timeText}
+            />
+          </GoodsWeddingdiv>
+          <CenterTextdiv>
+            <div
+              style={{
+                marginTop: "10px",
+              }}
+            >
+              <GoodsWeddingText
+                placeholder="신부 이름"
+                defaultValue={wifeNameText || ""}
               />
-              <br />
-              <GoodsText
-                placeholder="신랑 이름"
-                onChange={(e) => husbandTextChange(e)}
-                defaultValue={husbandNameText}
+              <GoodsWeddingbank
+                placeholder="은행"
+                onChange={(e) => wifBankTextChange(e)}
+                name="wifeBank"
+                defaultValue={wifeBankText}
+              />
+              <GoodsWeddingaccountnumber
+                placeholder="계좌번호"
+                onChange={(e) => wifeAccountTextChange(e)}
+                name="wifeAccount"
+                defaultValue={wifeAccountText}
               />
             </div>
-            <GoodsWeddingdiv>
-              <GoodsWeddingadress
-                placeholder="예식장 주소"
-                style={{
-                  marginBottom: "20px",
-                }}
-                onChange={(e) => addressChange(e)}
-                defaultValue={addressText || ""}
+            <br />
+            <div>
+              <GoodsWeddingText
+                placeholder="신랑 이름"
+                defaultValue={husbandNameText}
               />
-              <input
-                type="datetime-local"
-                style={{
-                  width: "200px",
-                  borderRadius: "10px",
-                  backgroundColor: "#EBEBEB",
-                  height: "33px",
-                  border: "1px solid #EBEBEB",
-                }}
-                onChange={(e) => dateTimeChange(e)}
-                value={dateText + "T" + timeText}
+              <GoodsWeddingbank
+                placeholder="은행"
+                name="husbandBank"
+                onChange={(e) => hasbandBankTextChange(e)}
+                defaultValue={husbandBankText}
               />
-            </GoodsWeddingdiv>
-            <CenterTextdiv>
-              <div
-                style={{
-                  marginTop: "30px",
-                }}
-              >
-                <GoodsWeddingText
-                  placeholder="신부 이름"
-                  defaultValue={wifeNameText || ""}
-                />
-                <GoodsWeddingbank
-                  placeholder="은행"
-                  onChange={(e) => wifBankTextChange(e)}
-                  name="wifeBank"
-                  defaultValue={wifeBankText}
-                />
-                <GoodsWeddingaccountnumber
-                  placeholder="계좌번호"
-                  onChange={(e) => wifeAccountTextChange(e)}
-                  name="wifeAccount"
-                  defaultValue={wifeAccountText}
-                />
-              </div>
-              <br />
-              <div>
-                <GoodsWeddingText
-                  placeholder="신랑 이름"
-                  defaultValue={husbandNameText}
-                />
-                <GoodsWeddingbank
-                  placeholder="은행"
-                  name="husbandBank"
-                  onChange={(e) => hasbandBankTextChange(e)}
-                  defaultValue={husbandBankText}
-                />
-                <GoodsWeddingaccountnumber
-                  placeholder="계좌번호"
-                  onChange={(e) => husbandAccountTextChange(e)}
-                  name="husbandAccount"
-                  defaultValue={husbandAccountText}
-                />
-                <AddMarriedButtonDiv>
-                  <AddMarriedButton
-                    onClick={() => addMarriedInformationClick(token)}
-                  >
-                    저장하기
-                  </AddMarriedButton>
-                </AddMarriedButtonDiv>
-              </div>
-            </CenterTextdiv>
-          </>
-        )}
-
+              <GoodsWeddingaccountnumber
+                placeholder="계좌번호"
+                onChange={(e) => husbandAccountTextChange(e)}
+                name="husbandAccount"
+                defaultValue={husbandAccountText}
+              />
+              <AddMarriedButtonDiv>
+                <AddMarriedButton onClick={() => addMarriedInformationClick()}>
+                  저장하기
+                </AddMarriedButton>
+              </AddMarriedButtonDiv>
+            </div>
+          </CenterTextdiv>
+        </>
         <BoxContainer>
           <RiArrowDropLeftLine onClick={prevSlide} size="40" />
           <BoxSlider>
@@ -570,7 +406,6 @@ export default function GoodsProductContainer({ token }) {
                         isOpen={isOpen}
                         setFetchData={setFetchData}
                         fetchData={fetchData}
-                        token={token}
                       />
                       <ItemDiv>
                         <StyledTrack isTrue={false}>
@@ -596,18 +431,15 @@ export default function GoodsProductContainer({ token }) {
               </>
             </BoxWapper>
           </BoxSlider>
-          {isOpen.result ? (
+          {isOpen.result && (
             <GoodsModal
               setIsOpen={setIsOpen}
-              token={token}
               fetchData={fetchData}
               setFetchData={setFetchData}
               isOpen={isOpen}
               renderProduct={renderProduct}
               deleteGoodsRender={deleteGoodsRender}
             />
-          ) : (
-            <></>
           )}
           <RiArrowDropRightLine onClick={nextSlide} size="40" />
         </BoxContainer>
@@ -615,3 +447,170 @@ export default function GoodsProductContainer({ token }) {
     </>
   );
 }
+
+const GoodsText = styled.input`
+  border: 0;
+  border-bottom: 1px solid black;
+  outline: none;
+  width: 100px;
+  margin-bottom: 5px;
+  text-align: center;
+  background-color: transparent;
+`;
+
+const GoodsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const GoodsWeddingText = styled.input`
+  outline: none;
+  border: none;
+  background-color: #ebebeb;
+  width: 80px;
+  border-radius: 10px 0 0 10px;
+  height: 33px;
+  text-align: center;
+`;
+
+const GoodsWeddingbank = styled.input`
+  outline: none;
+  border: none;
+  background-color: #ebebeb;
+  width: 80px;
+  height: 33px;
+  text-align: center;
+  margin-left: 5px;
+`;
+
+const GoodsWeddingaccountnumber = styled.input`
+  outline: none;
+  border: none;
+  background-color: #ebebeb;
+  width: 200px;
+  border-radius: 0 10px 10px 0;
+  margin-left: 5px;
+  height: 33px;
+  text-align: center;
+`;
+
+const GoodsWeddingadress = styled.input`
+  outline: none;
+  border: none;
+  background-color: #ebebeb;
+  width: 270px;
+  border-radius: 10px;
+  margin-left: 5px;
+  height: 33px;
+  text-align: center;
+`;
+
+const GoodsSharelink = styled.span`
+  font-size: 20px;
+  font-weight: 400px;
+  font-size: 14px;
+  line-height: 25px;
+`;
+
+const GoodsShareLinkdiv = styled.div`
+  width: 100%;
+  text-align: right;
+  margin-right: 8%;
+  height: 3rem;
+`;
+
+const GoodsWeddingdiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 100%;
+  margin-right: 8%;
+`;
+
+const BoxWapper = styled.div`
+  display: flex;
+
+  width: 100%;
+`;
+
+const BoxContainer = styled.div`
+  display: flex;
+  width: 100%;
+`;
+
+const BoxItem = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:nth-child(odd) {
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  &:nth-child(even) {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 150px;
+  }
+`;
+
+const ItemDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
+const StyledTrack = styled.div`
+  width: 5px;
+  height: 100px;
+  background-color: #ebebeb;
+  border-radius: 15px;
+  transform: rotate(180deg);
+  margin-right: 8px;
+`;
+
+const StyledRange = styled.div`
+  display: flex;
+  width: 100%;
+  height: ${({ width }) => `${width}%`};
+  background: linear-gradient(to right, blue, blue);
+`;
+
+const ValueItem = styled.div`
+  width: 130px;
+  display: inline-block;
+  font-style: normal;
+  font-weight: 400px;
+  font-size: 14px;
+  line-height: 17px;
+`;
+
+const BoxSlider = styled.div`
+  width: 100%;
+  height: 50%;
+  overflow-x: hidden;
+  margin-bottom: 10%;
+`;
+
+const CenterTextdiv = styled.div`
+  margin-bottom: 1%;
+  position: relative;
+  width: 450px;
+`;
+
+const AddMarriedButton = styled.button`
+  border: none;
+  background: none;
+`;
+
+const AddMarriedButtonDiv = styled.div`
+  position: absolute;
+  top: 0;
+  margin-top: 43px;
+  right: 0;
+`;

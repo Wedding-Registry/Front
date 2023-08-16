@@ -10,12 +10,12 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
+const queryClient = new QueryClient();
+
 //service worker 실행파일
 if (process.env.NODE_ENV === "development") {
   worker.start();
 }
-
-const queryClient = new QueryClient();
 
 function DebugObserver() {
   const snapshot = useRecoilSnapshot();

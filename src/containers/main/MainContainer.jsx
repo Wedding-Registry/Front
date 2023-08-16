@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 
 import CircleRadius from "@/assets/icons/radius.png";
 import FirstAnimation from "@/assets/icons/first.png";
-import SecoundAnimation from "@/assets/icons/secound.png";
-import ThreeAnimation from "@/assets/icons/three.png";
+
 import BorderIdModal from "../../components/borderid/BorderIdModal";
 import useTokenDecode from "../../hooks/useTokenDecode";
+
+import { addBorderId } from "../../services/goods/GoodsProductService";
+import {
+  getAccessToken,
+  setAccessToken,
+} from "../../repository/AuthTokenRepository";
 
 const Base = styled.div`
   display: flex;
   justify-content: center;
-  height: 92.8vh;
+  height: 91vh;
   align-items: center;
   margin-left: 10%;
   position: relative;
@@ -84,45 +89,6 @@ const ImgDiv = styled.div`
   left: 70%;
 `;
 
-const AniMove = keyframes`
-  0%{
-    background-image: url(${FirstAnimation});
-    background-size: cover;
-    width: 400px;
-    height: 400px;
-    display: flex;
-    justify-content: center;
-
-  }
-  25%{
-    background-image: url(${SecoundAnimation});
-    background-size: cover;
-    width: 400px;
-    height: 400px;
-    display: flex;
-    justify-content: center;
-
-  }
-  50%{
-    background-image: url(${ThreeAnimation});
-    background-size: cover;
-    width: 400px;
-    height: 400px;
-    display: flex;
-    justify-content: center;
-
-  }
-  100%{
-    background-image: url(${FirstAnimation});
-    background-size: cover;
-    width: 400px;
-    height: 400px;
-    display: flex;
-    justify-content: center;
-
-  }
-`;
-
 const MainImage = styled.div`
   filter: drop-shadow(0px 20px 5px rgba(85, 91, 102, 0.3));
   background: url(${FirstAnimation});
@@ -130,17 +96,36 @@ const MainImage = styled.div`
   height: 400px;
   background-size: cover;
   background-position: center;
-  &:hover {
-    animation: ${AniMove} 1s steps(4, end) infinite;
-  }
 `;
 
-export default function MainContainer({ token }) {
+export default function MainContainer({ guestToken }) {
   const [bordorIdModal, setBorderIdModal] = useState(false);
   const [bodersIdState, setBodersIdState] = useState(false);
-
+  const token = getAccessToken();
   const borderId = useTokenDecode(token);
-  useEffect(() => {
+  const setBorderStateFalse = () => setBorderIdModal(false);
+
+  async function addBorderIdrender() {
+    const data = await addBorderId();
+    if (data.data.accessToken && data.data.refreshToken) {
+      setAccessToken(data.data.accessToken, data.data.refreshToken);
+      setBodersIdState(true);
+      setBorderStateFalse();
+      return;
+    }
+    if (data.data.accessToken === undefined) {
+      alert("로그인 정보가 없습니다.");
+      setBodersIdState(false);
+      setBorderStateFalse();
+      return;
+    }
+  }
+
+  const borderModalState = (borderId, token, guestToken) => {
+    if (guestToken !== null) {
+      setBorderIdModal(false);
+      return;
+    }
     //로그인이 되어있을떄
     if (token !== null) {
       //bodersid가 없을때
@@ -154,7 +139,13 @@ export default function MainContainer({ token }) {
       }
     }
     setBorderIdModal(false);
-  }, [borderId, token]);
+  };
+  const borderAddButton = () => {
+    addBorderIdrender();
+  };
+  useEffect(() => {
+    borderModalState(borderId, token, guestToken);
+  }, [borderId, token, guestToken]);
 
   return (
     <>
@@ -190,11 +181,7 @@ export default function MainContainer({ token }) {
         </Weddingdiv>
       </Base>
       {bordorIdModal ? (
-        <BorderIdModal
-          setBorderIdModal={setBorderIdModal}
-          token={token}
-          setBodersIdState={setBodersIdState}
-        />
+        <BorderIdModal borderAddButton={borderAddButton} />
       ) : (
         <></>
       )}

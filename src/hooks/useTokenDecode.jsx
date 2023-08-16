@@ -9,9 +9,7 @@ export default function useTokenDecode(token) {
 
   useEffect(() => {
     if (token != null) {
-      const [hader, payload] = token.split(".");
-      console.log(hader);
-
+      const payload = token.split(".").slice(1, 2).join("");
       const { boardsId, userName } = JSON.parse(Base64.decode(payload));
       setDecodeToken({
         boardsId: boardsId,

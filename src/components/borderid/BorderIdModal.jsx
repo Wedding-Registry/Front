@@ -2,9 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import logo from "@/assets/icons/logo.png";
 
-import { addBorderIdApi } from "../../apis/Api";
-import { setAccessToken } from "../../tokens/token";
-
 const Cotainer = styled.div`
   width: 100%;
   height: 100%;
@@ -53,31 +50,7 @@ const WeddingText = styled.p`
   font-size: 40px;
 `;
 
-export default function BorderIdModal({
-  setBorderIdModal,
-  token,
-  setBodersIdState,
-}) {
-  async function addBorderIdrender(token) {
-    const data = await addBorderIdApi(token);
-    if (data.data.accessToken && data.data.accessToken) {
-      setAccessToken(data.data.refreshToken, data.data.accessToken);
-      setBodersIdState(true);
-      setBorderIdModal(false);
-      return;
-    }
-    if (data.data.accessToken === undefined) {
-      alert("로그인 정보가 없습니다.");
-      setBodersIdState(false);
-      setBorderIdModal(false);
-      return;
-    }
-  }
-
-  const borderAddButton = () => {
-    addBorderIdrender(token);
-  };
-
+export default function BorderIdModal({ borderAddButton }) {
   return (
     <Cotainer>
       <TitleDiv>

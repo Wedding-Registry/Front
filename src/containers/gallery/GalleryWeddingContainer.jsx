@@ -7,9 +7,9 @@ import { galleryWeddingImageState } from "../../state/galleryWeddingImageState";
 import { useRecoilState } from "recoil";
 import GalleryWeddingBox from "../../components/GalleryWeddingBox/GalleryWeddingBox";
 import {
-  deleteGalleryWeddingImage,
   getGalleryWeddingImage,
-} from "../../apis/Api";
+  deleteGalleryWeddingImage,
+} from "../../services/weddingGallery/WeddingImgService";
 
 // Import Swiper styles
 
@@ -20,11 +20,7 @@ import "swiper/css/navigation";
 import "../style/styles.css";
 import { AiOutlineClose } from "react-icons/ai";
 
-const Base = styled.div`
-  height: 92vh;
-`;
-
-export default function GalleryWeddingContainer({ token }) {
+export default function GalleryWeddingContainer() {
   const [imgData, setImgData] = useRecoilState(galleryWeddingImageState);
   const [didMount, setDidMount] = useState(false);
   const arrayLength = imgData ? imgData.length : 0;
@@ -50,15 +46,14 @@ export default function GalleryWeddingContainer({ token }) {
     return element;
   };
 
-  async function getImageDataRender(token) {
-    console.log(token);
-    const data = await getGalleryWeddingImage(token);
-    setImgData(data.data);
+  async function getImageDataRender() {
+    const weddingImgData = await getGalleryWeddingImage();
+    setImgData(weddingImgData.data);
   }
 
-  const deleteImageOnClick = async (id, token) => {
-    await deleteGalleryWeddingImage(id, token);
-    getImageDataRender(token);
+  const deleteImageOnClick = async (id) => {
+    await deleteGalleryWeddingImage(id);
+    setImgData((prev) => prev.filter((img) => img.galleryImgId !== id));
   };
 
   useEffect(() => {
@@ -67,7 +62,7 @@ export default function GalleryWeddingContainer({ token }) {
 
   useEffect(() => {
     if (didMount) {
-      getImageDataRender(token);
+      getImageDataRender();
     }
   }, [didMount]);
   return (
@@ -102,18 +97,20 @@ export default function GalleryWeddingContainer({ token }) {
                 className="swiper-image"
                 url={v.galleryImgUrl}
               />
-              <AiOutlineClose
-                key={v.galleryImgId}
-                style={{
-                  zIndex: "1",
-                  position: "absolute",
-                  top: "200",
-                  right: "80",
-                }}
-                onClick={() => {
-                  deleteImageOnClick(v.galleryImgId, token);
-                }}
-              />
+              <div style={{ backgroundColor: "red" }}>
+                <AiOutlineClose
+                  key={v.galleryImgId}
+                  style={{
+                    zIndex: "1",
+                    position: "absolute",
+                    top: "200",
+                    right: "80",
+                  }}
+                  onClick={() => {
+                    deleteImageOnClick(v.galleryImgId);
+                  }}
+                />
+              </div>
             </SwiperSlide>
           ))}
         {GallyElementList()}
@@ -121,3 +118,7 @@ export default function GalleryWeddingContainer({ token }) {
     </Base>
   );
 }
+
+const Base = styled.div`
+  height: 90vh;
+`;

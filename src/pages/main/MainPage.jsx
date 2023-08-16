@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import MainContainer from "../../containers/main/MainContainer";
-import { getAccessToken } from "../../tokens/token";
 
 export default function MainPage() {
-  const [tokenData, setTokenData] = useState();
-  const token = getAccessToken();
+  const [getTokenData, setGuestTokenData] = useState();
+  const guestToken = localStorage.getItem("Guest-Info");
 
   useEffect(() => {
-    setTokenData(token);
-  }, [token]);
-  return <MainContainer token={tokenData} />;
+    setGuestTokenData(guestToken);
+  }, [getTokenData]);
+
+  return <MainContainer guestToken={getTokenData} />;
 }
