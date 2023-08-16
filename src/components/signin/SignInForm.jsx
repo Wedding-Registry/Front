@@ -4,8 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { authTokenAtom } from "@/state/authState.js";
 import axios from "axios";
-// import { authStateAtom } from "../../state/authState";
-// import { prevUrlPathState } from "../../state/prevUrlPathState";
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -18,7 +16,6 @@ const StyledWrapper = styled.div`
   align-items: center;
   background: rgba(234, 234, 234, 0.4);
   .left {
-    //width: 50%;
     margin-top: 0.5rem;
     justify-self: flex-start;
     margin-bottom: 2rem;
@@ -30,7 +27,6 @@ const StyledInput = styled.input`
   min-height: 44px;
   margin-bottom: 0.5rem;
   border: 1px solid #818387;
-  //width: 30%;
   border-radius: 10px;
   padding-left: 0.8rem;
 `;
@@ -38,7 +34,6 @@ const StyledInput = styled.input`
 const StyledDiv = styled.div`
   display: flex;
   min-width: 344px;
-  //width: 38%;
 
   justify-content: center;
   align-items: center;
@@ -68,7 +63,6 @@ const StyledButton = styled.button`
 const StyledSpan = styled.span``;
 
 function SignInForm() {
-  // const authToken = useRecoilValue(authTokenAtom);
   const setAuthToken = useSetRecoilState(authTokenAtom);
   const navigate = useNavigate();
   const initInputValue = {
@@ -77,14 +71,12 @@ function SignInForm() {
   };
 
   const [inputValue, setInputValue] = useState(initInputValue);
-  const { email, password } = inputValue;
 
   const onChangeInputValue = (e) => {
     setInputValue({
       ...inputValue,
       [e.target.name]: e.target.value.toString().trim(),
     });
-    console.log(email, password);
   };
 
   const handleLogin = async () => {
@@ -141,10 +133,6 @@ function SignInForm() {
         <StyledSpan>비밀번호 찾기</StyledSpan>
       </StyledDiv>
       <StyledButton onClick={onClickButton}>로그인 하기</StyledButton>
-      <div className="left">
-        <input type={"checkbox"} id="remember-signin" />
-        <label htmlFor="remember-signin">로그인 상태 기억하기</label>
-      </div>
     </StyledWrapper>
   );
 }

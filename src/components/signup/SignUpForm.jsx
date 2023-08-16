@@ -112,7 +112,7 @@ function SignUpForm() {
   const navigate = useNavigate();
   const setAuthState = useSetRecoilState(authStateAtom);
   const urlPathState = useRecoilValue(prevUrlPathState);
-  // const { provider, id, email } = useRecoilValue(authStateAtom);
+
   return (
     <StyledWrapper>
       <Formik
@@ -182,11 +182,15 @@ function SignUpForm() {
             {touched.email && errors.email && (
               <div className="error">{errors.email}</div>
             )}
-            <Field name="password" placeholder="비밀번호" />
+            <Field name="password" placeholder="비밀번호" type="password" />
             {touched.password && errors.password && (
               <div className="error">{errors.password}</div>
             )}
-            <Field name="passwordCheck" placeholder="비밀번호 확인" />
+            <Field
+              name="passwordCheck"
+              placeholder="비밀번호 확인"
+              type="password"
+            />
             {touched.passwordCheck && errors.passwordCheck && (
               <div className="error">{errors.passwordCheck}</div>
             )}

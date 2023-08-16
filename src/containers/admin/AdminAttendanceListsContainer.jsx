@@ -54,29 +54,32 @@ function AdminAttendanceListsContainer() {
     no: {},
     unknown: {},
   });
+  const token = localStorage.getItem("accessToken") || "needSignIn";
 
-  const tempToken = import.meta.env.VITE_TEMPTOKEN;
+  // const tempToken = import.meta.env.VITE_TEMPTOKEN;
   const fetchAttendanceData = async () => {
-    const { data } = await axios.get(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/attendance/detail",
-      {
-        headers: {
-          Authorization: "Bearer " + tempToken,
-        },
-      }
-    );
+    try {
+      const { data } = await axios.get(
+        "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/attendance/detail",
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
 
-    setAttendanceData({
-      ...attendanceData,
-      ["yes"]: data.data.yes,
-      ["no"]: data.data.no,
-      ["unknown"]: data.data.unknown,
-    });
-    // attendanceData.yes = _.cloneDeep(data.data.yes);
-    // attendanceData.no = _.cloneDeep(data.data.no);
-    // attendanceData.unknown = _.cloneDeep(data.data.unknown);
-
-    return console.log("attendance", attendanceData);
+      // attendanceData.yes = _.cloneDeep(data.data.yes);
+      // attendanceData.no = _.cloneDeep(data.data.no);
+      // attendanceData.unknown = _.cloneDeep(data.data.unknown);
+      setAttendanceData({
+        ...attendanceData,
+        ["yes"]: data.data.yes,
+        ["no"]: data.data.no,
+        ["unknown"]: data.data.unknown,
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   let attendanceTable = {
