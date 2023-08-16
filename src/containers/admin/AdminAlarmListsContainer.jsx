@@ -32,17 +32,18 @@ const StyledDiv = styled.div`
   }
 `;
 
-// FIXME - 결혼식 참석 여부에 따라 글자색 변경
 // 참석 = 파란색 / 불참석 = 빨간색
 
 function AdminAlarmListsContainer() {
-  const tempToken = import.meta.env.VITE_TEMPTOKEN;
+  // const tempToken = import.meta.env.VITE_TEMPTOKEN;
+  const token = localStorage.getItem("accessToken") || "needSignIn";
+
   const fetchAlarmData = async () => {
     const { data } = await axios.get(
       "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/alarm",
       {
         headers: {
-          Authorization: "Bearer " + tempToken,
+          Authorization: "Bearer " + token,
         },
       }
     );

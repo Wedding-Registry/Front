@@ -1,6 +1,8 @@
-import React from "react";
-import { ReactSortable } from "react-sortablejs";
+import React, { useState } from "react";
+// import { ReactSortable } from "react-sortablejs";
 import styled from "styled-components";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 const StyledDiv = styled.div`
   display: flex;
@@ -29,70 +31,111 @@ const StyledDiv = styled.div`
   }
 `;
 
-function AdminLists({
-  attendance,
-  setAttendance,
-  absence,
-  setAbsence,
-  undecided,
-  setUndecided,
-}) {
+function AdminLists() {
+  const [listsData, setListsData] = useState({
+    yes: {},
+    no: {},
+    unknown: {},
+  });
+
+  // const tempToken = import.meta.env.VITE_TEMPTOKEN;
+
+  const token = localStorage.getItem("accessToken") || "needSignIn";
+  const fetchAttendanceDetailData = async () => {
+    const { data } = await axios.get(
+      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/attendance/detail",
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+
+    setListsData(data.data);
+
+    // setAbsence([...data.data.no.guestList]);
+    // setUndecided([...data.data.unknown.guestList]);
+    // setAttendance([...data.data.yes.guestList]);
+    // setAbsence([...absence, ...data.data.no.guestList]);
+    // setUndecided([...undecided, ...data.data.unknown.guestList]);
+    // setAttendance([...attendance, ...data.data.yes.guestList]);
+    // console.log("yes::", attendance, "no::", absence, "unknown::", undecided);
+    return data.data;
+  };
+
+  const { isLoading, error } = useQuery({
+    queryKey: ["attendanceDetailData"],
+    queryFn: fetchAttendanceDetailData,
+  });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  // const putAttendanceData = async () => {
+  //   // FIXME PUT API
+  //   // const lists = [...attendance, ...absence, ...undecided];
+  //   console.log("lists::: ", listsData);
+  //
+  //   const { data } = await axios.put(
+  //     "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/attendance",
+  //     {
+  //       body: [listsData],
+  //     },
+  //     {
+  //       headers: {
+  //         Authorization: "Bearer " + tempToken,
+  //       },
+  //     }
+  //   );
+  //   return console.log("put data", data);
+  // };
+
+  // const handleSort = (items, listName) => {
+  //   console.log("handlesort,", items, "list Name::: ", listName);
+  //   // console.log(listsData);
+  //   setListsData((prevListsData) => ({
+  //     ...prevListsData,
+  //     [listName]: items.map((item) => item.textContent),
+  //   }));
+  // };
+
   return (
     <StyledDiv>
       <div className="item">
         <h4>참석</h4>
-        <ReactSortable
-          list={attendance}
-          setList={setAttendance}
-          group="shared"
-          animation={200}
-          delayOnTouchStart={true}
-          delay={2}
-          ghostClass="sortable-ghost"
-        >
-          {attendance.length === 0 ? (
-            <span></span>
-          ) : (
-            attendance.map((item) => <p key={item.userId}>{item.name}</p>)
-          )}
-        </ReactSortable>
+        {/*{fetchAttendanceDetailData.data.map((item) => (*/}
+        {/*  <p key={item.userId}>*/}
+        {/*    {item.userId} / = {item.name}*/}
+        {/*  </p>*/}
+        {/*))}*/}
+        <div>
+          {listsData.yes.guestList?.map((item) => (
+            <p key={item.userId}>{item.name}</p>
+          ))}
+        </div>
       </div>
       <div className="item">
         <h4>불참</h4>
-        <ReactSortable
-          list={absence}
-          setList={setAbsence}
-          group="shared"
-          animation={200}
-          delayOnTouchStart={true}
-          delay={2}
-          ghostClass="sortable-ghost"
-        >
-          {absence.length === 0 ? (
-            <span></span>
-          ) : (
-            absence.map((item) => <p key={item.userId}>{item.name}</p>)
-          )}
-        </ReactSortable>
+        <div>
+          {listsData.no.guestList?.map((item) => (
+            <p key={item.userId}>{item.name}</p>
+          ))}
+        </div>
       </div>
       <div className="item">
         <h4>미정</h4>
-        <ReactSortable
-          list={undecided}
-          setList={setUndecided}
-          group="shared"
-          animation={200}
-          delayOnTouchStart={true}
-          delay={2}
-          ghostClass="sortable-ghost"
-        >
-          {undecided.length === 0 ? (
-            <span></span>
-          ) : (
-            undecided.map((item) => <p key={item.userId}>{item.name}</p>)
-          )}
-        </ReactSortable>
+        <div>
+          {listsData.unknown.guestList?.map((item) => (
+            <p key={item.userId}>{item.name}</p>
+          ))}
+        </div>
       </div>
+      {/*<button onClick={putAttendanceData}>저장하기</button>*/}
     </StyledDiv>
   );
 }
