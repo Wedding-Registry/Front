@@ -3,31 +3,13 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import kakaotalk from "@/assets/icons/kakaotalk.png";
 import sharelink from "@/assets/icons/sharelink.png";
-import { getGoodsUrlUUID } from "../apis/Api";
+import { getGoodsUrlUUID } from "../services/uuid/UrlUuidService";
 
-const Shareboxdiv = styled.div`
-  background-color: #ebebeb;
-  width: 300px;
-  display: flex;
-  justify-content: center;
-  border-radius: 15px;
-  font-size: 14px;
-  float: right;
-  height: 3rem;
-  align-items: center;
-`;
-
-const Shareboxp = styled.p`
-  display: flex;
-  text-align: center;
-`;
-
-export default function ShareBox({ token, setSharebox }) {
+export default function ShareBox({ setSharebox }) {
   const [uuid, setUUID] = useState([]);
 
-  async function getGoodsUrlUuidRender(token) {
-    const UUID = await getGoodsUrlUUID(token);
-    console.log(UUID);
+  async function getGoodsUrlUuidRender() {
+    const UUID = await getGoodsUrlUUID();
     setUUID(UUID.data);
   }
 
@@ -40,10 +22,10 @@ export default function ShareBox({ token, setSharebox }) {
     return () => document.body.removeChild(script);
   }, []);
   useEffect(() => {
-    getGoodsUrlUuidRender(token);
+    getGoodsUrlUuidRender();
   }, []);
   const shareKaKao = () => {
-    getGoodsUrlUuidRender(token);
+    getGoodsUrlUuidRender();
     //kakao sdk script 부른 후 window.kakao로 접근
     if (window.Kakao) {
       const kakao = window.Kakao;
@@ -109,3 +91,20 @@ export default function ShareBox({ token, setSharebox }) {
     </Shareboxdiv>
   );
 }
+
+const Shareboxdiv = styled.div`
+  background-color: #ebebeb;
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  border-radius: 15px;
+  font-size: 14px;
+  float: right;
+  height: 3rem;
+  align-items: center;
+`;
+
+const Shareboxp = styled.p`
+  display: flex;
+  text-align: center;
+`;
