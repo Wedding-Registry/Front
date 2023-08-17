@@ -14,7 +14,7 @@ import {
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { CiMoneyBill } from "react-icons/ci";
 
-import { getGoodsUrlUUID } from "../../apis/Api";
+import { getGoodsUrlUUID } from "../../services/uuid/UrlUuidService";
 import useTokenDecode from "../../hooks/useTokenDecode";
 import { removeAccessToken } from "../../repository/AuthTokenRepository";
 import { getAlarm } from "../../services/navbar/NavbarService";
@@ -163,7 +163,7 @@ function UUidIsTrueState({ uuid1, uuid2, setNavbar }) {
 }
 
 export default function Navbar({ setNavbar, uuid1, uuid2, token }) {
-  const [_, nickName] = useTokenDecode(token);
+  const [_, nickName] = useTokenDecode();
   const [uuid, setUUID] = useState([]);
   const [navbarNotification, setNavbarNotification] = useState([]);
 
@@ -174,8 +174,8 @@ export default function Navbar({ setNavbar, uuid1, uuid2, token }) {
     setNavbarNotification(navbarData.data);
   }
 
-  async function getGoodsUrlUuidRender(token) {
-    const UUID = await getGoodsUrlUUID(token);
+  async function getGoodsUrlUuidRender() {
+    const UUID = await getGoodsUrlUUID();
     setUUID(UUID.data);
   }
   console.log(_);
@@ -208,7 +208,7 @@ export default function Navbar({ setNavbar, uuid1, uuid2, token }) {
   };
 
   useEffect(() => {
-    getGoodsUrlUuidRender(token);
+    getGoodsUrlUuidRender();
   }, []);
   useEffect(() => {
     if (token) getNavibarNotificationRender();

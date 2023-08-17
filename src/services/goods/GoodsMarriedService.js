@@ -38,9 +38,6 @@ async function addWifeName(name) {
 
 //신부 계좌 등록
 async function addWifeAccount(account, bank) {
-  console.log("신부 계좌");
-  console.log(account);
-  console.log(bank);
   try {
     const response = await HttpClient.post(`marriage/wife/account`, {
       account: account,
