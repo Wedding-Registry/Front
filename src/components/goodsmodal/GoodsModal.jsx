@@ -38,7 +38,7 @@ function CreateGoodsState({
   };
   return (
     <>
-      {goodsData.length !== 0 && goodsData ? (
+      {goodsData?.length !== 0 && goodsData ? (
         <div id={goodsData.usersGoodsId} key={goodsData.usersGoodsId}>
           <GoodsImage url={goodsData.usersGoodsImgUrl} />
           <div>
@@ -65,8 +65,8 @@ function CreateGoodsState({
         </div>
       ) : (
         <>
-          {goodsData.length !== 0 && goodsData ? <></> : <Logo src={logo} />}
-          <Text onChange={getGoodsUrl} />
+          {goodsData?.length !== 0 && goodsData ? <></> : <Logo src={logo} />}
+          <Text onChange={getGoodsUrl} value={getGoodsUrlItem} />
           <div>
             <p>
               상품 이름 : <GoodsNameInput />
@@ -279,9 +279,12 @@ export default function GoodsModal({
 
   async function postGoodsListRender(url) {
     const goodsItems = await postGoodsProductApi(url);
+    if (goodsItems.status === 400) {
+      setGetGoodsUrlItem("");
+      alert(goodsItems.message);
+    }
     setGoodsData(goodsItems.data);
   }
-
   return (
     <Base>
       <Container>
