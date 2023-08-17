@@ -323,7 +323,7 @@ export default function GoodsModal({
 }
 
 const Base = styled.div`
-  background: rgba(228, 230, 232, 0.7);
+  background: rgb(228, 230, 232);
   box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 50px;
   width: 643px;
