@@ -34,7 +34,6 @@ async function postGoodsProductApi(url) {
 
 //상품 삭제
 async function deleteGoods(userGoodsId) {
-  console.log(userGoodsId);
   try {
     const response = await HttpClient.delete(
       `usersgoods?usersGoodsId=${userGoodsId}`
