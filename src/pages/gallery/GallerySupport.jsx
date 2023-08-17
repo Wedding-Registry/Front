@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import GallerySupportContainer from "../../containers/gallery/GallerySupportContainer";
-import { getAccessToken } from "../../tokens/token";
+import { getAccessToken } from "../../repository/AuthTokenRepository";
 import { useSetRecoilState } from "recoil";
 import { prevUrlPathState } from "../../state/prevUrlPathState";
 
