@@ -25,24 +25,15 @@ export default function GoodsProductContainer() {
   const [sharebox, setSharebox] = useState(false);
   const [didmount, setDidmount] = useState(false);
   const [fetchData, setFetchData] = useState([]);
-  const [wifeNameText, setWifeNameText] = useState("");
-  const [husbandNameText, setHusbandNameText] = useState("");
   const [addressText, setAddressText] = useState("");
   const [locationText, setLocationText] = useState("");
   const [dateText, setDateText] = useState("");
   const [timeText, setTimeText] = useState("");
-  const [isEditing, setIsEditing] = useState({
-    husband: false,
-    wife: false,
-    wifeBank: false,
-    husbandBank: false,
-    wifeAccount: false,
-    husbandAccount: false,
-  });
+  const [wifeNameText, setWifeNameText] = useState("");
+  const [husbandNameText, setHusbandNameText] = useState("");
   const [wifeBankText, setWifeBankText] = useState("");
   const [wifeAccountText, setWifeAccountText] = useState("");
   const [husbandBankText, setHusbandBankText] = useState("");
-
   const [husbandAccountText, setHusBandAccountText] = useState("");
   const [marriedWeddingData, setMarriedWeddingData] = useState([]);
   const [isOpen, setIsOpen] = useState({
@@ -70,30 +61,40 @@ export default function GoodsProductContainer() {
   }
   //남편 이름 등록
   async function addHusbandNameRender(name) {
-    await addHusbandName(name);
-    getWeddingHallRender();
+    const husbandNameData = await addHusbandName(name);
+    if (husbandNameData.status === 400) {
+      alert(husbandNameData.message);
+    }
+    return husbandNameData.status;
   }
   // 신부 이름 등록
   async function addWifeNameRender(name) {
-    await addWifeName(name);
-    getWeddingHallRender();
+    const wifeNameData = await addWifeName(name);
+    if (wifeNameData.status === 400) {
+      alert(wifeNameData.message);
+    }
+    return wifeNameData.status;
   }
 
   // 신부 계좌,은행 등록
   async function addWifeAccountRender(account, bank) {
-    await addWifeAccount(account, bank);
-    getWeddingHallRender();
+    const wifeAccountData = await addWifeAccount(account, bank);
+    if (wifeAccountData.status === 400) {
+      alert(wifeAccountData.message);
+    }
+    return wifeAccountData.status;
   }
   // 신랑 계좌,은행 등록
   async function addHusbandAccountRender(account, bank) {
-    await addHusbandAccount(account, bank);
-    getWeddingHallRender();
+    const husbandAccountData = await addHusbandAccount(account, bank);
+    if (husbandAccountData.status === 400) {
+      alert(husbandAccountData.message);
+    }
+    return husbandAccountData.status;
   }
   //예식장 주소 및 날짜 변경
   async function addWeddingHallLocationRender(address) {
     await updateWeddingHallLocation(address);
-
-    await getWeddingHallRender();
   }
   // 예식 시간
   async function addWeddingHallTimeRender(locationText) {
@@ -111,9 +112,6 @@ export default function GoodsProductContainer() {
   // 신부 이름 text
   const wifeTextChange = (e) => {
     const value = e.target.value;
-    if (isEditing.wife) {
-      setWifeNameText(value);
-    }
     setWifeNameText(value);
   };
   // 신랑 이름 text
@@ -152,16 +150,31 @@ export default function GoodsProductContainer() {
     setLocationText(value);
     addWeddingHallTimeRender(locationText);
   };
+
   //이름 계좌 시간 전체 등록 버튼
   const addMarriedInformationClick = async () => {
     //신랑 이름 등록
-    await addHusbandNameRender(husbandNameText);
+    const husbandData = await addHusbandNameRender(husbandNameText);
     //신부 이름 등록
-    await addWifeNameRender(wifeNameText);
+    const wifeData = await addWifeNameRender(wifeNameText);
     //신부 계좌 등록
-    await addWifeAccountRender(wifeAccountText, wifeBankText);
+    const wifeAccountData = await addWifeAccountRender(
+      wifeAccountText,
+      wifeBankText
+    );
     //신랑 계좌 등록
-    await addHusbandAccountRender(husbandAccountText, husbandBankText);
+    const husAccountData = await addHusbandAccountRender(
+      husbandAccountText,
+      husbandBankText
+    );
+    if (
+      husAccountData === 201 &&
+      wifeData === 201 &&
+      wifeAccountData === 201 &&
+      husbandData === 201
+    ) {
+      alert("부부의 정보가 저장 성공되었습니다.");
+    }
     await getWeddingHallRender();
   };
 
@@ -297,15 +310,14 @@ export default function GoodsProductContainer() {
               style={{
                 marginBottom: "20px",
               }}
-              onChange={(e) => {
-                wifeTextChange(e);
-                setIsEditing({ wife: true });
-              }}
+              name="wifeName"
+              onChange={(e) => wifeTextChange(e)}
               defaultValue={wifeNameText}
             />
             <br />
             <GoodsText
               placeholder="신랑 이름"
+              name="husbandName"
               onChange={(e) => husbandTextChange(e)}
               defaultValue={husbandNameText}
             />
@@ -342,7 +354,9 @@ export default function GoodsProductContainer() {
             >
               <GoodsWeddingText
                 placeholder="신부 이름"
-                defaultValue={wifeNameText || ""}
+                defaultValue={wifeNameText}
+                name="wifeName"
+                onChange={(e) => wifeTextChange(e)}
               />
               <GoodsWeddingbank
                 placeholder="은행"
@@ -362,6 +376,8 @@ export default function GoodsProductContainer() {
               <GoodsWeddingText
                 placeholder="신랑 이름"
                 defaultValue={husbandNameText}
+                name="husbandName"
+                onChange={(e) => husbandTextChange(e)}
               />
               <GoodsWeddingbank
                 placeholder="은행"
