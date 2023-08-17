@@ -163,7 +163,7 @@ function UUidIsTrueState({ uuid1, uuid2, setNavbar }) {
 }
 
 export default function Navbar({ setNavbar, uuid1, uuid2, token }) {
-  const [_, nickName] = useTokenDecode();
+  const [_, nickName] = useTokenDecode(token);
   const [uuid, setUUID] = useState([]);
   const [navbarNotification, setNavbarNotification] = useState([]);
 
