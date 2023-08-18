@@ -284,7 +284,7 @@ export default function GoodsProductContainer() {
     }
     setIsOpen(false);
   }
-
+  console.log(fetchData);
   return (
     <>
       <GoodsContainer>

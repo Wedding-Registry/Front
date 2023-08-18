@@ -19,15 +19,20 @@ export default function GoodsSupportModal({
       donation,
       guestToken
     );
-    const data = goodsSupportData.map((goods) =>
-      goods.usersGoodsId === donationData.data.usersGoodsId
-        ? {
-            ...goods,
-            usersGoodsTotalDonation: donationData.data.usersGoodsTotalDonation,
-          }
-        : goods
-    );
-    setGoodsSupportData(data);
+    if (donationData.status === 400) {
+      alert(donationData.message);
+    } else {
+      const data = goodsSupportData.map((goods) =>
+        goods.usersGoodsId === donationData.data?.usersGoodsId
+          ? {
+              ...goods,
+              usersGoodsTotalDonation:
+                donationData.data.usersGoodsTotalDonation,
+            }
+          : goods
+      );
+      setGoodsSupportData(data);
+    }
   }
   useEffect(() => {
     const filterGoodsData = goodsSupportData?.filter(
