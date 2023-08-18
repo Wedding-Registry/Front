@@ -103,9 +103,11 @@ export default function GoodsProductContainer() {
       const yyyymmdd = year.split("-").join("");
       const hhmm = time.split(":").join("");
       const data = await addWeddingHallTime(yyyymmdd, hhmm);
-      setDateText(data.data?.weddingDate);
-      setTimeText(data.data?.weddingTime);
-      getWeddingHallRender();
+      if (data.status === 201) {
+        setDateText(data.data?.weddingDate);
+        setTimeText(data.data?.weddingTime);
+        alert("예식장 주소가 저장 되었습니다.");
+      }
     }
     await getWeddingHallRender();
   }
@@ -182,6 +184,7 @@ export default function GoodsProductContainer() {
   const activeEnter = (e) => {
     if (e.key === "Enter") {
       addWeddingHallLocationRender(addressText);
+      alert("예식장 주소가 저장되었습니다.");
     }
   };
 
