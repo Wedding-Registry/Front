@@ -18,6 +18,8 @@ import { getGoodsUrlUUID } from "../../services/uuid/UrlUuidService";
 import useTokenDecode from "../../hooks/useTokenDecode";
 import { removeAccessToken } from "../../repository/AuthTokenRepository";
 import { getAlarm } from "../../services/navbar/NavbarService";
+import { useRecoilState } from "recoil";
+import { uuidState } from "../../state/uuidState";
 
 function NotificationItemList({ notifications }) {
   if (notifications === undefined || notifications === null) {
@@ -114,7 +116,7 @@ function TokenStateLink({ token, setNavbar }) {
           상품 리스트
           <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
         </LinkInput>
-        <LinkInput to="/admin/main" onClick={navbarClose}>
+        <LinkInput to="/admin" onClick={navbarClose}>
           <AiOutlineFileSync
             style={{ marginRight: "5px", marginLeft: "3px" }}
           />
@@ -162,13 +164,12 @@ function UUidIsTrueState({ uuid1, uuid2, setNavbar }) {
   );
 }
 
-export default function Navbar({ setNavbar, uuid1, uuid2, token }) {
+export default function Navbar({ setNavbar, token }) {
   const [_, nickName] = useTokenDecode(token);
   const [uuid, setUUID] = useState([]);
   const [navbarNotification, setNavbarNotification] = useState([]);
-
+  const [uuidStateData, setUuidStateData] = useRecoilState(uuidState);
   const navigate = useNavigate();
-
   async function getNavibarNotificationRender() {
     const navbarData = await getAlarm();
     setNavbarNotification(navbarData.data);
@@ -176,15 +177,20 @@ export default function Navbar({ setNavbar, uuid1, uuid2, token }) {
 
   async function getGoodsUrlUuidRender() {
     const UUID = await getGoodsUrlUUID();
+    setUuidStateData({
+      uuidFirst: UUID.data.uuidFirst,
+      uuidSecond: UUID.data.uuidSecond,
+    });
+
     setUUID(UUID.data);
   }
   console.log(_);
 
   function guestStateRender() {
-    const uuidState = uuid1 || uuid2;
+    const uuidState = uuidStateData.uuidFirst || uuidStateData.uuidSecond;
     if (uuidState) {
       removeAccessToken();
-      navigate(`/Guest/${uuid1}/${uuid2}`);
+      navigate(`/Guest/${uuidStateData.uuidFirst}/${uuidStateData.uuidSecond}`);
       setNavbar(false);
       alert("로그아웃");
       return;
@@ -226,9 +232,10 @@ export default function Navbar({ setNavbar, uuid1, uuid2, token }) {
       alert("다시 시도해주세요.");
     }
   };
+
   return (
     <>
-      {!uuid1 ? (
+      {uuidStateData.uuidSecond ? (
         <Base>
           <Title>ZOLABAYO</Title>
           <NickNamediv>
@@ -275,7 +282,7 @@ export default function Navbar({ setNavbar, uuid1, uuid2, token }) {
               )}
             </NickNameText>
           </NickNamediv>
-          <UUidIsTrueState uuid1={uuid1} uuid2={uuid2} setNavbar={setNavbar} />
+          <UUidIsTrueState setNavbar={setNavbar} />
           <GuestBottomItemDiv>
             <LogButton onClick={removeAcctokenRender}>Log out</LogButton>
           </GuestBottomItemDiv>

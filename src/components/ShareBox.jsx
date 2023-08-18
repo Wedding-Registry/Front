@@ -4,12 +4,19 @@ import styled from "styled-components";
 import kakaotalk from "@/assets/icons/kakaotalk.png";
 import sharelink from "@/assets/icons/sharelink.png";
 import { getGoodsUrlUUID } from "../services/uuid/UrlUuidService";
+import { uuidState } from "../state/uuidState";
+import { useSetRecoilState } from "recoil";
 
 export default function ShareBox({ setSharebox }) {
   const [uuid, setUUID] = useState([]);
+  const setUuidState = useSetRecoilState(uuidState);
 
   async function getGoodsUrlUuidRender() {
     const UUID = await getGoodsUrlUUID();
+    setUuidState({
+      uuidFirst: UUID.data.uuidFirst,
+      uuidSecond: UUID.data.uuidSecond,
+    });
     setUUID(UUID.data);
   }
 
