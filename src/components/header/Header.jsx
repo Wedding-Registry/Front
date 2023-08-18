@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import logo from "@/assets/icons/logo.png";
@@ -7,6 +7,77 @@ import Menu from "@/assets/icons/menu.png";
 import Navbar from "../navbar/Navbar";
 import { Link, useLocation } from "react-router-dom";
 import { getAccessToken } from "../../repository/AuthTokenRepository";
+import { useRecoilValue } from "recoil";
+import { uuidState } from "../../state/uuidState";
+
+function TokenStatusLink({ token, setNavbar, navbar }) {
+  if (token === null || token === undefined || token === false) {
+    return (
+      <RightLogo>
+        <Link to="/signin" onClick={() => setNavbar(false)}>
+          <PersonLogo src={Person} style={{ marginRight: "1vw" }} />
+        </Link>
+        <HamberLogo
+          src={Menu}
+          onClick={() => {
+            setNavbar(!navbar);
+          }}
+        />
+      </RightLogo>
+    );
+  } else {
+    return (
+      <RightLogo>
+        <Link onClick={() => setNavbar(false)}>
+          <PersonLogo src={Person} style={{ marginRight: "1vw" }} />
+        </Link>
+        <HamberLogo
+          src={Menu}
+          onClick={() => {
+            setNavbar(!navbar);
+          }}
+        />
+      </RightLogo>
+    );
+  }
+}
+
+export default function Header({ border }) {
+  const [navbar, setNavbar] = useState(false);
+  const uuidStateValue = useRecoilValue(uuidState);
+  const path = useLocation();
+  const uuid1 = path.pathname.trim().split("/")[2];
+  const token = getAccessToken();
+
+  return (
+    <>
+      <HeaderDiv isBoolean={border}>
+        <HeaderLogoDiv>
+          <div>
+            {uuidStateValue.uuidFirst === uuid1 ? (
+              <Link
+                to={`/Guest/${uuidStateValue.uuidFirst}/${uuidStateValue.uuidSecond}`}
+                onClick={() => setNavbar(false)}
+              >
+                <Logo src={logo} />
+              </Link>
+            ) : (
+              <Link to="/" onClick={() => setNavbar(false)}>
+                <Logo src={logo} />
+              </Link>
+            )}
+          </div>
+          <TokenStatusLink
+            setNavbar={setNavbar}
+            navbar={navbar}
+            token={token}
+          />
+        </HeaderLogoDiv>
+      </HeaderDiv>
+      {navbar ? <Navbar setNavbar={setNavbar} token={token} /> : null}
+    </>
+  );
+}
 
 const HeaderDiv = styled.header`
   height: 9vh;
@@ -43,91 +114,3 @@ const RightLogo = styled.div`
   right: 0;
   margin-right: 5rem;
 `;
-
-function TokenStatusLink({ token, setNavbar, navbar }) {
-  if (token === null || token === undefined || token === false) {
-    return (
-      <RightLogo>
-        <Link to="/signin" onClick={() => setNavbar(false)}>
-          <PersonLogo src={Person} style={{ marginRight: "1vw" }} />
-        </Link>
-        <HamberLogo
-          src={Menu}
-          onClick={() => {
-            setNavbar(!navbar);
-          }}
-        />
-      </RightLogo>
-    );
-  } else {
-    return (
-      <RightLogo>
-        <Link onClick={() => setNavbar(false)}>
-          <PersonLogo src={Person} style={{ marginRight: "1vw" }} />
-        </Link>
-        <HamberLogo
-          src={Menu}
-          onClick={() => {
-            setNavbar(!navbar);
-          }}
-        />
-      </RightLogo>
-    );
-  }
-}
-
-export default function Header({ border }) {
-  const [navbar, setNavbar] = useState(false);
-  const [urlPathUUid1, setUrlPathUUid1] = useState("");
-  const [urlPathUUid2, setUrlPathUUid2] = useState("");
-
-  const path = useLocation();
-  const [_, url, uuid1, uuid2] = path.pathname.trim().split("/");
-  const token = getAccessToken();
-
-  console.log(_);
-  console.log(url);
-
-  useEffect(() => {
-    setUrlPathUUid1(uuid1);
-  }, []);
-
-  useEffect(() => {
-    setUrlPathUUid2(uuid2);
-  }, []);
-  return (
-    <>
-      <HeaderDiv isBoolean={border}>
-        <HeaderLogoDiv>
-          <div>
-            {uuid1 || uuid2 ? (
-              <Link
-                to={`/Guest/${uuid1}/${uuid2}`}
-                onClick={() => setNavbar(false)}
-              >
-                <Logo src={logo} />
-              </Link>
-            ) : (
-              <Link to="/" onClick={() => setNavbar(false)}>
-                <Logo src={logo} />
-              </Link>
-            )}
-          </div>
-          <TokenStatusLink
-            setNavbar={setNavbar}
-            navbar={navbar}
-            token={token}
-          />
-        </HeaderLogoDiv>
-      </HeaderDiv>
-      {navbar ? (
-        <Navbar
-          setNavbar={setNavbar}
-          uuid1={urlPathUUid1}
-          uuid2={urlPathUUid2}
-          token={token}
-        />
-      ) : null}
-    </>
-  );
-}
