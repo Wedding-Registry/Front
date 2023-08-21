@@ -33,7 +33,7 @@ export default function GallerySupportContainer() {
   const location = useLocation();
 
   const arrayLength = imgData ? imgData.length : 0;
-  const FIX_SIZE = 6;
+  const FIX_SIZE = 8;
   const [_, GallerySupport, uuid1, uuid2] = location.pathname.trim().split("/");
   console.log(_, GallerySupport);
   const GallyElementList = () => {

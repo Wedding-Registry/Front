@@ -4,10 +4,12 @@ import styled from "styled-components";
 import Plus from "@/assets/icons/plus.png";
 import { addGalleryWeddingImage } from "../../services/weddingGallery/WeddingImgService";
 import { galleryWeddingImageState } from "../../state/galleryWeddingImageState";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { uuidState } from "../../state/uuidState";
 
 export default function GalleryWeddingBox({ url }) {
   const setImgData = useSetRecoilState(galleryWeddingImageState);
+  const pathUrlData = useRecoilValue(uuidState);
   async function addGalleryWeddingImageRender(dataImage) {
     const postImgData = await addGalleryWeddingImage(dataImage);
     setImgData((prev) => [...prev, postImgData.data]);
@@ -35,14 +37,18 @@ export default function GalleryWeddingBox({ url }) {
     <>
       <Base>
         <Imageinput>
-          <input
-            type="file"
-            name="thumbnail"
-            accept="image/jpg, image/png, image/jpeg"
-            id="ex_file"
-            ref={imageInput}
-            onChange={onUploadImage}
-          />
+          {!pathUrlData.uuidFirst ? (
+            <input
+              type="file"
+              name="thumbnail"
+              accept="image/jpg, image/png, image/jpeg"
+              id="ex_file"
+              ref={imageInput}
+              onChange={onUploadImage}
+            />
+          ) : (
+            <></>
+          )}
         </Imageinput>
         {url ? (
           <Image src={url} />
