@@ -18,7 +18,7 @@ import { getGoodsUrlUUID } from "../../services/uuid/UrlUuidService";
 import useTokenDecode from "../../hooks/useTokenDecode";
 import { removeAccessToken } from "../../repository/AuthTokenRepository";
 import { getAlarm } from "../../services/navbar/NavbarService";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { uuidState } from "../../state/uuidState";
 
 function NotificationItemList({ notifications }) {
@@ -64,7 +64,7 @@ function NotificationItem({ data }) {
 }
 //로그인상태에따른 navbar click 행위 핸들링
 
-function TokenStateLink({ token, setNavbar }) {
+function MarriedNavbar({ token, setNavbar }) {
   const tokenState = token === null || token === undefined;
   const navbarClose = () => {
     if (tokenState) {
@@ -138,12 +138,14 @@ function TokenStateLink({ token, setNavbar }) {
   }
 }
 
-function UUidIsTrueState({ uuid1, uuid2, setNavbar }) {
+function GuestNavbar({ setNavbar }) {
+  const uuidStateData = useRecoilValue(uuidState);
+
   return (
     <GuestTopItem>
       <TopTitleText>카테고리</TopTitleText>
       <LinkInput
-        to={`/GoodsSupport/${uuid1}/${uuid2}`}
+        to={`/GoodsSupport/${uuidStateData.uuidFirst}/${uuidStateData.uuidSecond}`}
         onClick={() => setNavbar(false)}
       >
         <AiOutlineShoppingCart
@@ -153,7 +155,7 @@ function UUidIsTrueState({ uuid1, uuid2, setNavbar }) {
         <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
       </LinkInput>
       <LinkInput
-        to={`/GallerySupport/${uuid1}/${uuid2}`}
+        to={`/GallerySupport/${uuidStateData.uuidFirst}/${uuidStateData.uuidSecond}`}
         onClick={() => setNavbar(false)}
       >
         <AiOutlinePicture style={{ marginRight: "5px", marginLeft: "3px" }} />
@@ -166,9 +168,11 @@ function UUidIsTrueState({ uuid1, uuid2, setNavbar }) {
 
 export default function Navbar({ setNavbar, token }) {
   const [_, nickName] = useTokenDecode(token);
-  const [uuid, setUUID] = useState([]);
+  const [uuid, setUUID] = useState({
+    uuidFirst: "",
+    uuidSecond: "",
+  });
   const [navbarNotification, setNavbarNotification] = useState([]);
-  const [uuidStateData, setUuidStateData] = useRecoilState(uuidState);
   const navigate = useNavigate();
   async function getNavibarNotificationRender() {
     const navbarData = await getAlarm();
@@ -177,25 +181,24 @@ export default function Navbar({ setNavbar, token }) {
 
   async function getGoodsUrlUuidRender() {
     const UUID = await getGoodsUrlUUID();
-    setUuidStateData({
+    setUUID({
       uuidFirst: UUID.data.uuidFirst,
       uuidSecond: UUID.data.uuidSecond,
     });
-
-    setUUID(UUID.data);
   }
   console.log(_);
 
   function guestStateRender() {
-    const uuidState = uuidStateData.uuidFirst || uuidStateData.uuidSecond;
+    const uuidState = uuid.uuidFirst || uuid.uuidSecond;
     if (uuidState) {
       removeAccessToken();
-      navigate(`/Guest/${uuidStateData.uuidFirst}/${uuidStateData.uuidSecond}`);
+      navigate(`/Guest/${uuid.uuidFirst}/${uuid.uuidSecond}`);
       setNavbar(false);
       alert("로그아웃");
       return;
     }
   }
+
   const removeAcctokenRender = () => {
     guestStateRender();
     if (token) {
@@ -216,26 +219,30 @@ export default function Navbar({ setNavbar, token }) {
   useEffect(() => {
     getGoodsUrlUuidRender();
   }, []);
+
   useEffect(() => {
     if (token) getNavibarNotificationRender();
   }, []);
 
-  const urlLinkClick = () => {
+  const urlLinkClick = async () => {
+    clipboardHandle();
+  };
+
+  function clipboardHandle() {
     try {
       navigator.clipboard.writeText(
         `zolabayo.com/GallerySupport/${uuid.uuidFirst}/${uuid.uuidSecond}`
       );
-      alert("링크주소가 복사되었습니다.");
       setNavbar(false);
+      alert("링크주소가 복사되었습니다.");
     } catch (e) {
       console.error(e);
-      alert("다시 시도해주세요.");
     }
-  };
+  }
 
   return (
     <>
-      {uuidStateData.uuidSecond ? (
+      {uuid.uuidSecond ? (
         <Base>
           <Title>ZOLABAYO</Title>
           <NickNamediv>
@@ -250,7 +257,7 @@ export default function Navbar({ setNavbar, token }) {
               )}
             </NickNameText>
           </NickNamediv>
-          <TokenStateLink token={token} setNavbar={setNavbar} />
+          <MarriedNavbar token={token} setNavbar={setNavbar} />
           <CenterItemDiv>
             <div>
               <CenterItemTitle>알림 목록</CenterItemTitle>
@@ -282,7 +289,7 @@ export default function Navbar({ setNavbar, token }) {
               )}
             </NickNameText>
           </NickNamediv>
-          <UUidIsTrueState setNavbar={setNavbar} />
+          <GuestNavbar setNavbar={setNavbar} />
           <GuestBottomItemDiv>
             <LogButton onClick={removeAcctokenRender}>Log out</LogButton>
           </GuestBottomItemDiv>
