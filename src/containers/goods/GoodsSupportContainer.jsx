@@ -186,7 +186,7 @@ export default function GoodsSupportContainer({ guestToken }) {
 
   useEffect(() => {
     slideRef.current.style.transition = "all 0.5s ease-in-out";
-    slideRef.current.style.transform = `translateX(-${currentSlide}00%)`; // 백틱을 사용하여 슬라이드로 이동하는 애니메이션을 만듭니다.
+    slideRef.current.style.transform = `translateX(-${currentSlide}00%)`;
   }, [currentSlide]);
 
   return (
@@ -229,6 +229,7 @@ export default function GoodsSupportContainer({ guestToken }) {
               usersGoodsId={usersGoodsId}
               guestToken={guestToken}
               setGoodsSupportData={setGoodsSupportData}
+              getGoodsListRender={getGoodsListRender}
             />
           )}
           <RiArrowDropRightLine onClick={nextSlide} size="40" />

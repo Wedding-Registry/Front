@@ -39,7 +39,7 @@ export default function GoodsSupportModal({
       (v) => v.usersGoodsId === usersGoodsId
     );
     setGoodsSupportDataList(filterGoodsData);
-    setDonationText(filterGoodsData[0].usersGoodsTotalDonation);
+    //setDonationText(filterGoodsData[0].usersGoodsTotalDonation);
   }, []);
 
   const updateGoodsDonation = () => {
@@ -50,6 +50,7 @@ export default function GoodsSupportModal({
     const value = e.target.value;
     setDonationText(value);
   };
+  console.log(goodsSupportDataList);
   return (
     <Base>
       <Container>
