@@ -18,7 +18,6 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 
 import "../style/styles.css";
-import { AiOutlineClose } from "react-icons/ai";
 
 export default function GalleryWeddingContainer() {
   const [imgData, setImgData] = useRecoilState(galleryWeddingImageState);
@@ -32,14 +31,6 @@ export default function GalleryWeddingContainer() {
       element.push(
         <SwiperSlide key={i}>
           <GalleryWeddingBox key={i} className="swiper-image" />
-          <AiOutlineClose
-            style={{
-              zIndex: "1",
-              position: "absolute",
-              top: "200",
-              right: "80",
-            }}
-          />
         </SwiperSlide>
       );
     }
@@ -96,21 +87,9 @@ export default function GalleryWeddingContainer() {
               <GalleryWeddingBox
                 className="swiper-image"
                 url={v.galleryImgUrl}
+                id={v.galleryImgId}
+                deleteImageOnClick={deleteImageOnClick}
               />
-              <div style={{ backgroundColor: "red" }}>
-                <AiOutlineClose
-                  key={v.galleryImgId}
-                  style={{
-                    zIndex: "1",
-                    position: "absolute",
-                    top: "200",
-                    right: "80",
-                  }}
-                  onClick={() => {
-                    deleteImageOnClick(v.galleryImgId);
-                  }}
-                />
-              </div>
             </SwiperSlide>
           ))}
         {GallyElementList()}

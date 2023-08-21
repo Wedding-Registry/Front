@@ -6,8 +6,9 @@ import { addGalleryWeddingImage } from "../../services/weddingGallery/WeddingImg
 import { galleryWeddingImageState } from "../../state/galleryWeddingImageState";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { uuidState } from "../../state/uuidState";
+import { AiOutlineClose } from "react-icons/ai";
 
-export default function GalleryWeddingBox({ url }) {
+export default function GalleryWeddingBox({ url, deleteImageOnClick, id }) {
   const setImgData = useSetRecoilState(galleryWeddingImageState);
   const pathUrlData = useRecoilValue(uuidState);
   async function addGalleryWeddingImageRender(dataImage) {
@@ -51,7 +52,18 @@ export default function GalleryWeddingBox({ url }) {
           )}
         </Imageinput>
         {url ? (
-          <Image src={url} />
+          <>
+            <Image src={url}>
+              {!pathUrlData.uuidFirst ? (
+                <AiOutlineClose
+                  style={{ marginRight: "10px", marginTop: "5px" }}
+                  onClick={() => deleteImageOnClick(id)}
+                />
+              ) : (
+                <></>
+              )}
+            </Image>
+          </>
         ) : (
           <PlusImage src={Plus} onClick={onClickImage} />
         )}
@@ -80,6 +92,8 @@ const Image = styled.div`
   width: 100%;
   height: 100%;
   background-size: cover;
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const PlusImage = styled.div`
