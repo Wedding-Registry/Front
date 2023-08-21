@@ -24,7 +24,7 @@ export default function GalleryWeddingContainer() {
   const [imgData, setImgData] = useRecoilState(galleryWeddingImageState);
   const [didMount, setDidMount] = useState(false);
   const arrayLength = imgData ? imgData.length : 0;
-  const FIX_SIZE = 6;
+  const FIX_SIZE = 8;
 
   const GallyElementList = () => {
     let element = [];
