@@ -231,7 +231,7 @@ export default function Navbar({ setNavbar, token }) {
   function clipboardHandle() {
     try {
       navigator.clipboard.writeText(
-        `zolabayo.com/GallerySupport/${uuid.uuidFirst}/${uuid.uuidSecond}`
+        `https://zolabayo.com/GallerySupport/${uuid.uuidFirst}/${uuid.uuidSecond}`
       );
       setNavbar(false);
       alert("링크주소가 복사되었습니다.");

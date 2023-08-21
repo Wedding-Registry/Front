@@ -8,7 +8,7 @@ import { uuidState } from "../state/uuidState";
 import { useSetRecoilState } from "recoil";
 
 export default function ShareBox({ setSharebox }) {
-  const [uuid, setUUID] = useState([]);
+  const [uuid, setUUID] = useState({ uuidFirst: "", uuidSecond: "" });
   const setUuidState = useSetRecoilState(uuidState);
 
   async function getGoodsUrlUuidRender() {
@@ -32,8 +32,8 @@ export default function ShareBox({ setSharebox }) {
     getGoodsUrlUuidRender();
   }, []);
   const shareKaKao = () => {
-    getGoodsUrlUuidRender();
     //kakao sdk script 부른 후 window.kakao로 접근
+    const INITIAL_LINK = `https://zolabayo.com/GallerySupport/${uuid.uuidFirst}/${uuid.uuidSecond}`;
     if (window.Kakao) {
       const kakao = window.Kakao;
       //중복 initalization 방지
@@ -45,23 +45,34 @@ export default function ShareBox({ setSharebox }) {
       kakao.Link.sendDefault({
         objectType: "feed",
         content: {
-          title: "제목",
-          description: "카카오 공유하기",
-          imageUrl: kakaotalk, //local이나 내 ip는 사용할 수 없기 떄문에 test 불가 ,
+          title: "ZOLABAYO",
+          description: "저희 결혼 합니다",
+          imageUrl:
+            "https://www.urbanbrush.net/web/wp-content/uploads/edd/2022/09/urbanbrush-20220922134835594912.jpg", //local이나 내 ip는 사용할 수 없기 떄문에 test 불가 ,
+          imageWidth: 1200,
+          imageHeight: 630,
           link: {
-            webURL: `https://zolabayo.com/invitation/${uuid.uuidFirst}/${uuid.uuidSecond}`,
+            webUrl: INITIAL_LINK,
           },
         },
+        buttons: [
+          {
+            title: "웹으로 보기",
+            link: {
+              webUrl: INITIAL_LINK,
+            },
+          },
+        ],
       });
     }
   };
   const urlLinkClick = () => {
     try {
       navigator.clipboard.writeText(
-        `도메인주소/GallerySupport/${uuid.uuidFirst}/${uuid.uuidSecond}`
+        `https://zolabayo.com/GallerySupport/${uuid.uuidFirst}/${uuid.uuidSecond}`
       );
-      alert("링크주소가 복사되었습니다.");
       setSharebox(false);
+      alert("링크주소가 복사되었습니다.");
     } catch (e) {
       console.error(e);
       alert("다시 시도해주세요.");
@@ -71,7 +82,7 @@ export default function ShareBox({ setSharebox }) {
     <Shareboxdiv>
       <Shareboxp>
         <span
-          onClick={() => shareKaKao}
+          onClick={shareKaKao}
           style={{ marginRight: "12px", display: "flex", alignItems: "center" }}
         >
           <img src={kakaotalk} style={{ marginRight: "3px" }} />
