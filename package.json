@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "yarn run build && aws s3 sync dist/ s3://wedding-registry-front-bucket --delete --profile wedding"
   },
   "dependencies": {
     "@babel/parser": "^7.21.3",
