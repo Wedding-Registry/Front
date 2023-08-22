@@ -74,7 +74,9 @@ export default function Header({ border }) {
           />
         </HeaderLogoDiv>
       </HeaderDiv>
-      {navbar ? <Navbar setNavbar={setNavbar} token={token} /> : null}
+      {navbar ? (
+        <Navbar setNavbar={setNavbar} token={token} uuid1={uuid1} />
+      ) : null}
     </>
   );
 }
