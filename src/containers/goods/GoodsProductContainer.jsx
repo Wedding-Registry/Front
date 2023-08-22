@@ -20,6 +20,8 @@ import {
   addWeddingHallTime,
 } from "../../services/goods/GoodsMarriedService";
 import GoodsModal from "../../components/goodsmodal/GoodsModal";
+import { useRecoilState } from "recoil";
+import { marriedInformationState } from "../../state/marriedInformationState";
 
 export default function GoodsProductContainer() {
   const [sharebox, setSharebox] = useState(false);
@@ -35,7 +37,10 @@ export default function GoodsProductContainer() {
   const [wifeAccountText, setWifeAccountText] = useState("");
   const [husbandBankText, setHusbandBankText] = useState("");
   const [husbandAccountText, setHusBandAccountText] = useState("");
-  const [marriedWeddingData, setMarriedWeddingData] = useState([]);
+  //const [marriedWeddingData, setMarriedWeddingData] = useState([]);
+  const [marriedWeddingData, setMarriedWeddingData] = useRecoilState(
+    marriedInformationState
+  );
   const [isOpen, setIsOpen] = useState({
     result: false,
     state: "Edit",
@@ -57,6 +62,7 @@ export default function GoodsProductContainer() {
   //이름 계좌 시간 전체 조회
   async function getWeddingHallRender() {
     const weddingHallData = await getWeddingHall();
+
     setMarriedWeddingData(weddingHallData);
   }
   //남편 이름 등록
