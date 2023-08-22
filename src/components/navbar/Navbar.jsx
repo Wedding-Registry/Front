@@ -166,7 +166,7 @@ function GuestNavbar({ setNavbar }) {
   );
 }
 
-export default function Navbar({ setNavbar, token }) {
+export default function Navbar({ setNavbar, token, uuid1 }) {
   const [_, nickName] = useTokenDecode(token);
   const [uuid, setUUID] = useState({
     uuidFirst: "",
@@ -174,6 +174,7 @@ export default function Navbar({ setNavbar, token }) {
   });
   const [navbarNotification, setNavbarNotification] = useState([]);
   const navigate = useNavigate();
+
   async function getNavibarNotificationRender() {
     const navbarData = await getAlarm();
     setNavbarNotification(navbarData.data);
@@ -215,34 +216,33 @@ export default function Navbar({ setNavbar, token }) {
       return;
     }
   };
-
   useEffect(() => {
     getGoodsUrlUuidRender();
-  }, []);
+  }, [uuid1]);
 
   useEffect(() => {
     if (token) getNavibarNotificationRender();
   }, []);
 
-  const urlLinkClick = async () => {
-    clipboardHandle();
+  const urlLinkClick = (first, secound) => {
+    clipboardHandle(first, secound);
   };
 
-  function clipboardHandle() {
+  const clipboardHandle = (first, secound) => {
     try {
       navigator.clipboard.writeText(
-        `https://zolabayo.com/GallerySupport/${uuid.uuidFirst}/${uuid.uuidSecond}`
+        `https://zolabayo.com/GallerySupport/${first}/${secound}`
       );
       setNavbar(false);
       alert("링크주소가 복사되었습니다.");
     } catch (e) {
       console.error(e);
     }
-  }
-
+  };
+  console.log(uuid1);
   return (
     <>
-      {uuid.uuidSecond ? (
+      {!uuid1 ? (
         <Base>
           <Title>ZOLABAYO</Title>
           <NickNamediv>
@@ -268,7 +268,10 @@ export default function Navbar({ setNavbar, token }) {
             />
           </CenterItemDiv>
           <BottomItemDiv>
-            <span style={{ fontSize: "13px" }} onClick={urlLinkClick}>
+            <span
+              style={{ fontSize: "13px" }}
+              onClick={() => urlLinkClick(uuid.uuidFirst, uuid.uuidSecond)}
+            >
               링크 공유하기
             </span>
             <LogButton onClick={removeAcctokenRender}>Log out</LogButton>
