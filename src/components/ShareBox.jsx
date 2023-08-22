@@ -5,12 +5,13 @@ import kakaotalk from "@/assets/icons/kakaotalk.png";
 import sharelink from "@/assets/icons/sharelink.png";
 import { getGoodsUrlUUID } from "../services/uuid/UrlUuidService";
 import { uuidState } from "../state/uuidState";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { marriedInformationState } from "../state/marriedInformationState";
 
 export default function ShareBox({ setSharebox }) {
   const [uuid, setUUID] = useState({ uuidFirst: "", uuidSecond: "" });
   const setUuidState = useSetRecoilState(uuidState);
-
+  const marriedInformationData = useRecoilValue(marriedInformationState);
   async function getGoodsUrlUuidRender() {
     const UUID = await getGoodsUrlUUID();
     setUuidState({
@@ -28,12 +29,16 @@ export default function ShareBox({ setSharebox }) {
     document.body.appendChild(script);
     return () => document.body.removeChild(script);
   }, []);
+
   useEffect(() => {
     getGoodsUrlUuidRender();
   }, []);
+
   const shareKaKao = () => {
     //kakao sdk script 부른 후 window.kakao로 접근
     const INITIAL_LINK = `https://zolabayo.com/GallerySupport/${uuid.uuidFirst}/${uuid.uuidSecond}`;
+    const HUSBAND_NAME = marriedInformationData.data.account[0].name;
+    const WIFE_NAME = marriedInformationData.data.account[1].name;
     if (window.Kakao) {
       const kakao = window.Kakao;
       //중복 initalization 방지
@@ -46,7 +51,7 @@ export default function ShareBox({ setSharebox }) {
         objectType: "feed",
         content: {
           title: "ZOLABAYO",
-          description: "저희 결혼 합니다",
+          description: `${HUSBAND_NAME} ❤ ${WIFE_NAME}`,
           imageUrl:
             "https://www.urbanbrush.net/web/wp-content/uploads/edd/2022/09/urbanbrush-20220922134835594912.jpg", //local이나 내 ip는 사용할 수 없기 떄문에 test 불가 ,
           imageWidth: 1200,

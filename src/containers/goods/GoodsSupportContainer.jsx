@@ -8,11 +8,15 @@ import GoodsSupportModal from "../../components/goodssupportmodal/GoodsSupportMo
 import { getInforMationList } from "../../services/gustGoods/GuestMarriedService";
 import { getGoodsSupportItemsList } from "../../services/gustGoods/GuestGoodsProductSerivce";
 import RadioButtonGroup from "../../components/radiobutton/RadioButtonGroup";
+import { useRecoilState } from "recoil";
+import { marriedInformationState } from "../../state/marriedInformationState";
 
 function MarriedInforMation({ guestToken }) {
   //신랑 신부 statae
   const [merriedHusbandNameData, setMerriedHusbandNameData] = useState([]);
-  const [merriedWifeNameData, setMerriedWifeNameData] = useState([]);
+  const [merriedWifeNameData, setMerriedWifeNameData] = useRecoilState(
+    marriedInformationState
+  );
   //도로명주소
   const [addressData, setAdressData] = useState([]);
   const [dateTimeData, setDateTimeData] = useState("");
