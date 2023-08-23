@@ -8,8 +8,8 @@ import { useQuery } from "@tanstack/react-query";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const StyledDiv = styled.div`
-  height: max-content;
   width: 1300px;
+  height: 90vh;
   margin: auto;
   div.container {
     display: flex;
@@ -18,7 +18,7 @@ const StyledDiv = styled.div`
   }
 `;
 const StyledSection = styled.section`
-  margin: 40px auto 80px;
+  margin: 40px auto;
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -76,29 +76,37 @@ const StyledArticle = styled.article`
     .button {
       display: flex;
       justify-content: flex-end;
+      align-items: center;
       border: none;
+      input {
+        width: 45%;
+        margin: 10px;
+      }
       span {
+        width: 40px;
         cursor: pointer;
-        margin: 15px 5px 15px;
-        padding: 3px;
+        margin-left: 5px;
+        margin-right: 15px;
         font-size: 14px;
       }
-      margin-right: 10px;
     }
   }
 `;
 const StyledBox = styled.div`
   display: flex;
-  width: 1200px;
+  //width: 1200px;
   margin: auto;
-  justify-content: space-between;
-  align-items: flex-start;
 `;
 const StyledDivItem = styled.div`
-  width: 200px;
+  width: 1500px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
+  div {
+    display: flex;
+    min-width: 350px;
+    flex-direction: column;
+    align-items: center;
+  }
   img {
     width: 140px;
     height: 140px;
@@ -107,13 +115,15 @@ const StyledDivItem = styled.div`
   }
   h4 {
     font-size: 13px;
+    max-width: 250px;
     text-align: center;
     margin-top: 15px;
   }
   h4::after {
     display: block;
     content: "";
-    width: 50px;
+    min-width: 50px;
+    max-width: 250px;
     height: 2px;
     margin: 5px auto 15px;
     border-bottom: 1px solid #aaa;
@@ -135,13 +145,18 @@ const options = {
   },
 };
 function AdminDonationListsContainer() {
-  const [val, setVal] = useState("");
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editedValue, setEditedValue] = useState("");
   const [data, setData] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const inputValue = (e) => {
-    setVal(e.target.value);
+    if (e.target.name === "name") {
+      setName(e.target.value);
+    } else {
+      setPrice(e.target.value);
+    }
   };
 
   const editValue = (e, id) => {
@@ -200,7 +215,7 @@ function AdminDonationListsContainer() {
     const { data } = await axios.post(
       "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/donation/transfer/detail",
       {
-        transferMemo: val,
+        transferMemo: `${name} ${price}`,
       },
       {
         headers: {
@@ -334,7 +349,20 @@ function AdminDonationListsContainer() {
               </p>
             ))}
             <div className="button">
-              <input type="text" onChange={inputValue} value={val} />
+              <input
+                type="text"
+                onChange={inputValue}
+                name="name"
+                value={name}
+                placeholder="이름"
+              />
+              <input
+                type="text"
+                onChange={inputValue}
+                name="price"
+                placeholder="금액"
+                value={price}
+              />
               <span onClick={postDonationTransferData}>추가</span>
             </div>
           </div>

@@ -5,14 +5,12 @@ import axios from "axios";
 // import _ from "lodash";
 
 const StyledSection = styled.section`
-  margin: auto;
+  margin: 40px auto;
+
   width: 1285px;
   display: flex;
   flex-direction: column;
-  align-items: space-around;
   padding: 20px;
-  margin-top: 40px;
-  margin-bottom: 80px;
 
   h3 {
     color: #4b4b4b;

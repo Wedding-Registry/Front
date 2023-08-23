@@ -6,10 +6,10 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
 const StyledDiv = styled.div`
-  height: max-content;
+  height: 90vh;
 `;
 const StyledSection = styled.section`
-  margin: 40px auto 80px;
+  margin: 40px auto 0;
   width: 1285px;
   display: flex;
   flex-direction: column;

@@ -5,8 +5,9 @@ import { useQuery } from "@tanstack/react-query";
 
 const StyledDiv = styled.div`
   display: flex;
+  height: 80vh;
   width: 1250px;
-  margin: 80px auto;
+  margin: 80px auto auto;
   align-items: flex-start;
   justify-content: space-between;
 
