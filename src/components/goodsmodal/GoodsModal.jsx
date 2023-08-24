@@ -194,7 +194,7 @@ function UpdateGoodsState({
                     />
                   </p>
                   <p>
-                    후&nbsp; 원 &nbsp; 가
+                    후&nbsp; 원 &nbsp; 가 :
                     <GoodsDonationInput
                       name="price"
                       value={editPriceText}
@@ -244,8 +244,13 @@ function UpdateGoodsState({
                       onFocus={() => setEditState({ state: true })}
                     />
                   </p>
-                  <p>
-                    후&nbsp; 원 &nbsp; 가
+                  <p
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    후&nbsp; 원 &nbsp; 가 :
                     <GoodsDonationInput
                       value={editPriceText}
                       onChange={updateGoodsPriceChange}
