@@ -36,6 +36,14 @@ function CreateGoodsState({
   const registerGoodsButton = async () => {
     await postGoodsListRender(getGoodsUrlItem);
   };
+
+  //엔터키
+  const activeEnter = async (e) => {
+    console.log(e);
+    if (e.key === "Enter") {
+      await postGoodsListRender(getGoodsUrlItem);
+    }
+  };
   return (
     <>
       {goodsData?.length !== 0 && goodsData ? (
@@ -63,7 +71,11 @@ function CreateGoodsState({
       ) : (
         <>
           {goodsData?.length !== 0 && goodsData ? <></> : <Logo src={logo} />}
-          <Text onChange={getGoodsUrl} value={getGoodsUrlItem} />
+          <Text
+            onChange={getGoodsUrl}
+            value={getGoodsUrlItem}
+            onKeyPress={(e) => activeEnter(e)}
+          />
           <div>
             <p>
               상품 이름 : <GoodsNameInput />
@@ -427,7 +439,7 @@ const GoodsImage = styled.div`
   background-repeat: no-repeat;
   background-position: center;
   margin-bottom: 10px;
-  margin-left: 30%;
+  margin-left: 35%;
 `;
 
 const GoodsText = styled.p`
