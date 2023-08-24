@@ -64,10 +64,14 @@ async function addHusbandAccount(account, bank) {
 }
 
 // 예식시간
-async function addWeddingHallTime(date, time) {
+async function addWeddingHallTime(date) {
+  const yyymmdd = date.slice(0, 10).split("-").join("");
+
+  const time = date.slice(11, 16).split(":").join("");
+
   try {
     const response = await HttpClient.post(`weddingHall/time`, {
-      date: date,
+      date: yyymmdd,
       time: time,
     });
     const data = response.data;
