@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "env-cmd -f .env vite",
-    "build": "env-cmd -f .env vite build",
+    "dev": "env-cmd -e .env vite",
+    "build": "env-cmd -e .env vite build",
     "preview": "vite preview",
     "deploy": "yarn run build && aws s3 sync dist/ s3://wedding-registry-front-bucket --delete --profile wedding"
   },
