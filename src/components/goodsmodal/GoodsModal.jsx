@@ -51,9 +51,6 @@ function CreateGoodsState({
           </div>
           <div style={{ width: "100%" }}>
             <OkorColsebuttonDiv>
-              <div>
-                <ApiButton onClick={registerGoodsButton}>등록하기</ApiButton>
-              </div>
               <div style={{ position: "absolute", top: "85%", right: "10%" }}>
                 <ApiButton onClick={okButton}>확인</ApiButton>|
                 <ApiButton onClick={() => deleteButton(goodsData.usersGoodsId)}>
