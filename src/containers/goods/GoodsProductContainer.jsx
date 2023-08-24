@@ -544,7 +544,7 @@ const GoodsWeddingadress = styled.input`
   outline: none;
   border: none;
   background-color: #ebebeb;
-  width: 330px;
+  width: 320px;
   border-radius: 10px;
   margin-left: 5px;
   height: 33px;

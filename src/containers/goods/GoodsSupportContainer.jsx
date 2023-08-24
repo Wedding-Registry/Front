@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Box from "@/components/box/Box";
 import { RiArrowDropLeftLine, RiArrowDropRightLine } from "react-icons/ri";
+import DatePicker from "react-datepicker";
 
 import GoodsSupportModal from "../../components/goodssupportmodal/GoodsSupportModal";
 import { getInforMationList } from "../../services/gustGoods/GuestMarriedService";
@@ -10,6 +11,8 @@ import { getGoodsSupportItemsList } from "../../services/gustGoods/GuestGoodsPro
 import RadioButtonGroup from "../../components/radiobutton/RadioButtonGroup";
 import { useRecoilState } from "recoil";
 import { marriedInformationState } from "../../state/marriedInformationState";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 function MarriedInforMation({ guestToken }) {
   //신랑 신부 statae
@@ -31,12 +34,34 @@ function MarriedInforMation({ guestToken }) {
       getMerriedInfoMationData.data?.account[1];
     setMerriedWifeNameData(getMrriedInforMationDataHusWife);
     setAdressData(getMerriedInfoMationData.data?.location);
-    setDateTimeData(
-      getMerriedInfoMationData.data?.weddingDate +
-        "T" +
-        getMerriedInfoMationData.data?.weddingTime
-    );
+    const weddingDate = getMerriedInfoMationData.data?.weddingDate;
+    const weddingTime = getMerriedInfoMationData.data?.weddingTime;
+    const toStringDate = originalDate(weddingDate, weddingTime);
+    setDateTimeData(toStringDate);
   }
+  //원래 날짜 데이터로 변환
+  function originalDate(date, time) {
+    if (date === "" || time === "") {
+      return;
+    }
+    if (date !== undefined) {
+      const originalDate = new Date(date + " " + time);
+      return originalDate;
+    }
+  }
+
+  const DateFicker = () => {
+    return (
+      <DatePicker
+        selected={dateTimeData}
+        timeInputLabel="Time:"
+        dateFormat="yyyy/MM/dd h:mm aa"
+        showTimeInput
+        className="datePicker"
+        readOnly={true}
+      />
+    );
+  };
 
   useEffect(() => {
     getInforMationListRender(guestToken);
@@ -69,18 +94,7 @@ function MarriedInforMation({ guestToken }) {
                 value={addressData || ""}
                 placeholder="예식장 주소"
               />
-              <input
-                type="datetime-local"
-                style={{
-                  width: "200px",
-                  borderRadius: "10px",
-                  backgroundColor: "#EBEBEB",
-                  height: "33px",
-                  border: "1px solid #EBEBEB",
-                }}
-                value={dateTimeData || ""}
-                disabled={true}
-              />
+              <DateFicker />
             </GoodsInformationAddressandDateTimeDiv>
           )}
         </GoodsWeddingdiv>
@@ -177,6 +191,8 @@ export default function GoodsSupportContainer({ guestToken }) {
     }
     return element;
   };
+  //날짜
+
   //Api 2번 호출 막기
   useEffect(() => {
     setDidMount(true);
@@ -380,7 +396,7 @@ const GoodsWeddingadress = styled.input`
   outline: none;
   border: none;
   background-color: #ebebeb;
-  width: 200px;
+  width: 320px;
   border-radius: 10px;
   margin-left: 5px;
   height: 33px;
@@ -390,4 +406,6 @@ const GoodsWeddingadress = styled.input`
 const GoodsInformationAddressandDateTimeDiv = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
+  width: 100%;
 `;
