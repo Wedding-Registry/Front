@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import HttpClient from "@/apis/HttpClient.js";
 
 const StyledDiv = styled.div`
   display: flex;
@@ -31,23 +31,27 @@ const StyledDiv = styled.div`
       font-size: 13px;
     }
   }
+
+  .attend {
+    span {
+      display: inline;
+      font-size: 17px;
+      font-weight: 600;
+      color: #000;
+    }
+    .yes {
+      color: blue;
+    }
+    .no {
+      color: red;
+    }
+  }
 `;
 
-// 참석 = 파란색 / 불참석 = 빨간색
-
 function AdminAlarmListsContainer() {
-  // const tempToken = import.meta.env.VITE_TEMPTOKEN;
-  const token = localStorage.getItem("accessToken") || "needSignIn";
-
+  const apiUrl = import.meta.env.VITE_HTTP_API_URL;
   const fetchAlarmData = async () => {
-    const { data } = await axios.get(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/alarm",
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const { data } = await HttpClient.get(`${apiUrl}admin/alarm`);
     return data.data;
   };
 
@@ -70,8 +74,21 @@ function AdminAlarmListsContainer() {
         <h3>참석여부 알림</h3>
         {data.attendance?.map((i) => (
           <div key={i.userId} className="item">
-            <p>
-              {i.name}님이 결혼식 {i.attend}에 체크하셨습니다.
+            <p className="attend">
+              <span>{i.name}</span>님이 결혼식
+              <span
+                className={
+                  i.attend === "참석"
+                    ? "yes"
+                    : i.attend === "불참"
+                    ? "no"
+                    : "unknown"
+                }
+              >
+                {" "}
+                {i.attend}
+              </span>
+              에 체크하셨습니다.
             </p>
             <span>
               {i.date} {i.time}

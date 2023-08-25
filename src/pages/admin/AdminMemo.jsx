@@ -7,7 +7,7 @@ const StyledDiv = styled.div``;
 function AdminMemo() {
   return (
     <StyledDiv>
-      <AdminMemoContainer></AdminMemoContainer>
+      <AdminMemoContainer />
     </StyledDiv>
   );
 }

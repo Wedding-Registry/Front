@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import HttpClient from "@/apis/HttpClient.js";
 
 const StyledDiv = styled.div`
   margin: auto;
@@ -95,7 +95,8 @@ function AdminMemoContainer() {
     setMemoPad(e.target.value);
   };
 
-  // const tempToken = import.meta.env.VITE_TEMPTOKEN;
+  const apiUrl = import.meta.env.VITE_HTTP_API_URL;
+
   const defaultOption = {
     root: null,
     threshold: 0.5,
@@ -144,102 +145,51 @@ function AdminMemoContainer() {
     console.log(isEdit);
     setIsEdit(true);
   };
-  const token = localStorage.getItem("accessToken") || "needSignIn";
   const fetchMemoData = async () => {
-    const { data } = await axios.get(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/memo/item/wish?size=5&sort=id,DESC&lastId=3",
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
+    const { data } = await HttpClient.get(
+      `${apiUrl}admin/memo/item/wish?size=5&sort=id,DESC&lastId=3`
     );
-
     console.log(data);
     setIsLoaded(false);
-
     return data.data;
   };
 
   const postMemoData = async () => {
-    const { data } = await axios.post(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/memo/item/wish",
-      {
-        url: url,
-      },
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
-
+    const { data } = await HttpClient.post(`${apiUrl}admin/memo/item/wish`, {
+      url: url,
+    });
     console.log(data);
-
     return data.data;
   };
   const putMemoData = async () => {
-    const { data } = await axios.put(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/memo/item/wish",
-      {
-        url: url,
-        usersGoodsName: goodsName,
-        usersGoodsPrice: goodsPrice,
-      },
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const { data } = await HttpClient.put(`${apiUrl}admin/memo/item/wish`, {
+      url: url,
+      usersGoodsName: goodsName,
+      usersGoodsPrice: goodsPrice,
+    });
 
     console.log(data);
     setIsEdit(false);
     return data.data;
   };
   const deleteMemoData = async (id) => {
-    const { data } = await axios.delete(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/memo/item/wish",
-      {
-        usersGoodsId: id,
-      },
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
-
+    const { data } = await HttpClient.delete(`${apiUrl}admin/memo/item/wish`, {
+      usersGoodsId: id,
+    });
     console.log(data);
-
     return data.data;
   };
 
   const getMemoPad = async () => {
-    const { data } = await axios.get(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/memo/pad",
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const { data } = await HttpClient.get(`${apiUrl}admin/memo/pad`);
 
     console.log(data);
     return data.data;
   };
   const postMemoPad = async () => {
-    const { data } = await axios.post(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/memo/pad",
-      {
-        contents: memoPad,
-      },
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const { data } = await HttpClient.post(`${apiUrl}admin/memo/pad`, {
+      contents: memoPad,
+    });
     alert("저장성공!");
     return data.data;
   };

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Doughnut } from "react-chartjs-2";
-import axios from "axios";
-// import _ from "lodash";
+import { useQuery } from "@tanstack/react-query";
+import HttpClient from "@/apis/HttpClient.js";
 
 const StyledSection = styled.section`
   margin: 40px auto;
@@ -47,38 +47,32 @@ const StyledSection = styled.section`
 `;
 
 function AdminAttendanceListsContainer() {
+  const apiUrl = import.meta.env.VITE_HTTP_API_URL;
   const [attendanceData, setAttendanceData] = useState({
     yes: {},
     no: {},
     unknown: {},
   });
-  const token = localStorage.getItem("accessToken") || "needSignIn";
 
-  // const tempToken = import.meta.env.VITE_TEMPTOKEN;
   const fetchAttendanceData = async () => {
     try {
-      const { data } = await axios.get(
-        "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/attendance/detail",
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      );
-
-      // attendanceData.yes = _.cloneDeep(data.data.yes);
-      // attendanceData.no = _.cloneDeep(data.data.no);
-      // attendanceData.unknown = _.cloneDeep(data.data.unknown);
+      const { data } = await HttpClient.get(`${apiUrl}admin/attendance/detail`);
       setAttendanceData({
         ...attendanceData,
         ["yes"]: data.data.yes,
         ["no"]: data.data.no,
         ["unknown"]: data.data.unknown,
       });
+      return data.data;
     } catch (e) {
       console.log(e);
     }
   };
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["fetchAttendanceData"],
+    queryFn: fetchAttendanceData,
+  });
 
   let attendanceTable = {
     labels: ["참석", "불참석", "미정"],
@@ -118,8 +112,15 @@ function AdminAttendanceListsContainer() {
         ],
       },
     ];
-    console.log("table", attendanceTable);
   }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
     <StyledSection>
@@ -136,15 +137,15 @@ function AdminAttendanceListsContainer() {
         <span>
           <h4>참석</h4>
           <p>
-            {attendanceData.yes.rate}%, {attendanceData.yes.count}명
+            {data.yes.rate}%, {data.yes.count}명
           </p>
           <h4>불참석</h4>
           <p>
-            {attendanceData.no.rate}%, {attendanceData.no.count}명
+            {data.no.rate}%, {data.no.count}명
           </p>
           <h4>미정</h4>
           <p>
-            {attendanceData.unknown.rate}%, {attendanceData.unknown.count}명
+            {data.unknown.rate}%, {data.unknown.count}명
           </p>
         </span>
       </div>

@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { Doughnut } from "react-chartjs-2";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import HttpClient from "@/apis/HttpClient.js";
 
 const StyledDiv = styled.div`
   height: 90vh;
@@ -55,30 +55,14 @@ const StyledSection = styled.section`
 `;
 
 function AdminMainContainer() {
-  // const tempToken = import.meta.env.VITE_TEMPTOKEN;
-  const token = localStorage.getItem("accessToken") || "needSignIn";
-
+  const apiUrl = import.meta.env.VITE_HTTP_API_URL;
   const fetchAttendanceData = async () => {
-    const { data } = await axios.get(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/summary/attendance",
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const { data } = await HttpClient.get(`${apiUrl}admin/summary/attendance`);
     return data.data;
   };
 
   const fetchDonationData = async () => {
-    const { data } = await axios.get(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/summary/donation",
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const { data } = await HttpClient.get(`${apiUrl}admin/summary/donation`);
     return data.data;
   };
 

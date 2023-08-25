@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Doughnut } from "react-chartjs-2";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import HttpClient from "@/apis/HttpClient.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -17,11 +17,12 @@ const StyledDiv = styled.div`
     justify-content: space-between;
   }
 `;
+
 const StyledSection = styled.section`
   margin: 40px auto;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 20px 0;
 
   h3 {
     color: #4b4b4b;
@@ -51,11 +52,15 @@ const StyledSection = styled.section`
       margin: 7px 0 10px;
     }
   }
+  p.total {
+    margin: 8px auto 28px;
+    font-size: 15px;
+  }
 `;
 const StyledArticle = styled.article`
-  width: 350px;
-  margin-left: auto;
+  max-width: 350px;
   h3 {
+    margin-top: 40px;
     color: #4b4b4b;
     font-size: 21px;
     font-weight: 600;
@@ -65,12 +70,15 @@ const StyledArticle = styled.article`
     border: 1px solid #4b4b4b;
     border-radius: 10px;
     overflow-y: scroll;
-
+    margin-bottom: 60px;
     button {
       margin-left: 10px;
     }
     p {
       border-bottom: 1px solid #4b4b4b;
+      max-width: 300px;
+      word-break: break-all;
+      word-wrap: break-word;
       margin: 15px 20px 15px 15px;
       padding-top: 5px;
       padding-bottom: 7px;
@@ -94,10 +102,13 @@ const StyledArticle = styled.article`
       }
     }
   }
+  .edit {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
 `;
 const StyledBox = styled.div`
   display: flex;
-  //width: 1200px;
   margin: auto;
 `;
 const StyledDivItem = styled.div`
@@ -168,7 +179,6 @@ function AdminDonationListsContainer() {
   };
 
   const editValue = (e, id) => {
-    console.log(e.target.value, id);
     setEditedValue(e.target.value);
     setData((prevItems) =>
       prevItems.map((item) =>
@@ -177,58 +187,34 @@ function AdminDonationListsContainer() {
     );
   };
 
-  const token = localStorage.getItem("accessToken") || "needSignIn";
-
-  // const tempToken = import.meta.env.VITE_TEMPTOKEN;
+  const apiUrl = import.meta.env.VITE_HTTP_API_URL;
   const fetchDonationData = async () => {
-    const { data } = await axios.get(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/summary/donation",
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
-
+    const { data } = await HttpClient.get(`${apiUrl}admin/summary/donation`);
     return data.data;
   };
 
   const fetchDonationDetailData = async () => {
-    const { data } = await axios.get(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/donation/product/detail",
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
+    const { data } = await HttpClient.get(
+      `${apiUrl}admin/donation/product/detail`
     );
-    console.log(data.data);
+
     return data.data;
   };
 
   const fetchDonationTransferData = async () => {
-    const { data } = await axios.get(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/donation/transfer/detail",
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
+    const { data } = await HttpClient.get(
+      `${apiUrl}admin/donation/transfer/detail`
     );
+
     setData(data.data);
     return data.data;
   };
 
   const postDonationTransferData = async () => {
-    const { data } = await axios.post(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/donation/transfer/detail",
+    const { data } = await HttpClient.post(
+      `${apiUrl}admin/donation/transfer/detail`,
       {
         transferMemo: `${name} ${price}`,
-      },
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
       }
     );
     location.reload();
@@ -236,16 +222,11 @@ function AdminDonationListsContainer() {
   };
 
   const putDonationTransferData = async (id, value) => {
-    const { data } = await axios.put(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/donation/transfer/detail",
+    const { data } = await HttpClient.put(
+      `${apiUrl}admin/donation/transfer/detail`,
       {
         accountTransferId: id,
         transferMemo: value,
-      },
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
       }
     );
     return data.data;
@@ -307,10 +288,11 @@ function AdminDonationListsContainer() {
             <span>
               {donationQuery.data?.map((i) => (
                 <div key={i.usersGoodsId}>
-                  <h4>
-                    {i.usersGoodsName}, {i.usersGoodsTotalDonation}원
-                  </h4>
-                  <p>{i.usersGoodsTotalDonationRate}% 달성</p>
+                  <h4>{i.usersGoodsName}</h4>
+                  <p className="total">
+                    {i.usersGoodsTotalDonation}원(
+                    {i.usersGoodsTotalDonationRate}% 달성)
+                  </p>
                 </div>
               ))}
             </span>
@@ -327,6 +309,8 @@ function AdminDonationListsContainer() {
                     {editingId === i.accountTransferId ? (
                       <>
                         <input
+                          className="edit"
+                          defaultValue={i.transferMemo}
                           id={i.accountTransferId}
                           value={data.transferMemo}
                           onChange={(e) => editValue(e, i.accountTransferId)}
