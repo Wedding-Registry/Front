@@ -2,15 +2,15 @@ import React from "react";
 import styled from "styled-components";
 import { Doughnut } from "react-chartjs-2";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import HttpClient from "@/apis/HttpClient.js";
 
 const StyledDiv = styled.div`
-  height: max-content;
+  height: 90vh;
 `;
 const StyledSection = styled.section`
-  margin: 40px auto 80px;
-  width: 1285px;
+  margin: 40px auto 0;
+  width: 1300px;
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -44,37 +44,25 @@ const StyledSection = styled.section`
     }
     p {
       font-size: 14px;
-      margin: 7px 0 10px;
+      margin: 10px 0 10px;
+    }
+
+    p.total {
+      margin: 8px auto 28px;
+      font-size: 15px;
     }
   }
 `;
 
-// let attendanceData = {};
 function AdminMainContainer() {
-  // const tempToken = import.meta.env.VITE_TEMPTOKEN;
-  const token = localStorage.getItem("accessToken") || "needSignIn";
-
+  const apiUrl = import.meta.env.VITE_HTTP_API_URL;
   const fetchAttendanceData = async () => {
-    const { data } = await axios.get(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/summary/attendance",
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const { data } = await HttpClient.get(`${apiUrl}admin/summary/attendance`);
     return data.data;
   };
 
   const fetchDonationData = async () => {
-    const { data } = await axios.get(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/summary/donation",
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const { data } = await HttpClient.get(`${apiUrl}admin/summary/donation`);
     return data.data;
   };
 
@@ -182,10 +170,11 @@ function AdminMainContainer() {
           <span>
             {donationQuery.data?.map((i) => (
               <div key={i.usersGoodsId}>
-                <h4>
-                  {i.usersGoodsName}, {i.usersGoodsTotalDonation}원
-                </h4>
-                <p>{i.usersGoodsTotalDonationRate}% 달성</p>
+                <h4>{i.usersGoodsName}</h4>
+                <p className="total">
+                  {i.usersGoodsTotalDonation}원({i.usersGoodsTotalDonationRate}%
+                  달성)
+                </p>
               </div>
             ))}
           </span>

@@ -58,20 +58,19 @@ export default function GoodsSupportModal({
           {goodsSupportDataList.map((goods) => (
             <div id={goods.usersGoodsId} key={goods.usersGoodsId}>
               <GoodsImage url={goods.usersGoodsImgUrl} />
-              <GoodsDonationDiv>
-                <p>
-                  상품 이름 :{" "}
-                  <GoodsNameInput name="name" value={goods.usersGoodsName} />
-                </p>
-                <GoodsText>
-                  후&nbsp; 원 &nbsp; 가 :{" "}
-                  <GoodsDonationInput
-                    value={donationText || ""}
-                    onChange={donationChange}
-                  />
-                  원
-                </GoodsText>
-              </GoodsDonationDiv>
+              <div>
+                <p>상품 이름 :{goods.usersGoodsName}</p>
+                <GoodsDonationDiv>
+                  <GoodsText>
+                    후&nbsp; 원 &nbsp; 가 :{" "}
+                    <GoodsDonationInput
+                      value={donationText || ""}
+                      onChange={donationChange}
+                    />
+                    원
+                  </GoodsText>
+                </GoodsDonationDiv>
+              </div>
               <div style={{ width: "100%" }}>
                 <OkorColsebuttonDiv>
                   <div>
@@ -101,7 +100,7 @@ export default function GoodsSupportModal({
 }
 
 const Base = styled.div`
-  background: rgb(228, 230, 232);
+  background: rgba(228, 230, 232, 0.7);
   box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 50px;
   width: 643px;
@@ -164,14 +163,13 @@ const GoodsImage = styled.div`
   background-repeat: no-repeat;
   background-position: center;
   margin-bottom: 10px;
-  margin-left: 35%;
+  margin-left: 30%;
 `;
 
 const GoodsText = styled.p`
   width: 100%;
   justify-content: center;
   display: flex;
-  align-items: center;
 `;
 
 const GoodsDonationInput = styled.input`
@@ -180,13 +178,4 @@ const GoodsDonationInput = styled.input`
   outline: none;
   width: 100px;
   height: 20px;
-`;
-
-const GoodsNameInput = styled.input`
-  border: none;
-  background: rgba(228, 230, 232, 0.7);
-  outline: none;
-  width: 400px;
-  height: 20px;
-  margin-bottom: 10px;
 `;

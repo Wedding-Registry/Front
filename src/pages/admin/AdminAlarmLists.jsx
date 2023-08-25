@@ -6,8 +6,8 @@ import AdminContainer from "@/containers/admin/AdminContainer.jsx";
 function AdminAlarmLists() {
   return (
     <>
-      <AdminContainer></AdminContainer>
-      <AdminAlarmListsContainer></AdminAlarmListsContainer>
+      <AdminContainer />
+      <AdminAlarmListsContainer />
     </>
   );
 }

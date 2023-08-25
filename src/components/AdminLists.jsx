@@ -7,9 +7,10 @@ import { useQuery } from "@tanstack/react-query";
 const StyledDiv = styled.div`
   display: flex;
   width: 1200px;
-  align-items: flex-start;
   justify-content: space-between;
+  height: 45vh;
   margin: auto;
+
   div.item {
     /* border: 1px solid green; */
     h4 {

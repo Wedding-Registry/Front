@@ -4,14 +4,14 @@ import AdminMainContainer from "@/containers/admin/AdminMainContainer.jsx";
 import AdminContainer from "@/containers/admin/AdminContainer.jsx";
 
 const StyledDiv = styled.div`
-  height: max-content;
+  height: 100vh;
 `;
 
 function AdminMain() {
   return (
     <StyledDiv>
-      <AdminContainer></AdminContainer>
-      <AdminMainContainer></AdminMainContainer>
+      <AdminContainer />
+      <AdminMainContainer />
     </StyledDiv>
   );
 }

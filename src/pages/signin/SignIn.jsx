@@ -1,10 +1,12 @@
-import React from 'react'
+import React from "react";
 import SignInContainer from "../../containers/signin/SignInContainer.jsx";
 
 function SignIn() {
   return (
-    <div><SignInContainer></SignInContainer></div>
-  )
+    <div>
+      <SignInContainer />
+    </div>
+  );
 }
 
-export default SignIn
+export default SignIn;

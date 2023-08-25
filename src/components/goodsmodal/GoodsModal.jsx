@@ -36,14 +36,6 @@ function CreateGoodsState({
   const registerGoodsButton = async () => {
     await postGoodsListRender(getGoodsUrlItem);
   };
-
-  //엔터키
-  const activeEnter = async (e) => {
-    console.log(e);
-    if (e.key === "Enter") {
-      await postGoodsListRender(getGoodsUrlItem);
-    }
-  };
   return (
     <>
       {goodsData?.length !== 0 && goodsData ? (
@@ -59,6 +51,9 @@ function CreateGoodsState({
           </div>
           <div style={{ width: "100%" }}>
             <OkorColsebuttonDiv>
+              <div>
+                <ApiButton onClick={registerGoodsButton}>등록하기</ApiButton>
+              </div>
               <div style={{ position: "absolute", top: "85%", right: "10%" }}>
                 <ApiButton onClick={okButton}>확인</ApiButton>|
                 <ApiButton onClick={() => deleteButton(goodsData.usersGoodsId)}>
@@ -71,11 +66,7 @@ function CreateGoodsState({
       ) : (
         <>
           {goodsData?.length !== 0 && goodsData ? <></> : <Logo src={logo} />}
-          <Text
-            onChange={getGoodsUrl}
-            value={getGoodsUrlItem}
-            onKeyPress={(e) => activeEnter(e)}
-          />
+          <Text onChange={getGoodsUrl} value={getGoodsUrlItem} />
           <div>
             <p>
               상품 이름 : <GoodsNameInput />
@@ -194,7 +185,7 @@ function UpdateGoodsState({
                     />
                   </p>
                   <p>
-                    후&nbsp; 원 &nbsp; 가 :
+                    후&nbsp; 원 &nbsp; 가
                     <GoodsDonationInput
                       name="price"
                       value={editPriceText}
@@ -244,13 +235,8 @@ function UpdateGoodsState({
                       onFocus={() => setEditState({ state: true })}
                     />
                   </p>
-                  <p
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    후&nbsp; 원 &nbsp; 가 :
+                  <p>
+                    후&nbsp; 원 &nbsp; 가
                     <GoodsDonationInput
                       value={editPriceText}
                       onChange={updateGoodsPriceChange}
@@ -444,7 +430,7 @@ const GoodsImage = styled.div`
   background-repeat: no-repeat;
   background-position: center;
   margin-bottom: 10px;
-  margin-left: 35%;
+  margin-left: 30%;
 `;
 
 const GoodsText = styled.p`
