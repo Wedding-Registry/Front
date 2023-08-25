@@ -1,17 +1,15 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from "react";
+import styled from "styled-components";
 import AdminMemoContainer from "@/containers/admin/AdminMemoContainer.jsx";
 
-const StyledDiv = styled.div`
-`
-
+const StyledDiv = styled.div``;
 
 function AdminMemo() {
   return (
     <StyledDiv>
-<AdminMemoContainer></AdminMemoContainer>
-      </StyledDiv>
-  )
+      <AdminMemoContainer></AdminMemoContainer>
+    </StyledDiv>
+  );
 }
 
-export default AdminMemo
+export default AdminMemo;
