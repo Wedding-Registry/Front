@@ -66,6 +66,9 @@ const StyledArticle = styled.article`
     border-radius: 10px;
     overflow-y: scroll;
 
+    button {
+      margin-left: 10px;
+    }
     p {
       border-bottom: 1px solid #4b4b4b;
       margin: 15px 20px 15px 15px;
@@ -118,15 +121,20 @@ const StyledDivItem = styled.div`
     max-width: 250px;
     text-align: center;
     margin-top: 15px;
+    height: 50px;
   }
   h4::after {
     display: block;
     content: "";
     min-width: 50px;
     max-width: 250px;
-    height: 2px;
-    margin: 5px auto 15px;
-    border-bottom: 1px solid #aaa;
+    height: 5px;
+    margin: 10px auto 15px;
+    //border-bottom: 1px solid #aaa;
+  }
+  p:first-of-type {
+    border-top: 1px solid #aaa;
+    padding: 8px 0 0;
   }
   p {
     margin: 8px 0;
@@ -376,7 +384,7 @@ function AdminDonationListsContainer() {
               <h4>{i.updatedUsersGoodsName}</h4>
               {i.donationList?.map((j) => (
                 <p key={j.guestId}>
-                  {j.name} 님 {j.amount} 원
+                  {j.name} 님 {j.amount}원
                 </p>
               ))}
             </div>

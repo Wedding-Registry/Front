@@ -10,7 +10,7 @@ const StyledDiv = styled.div`
 `;
 const StyledSection = styled.section`
   margin: 40px auto 0;
-  width: 1285px;
+  width: 1300px;
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -44,12 +44,16 @@ const StyledSection = styled.section`
     }
     p {
       font-size: 14px;
-      margin: 7px 0 10px;
+      margin: 10px 0 10px;
+    }
+
+    p.total {
+      margin: 8px auto 28px;
+      font-size: 15px;
     }
   }
 `;
 
-// let attendanceData = {};
 function AdminMainContainer() {
   // const tempToken = import.meta.env.VITE_TEMPTOKEN;
   const token = localStorage.getItem("accessToken") || "needSignIn";
@@ -182,10 +186,11 @@ function AdminMainContainer() {
           <span>
             {donationQuery.data?.map((i) => (
               <div key={i.usersGoodsId}>
-                <h4>
-                  {i.usersGoodsName}, {i.usersGoodsTotalDonation}원
-                </h4>
-                <p>{i.usersGoodsTotalDonationRate}% 달성</p>
+                <h4>{i.usersGoodsName}</h4>
+                <p className="total">
+                  {i.usersGoodsTotalDonation}원({i.usersGoodsTotalDonationRate}%
+                  달성)
+                </p>
               </div>
             ))}
           </span>

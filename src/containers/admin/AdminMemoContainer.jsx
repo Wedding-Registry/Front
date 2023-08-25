@@ -1,5 +1,3 @@
-// import {Link} from "react-router-dom";
-
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
@@ -28,6 +26,10 @@ const StyledDiv = styled.div`
       background-color: #d9d9d9;
       border-radius: 50px;
       box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+
+      span.add {
+        margin-left: 80%;
+      }
     }
     input {
       width: 430px;
@@ -46,6 +48,7 @@ const StyledDiv = styled.div`
       display: inline-block;
       width: 350px;
       text-align: right;
+      cursor: pointer;
     }
     span:last-child {
       width: 80px;
@@ -55,7 +58,7 @@ const StyledDiv = styled.div`
     border-left: 1px solid #000;
     margin: 25px auto;
     textarea {
-      margin: 25px auto 25px 25px;
+      margin: 0px auto 0 25px;
       width: 600px;
       height: 800px;
       resize: none;
@@ -72,6 +75,10 @@ const StyledDiv = styled.div`
         );
       line-height: 31px;
       padding: 8px 50px 8px 10px;
+    }
+    button {
+      margin-left: 88%;
+      margin-top: 10px;
     }
   }
 `;
@@ -293,7 +300,9 @@ function AdminMemoContainer() {
           />
           <p>상품 이름: </p>
           <p>상품 가격: </p>
-          <span onClick={postMemoData}>등록하기</span>
+          <span className="add" onClick={postMemoData}>
+            등록하기
+          </span>
         </div>
         {isLoaded && <p ref={setRef}>Loading...</p>}
       </div>
