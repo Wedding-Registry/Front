@@ -20,6 +20,17 @@ jobs:
         with:
           args: --delete
       - name: Generate Environment Variables File for Production
+        run: |
+          echo "VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID" >> .env.production
+          echo "VITE_GOOGLE_CLIENT_SECRETKEY=$VITE_GOOGLE_CLIENT_SECRETKEY" >> .env.production
+          echo "VITE_KAKAO_REST_API_KEY=$VITE_KAKAO_REST_API_KEY" >> .env.production
+          echo "VITE_KAKAO_REDIRECT_URI=$VITE_KAKAO_REDIRECT_URI" >> .env.production
+          echo "VITE_KAKAO_ADMIN_KEY=$VITE_KAKAO_ADMIN_KEY" >> .env.production
+          echo "VITE_KAKAO_JS_KEY=$VITE_KAKAO_JS_KEY" >> .env.production
+          echo "VITE_TOKEN=$VITE_TOKEN" >> .env.production
+          echo "VITE_TEMPTOKEN=$VITE_TEMPTOKEN" >> .env.production
+          echo "VITE_HTTP_API_URL=$VITE_HTTP_API_URL" >> .env.production
+          echo "VITE_API_URL=$VITE_API_URL" >> .env.production
         env:
           VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
           VITE_GOOGLE_CLIENT_SECRETKEY: ${{ secrets.VITE_GOOGLE_CLIENT_SECRETKEY }}
@@ -36,14 +47,3 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: "ap-northeast-2"
           SOURCE_DIR: "dist"
-        run: |
-          echo "VITE_GOOGLE_CLIENT_ID=${{VITE_GOOGLE_CLIENT_ID}}" >> .env.production
-          echo "VITE_GOOGLE_CLIENT_SECRETKEY=${{$VITE_GOOGLE_CLIENT_SECRETKEY}}" >> .env.production
-          echo "VITE_KAKAO_REST_API_KEY=${{VITE_KAKAO_REST_API_KEY}}" >> .env.production
-          echo "VITE_KAKAO_REDIRECT_URI=${{VITE_KAKAO_REDIRECT_URI}}" >> .env.production
-          echo "VITE_KAKAO_ADMIN_KEY=${{VITE_KAKAO_ADMIN_KEY}}" >> .env.production
-          echo "VITE_KAKAO_JS_KEY=${{VITE_KAKAO_JS_KEY}}" >> .env.production
-          echo "VITE_TOKEN=${{VITE_TOKEN}}" >> .env.production
-          echo "VITE_TEMPTOKEN=${{VITE_TEMPTOKEN}}" >> .env.production
-          echo "VITE_HTTP_API_URL=${{VITE_HTTP_API_URL}}" >> .env.production
-          echo "VITE_API_URL=${{VITE_API_URL}}" >> .env.production
