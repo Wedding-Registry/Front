@@ -42,19 +42,23 @@ function NotificationItem({ data }) {
   if (data === null || data === undefined) {
     return <></>;
   }
+  const NAME = data.name;
+  const ATTEND = data.attend;
   if (data.type === "attend") {
     return (
       <AlarmDiv>
         <BsFillEnvelopeFill style={{ width: "21px", height: "21px" }} />
-        {data.type ? (
-          <AlarmAttendText>
-            {data.name}님이 결혼식 참석에 체크하셨습니다.
-          </AlarmAttendText>
-        ) : (
-          <AlarmAttendText>
-            {data.name}님이 결혼식 불참석에 체크하셨습니다.
-          </AlarmAttendText>
-        )}
+        <AlarmAttendText>
+          {ATTEND === "UNKNOWN" ? (
+            <span>{NAME}님이 미정에 체크하셨습니다.</span>
+          ) : (
+            <span>
+              {NAME}님이
+              {ATTEND === "NO" ? <span> 불참석</span> : <span> 참석</span>}에
+              체크하셨습니다.
+            </span>
+          )}
+        </AlarmAttendText>
       </AlarmDiv>
     );
   }
@@ -62,7 +66,7 @@ function NotificationItem({ data }) {
     <AlarmDiv>
       <CiMoneyBill style={{ width: "50px", height: "21px" }} />
       <AlarmDonationText>
-        {data.name}님이 {data.goods}에 {data.donation}원을 후원하셨습니다.
+        {NAME}님이 {data.goods}에 {data.donation}원을 후원하셨습니다.
       </AlarmDonationText>
     </AlarmDiv>
   );
