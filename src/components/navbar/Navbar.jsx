@@ -20,6 +20,11 @@ import { removeAccessToken } from "../../repository/AuthTokenRepository";
 import { getAlarm } from "../../services/navbar/NavbarService";
 import { useRecoilValue } from "recoil";
 import { uuidState } from "../../state/uuidState";
+import {
+  getUUid1Token,
+  getUUid2Token,
+  setUUidToken,
+} from "../../repository/GuestUuidRespository";
 
 function NotificationItemList({ notifications }) {
   if (notifications === undefined || notifications === null) {
@@ -140,7 +145,6 @@ function MarriedNavbar({ token, setNavbar }) {
 
 function GuestNavbar({ setNavbar }) {
   const uuidStateData = useRecoilValue(uuidState);
-
   return (
     <GuestTopItem>
       <TopTitleText>카테고리</TopTitleText>
@@ -166,15 +170,14 @@ function GuestNavbar({ setNavbar }) {
   );
 }
 
-export default function Navbar({ setNavbar, token, uuid1 }) {
+export default function Navbar({ setNavbar, token, guestState, uuid1 }) {
   const [_, nickName] = useTokenDecode(token);
-  const [uuid, setUUID] = useState({
-    uuidFirst: "",
-    uuidSecond: "",
-  });
+
   const [navbarNotification, setNavbarNotification] = useState([]);
   const navigate = useNavigate();
+  const localUuid1 = getUUid1Token();
 
+  const localUuid2 = getUUid2Token();
   async function getNavibarNotificationRender() {
     const navbarData = await getAlarm();
     setNavbarNotification(navbarData.data);
@@ -182,18 +185,17 @@ export default function Navbar({ setNavbar, token, uuid1 }) {
 
   async function getGoodsUrlUuidRender() {
     const UUID = await getGoodsUrlUUID();
-    setUUID({
-      uuidFirst: UUID.data.uuidFirst,
-      uuidSecond: UUID.data.uuidSecond,
-    });
+
+    if (!localUuid1) {
+      setUUidToken(UUID.data.uuidFirst, UUID.data.uuidSecond);
+    }
   }
   console.log(_);
-
   function guestStateRender() {
-    const uuidState = uuid.uuidFirst || uuid.uuidSecond;
+    const uuidState = localUuid1 || localUuid2;
     if (uuidState) {
       removeAccessToken();
-      navigate(`/Guest/${uuid.uuidFirst}/${uuid.uuidSecond}`);
+      navigate(`/Guest/${localUuid1}/${localUuid2}`);
       setNavbar(false);
       alert("로그아웃");
       return;
@@ -216,16 +218,23 @@ export default function Navbar({ setNavbar, token, uuid1 }) {
       return;
     }
   };
-  useEffect(() => {
-    getGoodsUrlUuidRender();
-  }, [uuid1]);
 
+  useEffect(() => {
+    if (uuid1) {
+      return;
+    }
+    if (!localUuid1) {
+      getGoodsUrlUuidRender();
+    }
+  }, []);
   useEffect(() => {
     if (token) getNavibarNotificationRender();
   }, []);
 
   const urlLinkClick = (first, secound) => {
-    clipboardHandle(first, secound);
+    if (token) {
+      clipboardHandle(first, secound);
+    }
   };
 
   const clipboardHandle = (first, secound) => {
@@ -239,10 +248,10 @@ export default function Navbar({ setNavbar, token, uuid1 }) {
       console.error(e);
     }
   };
-  console.log(uuid1);
+
   return (
     <>
-      {!uuid1 ? (
+      {!guestState ? (
         <Base>
           <Title>ZOLABAYO</Title>
           <NickNamediv>
@@ -270,7 +279,7 @@ export default function Navbar({ setNavbar, token, uuid1 }) {
           <BottomItemDiv>
             <span
               style={{ fontSize: "13px" }}
-              onClick={() => urlLinkClick(uuid.uuidFirst, uuid.uuidSecond)}
+              onClick={() => urlLinkClick(localUuid1, localUuid2)}
             >
               링크 공유하기
             </span>

@@ -1,24 +1,28 @@
 //상품 등록 페이지에서 링크 공유 클릭시 일어나는 component
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import kakaotalk from "@/assets/icons/kakaotalk.png";
 import sharelink from "@/assets/icons/sharelink.png";
 import { getGoodsUrlUUID } from "../services/uuid/UrlUuidService";
-import { uuidState } from "../state/uuidState";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+
+import { useRecoilValue } from "recoil";
 import { marriedInformationState } from "../state/marriedInformationState";
+import {
+  getUUid1Token,
+  getUUid2Token,
+  setUUidToken,
+} from "../repository/GuestUuidRespository";
 
 export default function ShareBox({ setSharebox }) {
-  const [uuid, setUUID] = useState({ uuidFirst: "", uuidSecond: "" });
-  const setUuidState = useSetRecoilState(uuidState);
   const marriedInformationData = useRecoilValue(marriedInformationState);
+  const localUuid1 = getUUid1Token();
+  const localUuid2 = getUUid2Token();
   async function getGoodsUrlUuidRender() {
     const UUID = await getGoodsUrlUUID();
-    setUuidState({
-      uuidFirst: UUID.data.uuidFirst,
-      uuidSecond: UUID.data.uuidSecond,
-    });
-    setUUID(UUID.data);
+
+    if (!localUuid1) {
+      setUUidToken(UUID.data.uuidFirst, UUID.data.uuidSecond);
+    }
   }
 
   useEffect(() => {
@@ -31,12 +35,13 @@ export default function ShareBox({ setSharebox }) {
   }, []);
 
   useEffect(() => {
-    getGoodsUrlUuidRender();
+    if (!localUuid1) {
+      getGoodsUrlUuidRender();
+    }
   }, []);
-
   const shareKaKao = () => {
     //kakao sdk script 부른 후 window.kakao로 접근
-    const INITIAL_LINK = `https://zolabayo.com/GallerySupport/${uuid.uuidFirst}/${uuid.uuidSecond}`;
+    const INITIAL_LINK = `https://zolabayo.com/GallerySupport/${localUuid2}/${localUuid2}`;
     const HUSBAND_NAME = marriedInformationData.data.account[0].name;
     const WIFE_NAME = marriedInformationData.data.account[1].name;
     if (window.Kakao) {
@@ -74,7 +79,7 @@ export default function ShareBox({ setSharebox }) {
   const urlLinkClick = () => {
     try {
       navigator.clipboard.writeText(
-        `https://zolabayo.com/GallerySupport/${uuid.uuidFirst}/${uuid.uuidSecond}`
+        `https://zolabayo.com/GallerySupport/${localUuid1}/${localUuid2}`
       );
       setSharebox(false);
       alert("링크주소가 복사되었습니다.");
