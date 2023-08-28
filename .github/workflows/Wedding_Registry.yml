@@ -19,11 +19,21 @@ jobs:
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --delete
+        - name: Generate Environment Variables File for Production
+        run: |
+          echo "VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID" >> .env.production
+          echo "VITE_GOOGLE_CLIENT_SECRETKEY=$VITE_GOOGLE_CLIENT_SECRETKEY" >> .env.production
+          echo "VITE_KAKAO_REST_API_KEY=$VITE_KAKAO_REST_API_KEY" >> .env.production
+          echo "VITE_KAKAO_REST_API_KEY=$VITE_KAKAO_REST_API_KEY" >> .env.production
+          echo "VITE_KAKAO_REDIRECT_URI=$VITE_KAKAO_REDIRECT_URI" >> .env.production
+          echo "VITE_KAKAO_ADMIN_KEY=$VITE_KAKAO_ADMIN_KEY" >> .env.production
+          echo "VITE_KAKAO_JS_KEY=$VITE_KAKAO_JS_KEY" >> .env.production
+          echo "VITE_TOKEN=$VITE_TOKEN" >> .env.production
+          echo "VITE_TEMPTOKEN=$VITE_TEMPTOKEN" >> .env.production
+          echo "VITE_HTTP_API_URL=$VITE_HTTP_API_URL" >> .env.production
+          echo "VITE_API_URL=$VITE_API_URL" >> .env.production
         env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          VITE_GOOGLE_CLIENT_ID: ${{ secrets.AWS_S3_BUCKET }}
+         VITE_GOOGLE_CLIENT_ID: ${{ secrets.AWS_S3_BUCKET }}
           VITE_GOOGLE_CLIENT_SECRETKEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
           VITE_KAKAO_REST_API_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           VITE_KAKAO_REDIRECT_URI: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -33,5 +43,9 @@ jobs:
           VITE_TEMPTOKEN: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           VITE_HTTP_API_URL: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           VITE_API_URL: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}          
           AWS_REGION: "ap-northeast-2"
           SOURCE_DIR: "dist"
