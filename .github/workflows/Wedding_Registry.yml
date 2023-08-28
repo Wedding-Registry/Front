@@ -19,7 +19,7 @@ jobs:
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --delete
-        - name: Generate Environment Variables File for Production
+      - name: Generate Environment Variables File for Production
           run: |
             echo "VITE_GOOGLE_CLIENT_ID=${{VITE_GOOGLE_CLIENT_ID}}" >> .env.production
             echo "VITE_GOOGLE_CLIENT_SECRETKEY=${{$VITE_GOOGLE_CLIENT_SECRETKEY}}" >> .env.production
