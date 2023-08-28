@@ -31,6 +31,9 @@ jobs:
           echo "VITE_TEMPTOKEN=$VITE_TEMPTOKEN" >> .env.production
           echo "VITE_HTTP_API_URL=$VITE_HTTP_API_URL" >> .env.production
           echo "VITE_API_URL=$VITE_API_URL" >> .env.production
+          echo "AWS_S3_BUCKET=$AWS_S3_BUCKET" >> .env.production
+          echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> .env.production
+          echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> .env.production
         env:
           VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
           VITE_GOOGLE_CLIENT_SECRETKEY: ${{ secrets.VITE_GOOGLE_CLIENT_SECRETKEY }}
