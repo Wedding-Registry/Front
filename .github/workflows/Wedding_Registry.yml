@@ -24,7 +24,6 @@ jobs:
           echo "VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID" >> .env.production
           echo "VITE_GOOGLE_CLIENT_SECRETKEY=$VITE_GOOGLE_CLIENT_SECRETKEY" >> .env.production
           echo "VITE_KAKAO_REST_API_KEY=$VITE_KAKAO_REST_API_KEY" >> .env.production
-          echo "VITE_KAKAO_REST_API_KEY=$VITE_KAKAO_REST_API_KEY" >> .env.production
           echo "VITE_KAKAO_REDIRECT_URI=$VITE_KAKAO_REDIRECT_URI" >> .env.production
           echo "VITE_KAKAO_ADMIN_KEY=$VITE_KAKAO_ADMIN_KEY" >> .env.production
           echo "VITE_KAKAO_JS_KEY=$VITE_KAKAO_JS_KEY" >> .env.production
@@ -36,15 +35,15 @@ jobs:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          VITE_GOOGLE_CLIENT_ID: ${{ secrets.AWS_S3_BUCKET }}
-          VITE_GOOGLE_CLIENT_SECRETKEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          VITE_KAKAO_REST_API_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          VITE_KAKAO_REDIRECT_URI: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          VITE_KAKAO_ADMIN_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          VITE_KAKAO_JS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          VITE_TOKEN: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          VITE_TEMPTOKEN: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          VITE_HTTP_API_URL: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          VITE_API_URL: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
+          VITE_GOOGLE_CLIENT_SECRETKEY: ${{ secrets.VITE_GOOGLE_CLIENT_SECRETKEY }}
+          VITE_KAKAO_REST_API_KEY: ${{ secrets.VITE_KAKAO_REST_API_KEY }}
+          VITE_KAKAO_REDIRECT_URI: ${{ secrets.VITE_KAKAO_REDIRECT_URI }}
+          VITE_KAKAO_ADMIN_KEY: ${{ secrets.VITE_KAKAO_ADMIN_KEY }}
+          VITE_KAKAO_JS_KEY: ${{ secrets.VITE_KAKAO_JS_KEY }}
+          VITE_TOKEN: ${{ secrets.VITE_TOKEN }}
+          VITE_TEMPTOKEN: ${{ secrets.VITE_TEMPTOKEN }}
+          VITE_HTTP_API_URL: ${{ secrets.VITE_HTTP_API_URL }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
           AWS_REGION: "ap-northeast-2"
           SOURCE_DIR: "dist"
