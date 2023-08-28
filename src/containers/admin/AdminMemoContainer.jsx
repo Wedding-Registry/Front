@@ -161,7 +161,6 @@ function AdminMemoContainer() {
   };
 
   const onEdit = (id) => {
-    console.log(isEdit);
     setIsEdit(true);
     setEditedItemId(id);
   };
@@ -182,15 +181,22 @@ function AdminMemoContainer() {
 
   const putMemoData = async (id) => {
     const { data } = await HttpClient.post(
-      `${apiUrl}usersgoods/name/update?usersGoodsId=${id}`,
+      `${apiUrl}usersgoods/cost/update?usersGoodsId=${id}`,
       {
-        usersGoodsName: goodsName,
         usersGoodsPrice: goodsPrice,
       }
     );
 
-    console.log(goodsPrice, data);
+    const res = await HttpClient.post(
+      `${apiUrl}usersgoods/name/update?usersGoodsId=${id}`,
+      {
+        usersGoodsName: goodsName,
+      }
+    );
+
+    console.log(res);
     setIsEdit(false);
+    location.reload();
     return data.data;
   };
   const deleteMemoData = async (id) => {
