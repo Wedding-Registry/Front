@@ -51,9 +51,6 @@ function CreateGoodsState({
           </div>
           <div style={{ width: "100%" }}>
             <OkorColsebuttonDiv>
-              <div>
-                <ApiButton onClick={registerGoodsButton}>등록하기</ApiButton>
-              </div>
               <div style={{ position: "absolute", top: "85%", right: "10%" }}>
                 <ApiButton onClick={okButton}>확인</ApiButton>|
                 <ApiButton onClick={() => deleteButton(goodsData.usersGoodsId)}>
@@ -235,12 +232,15 @@ function UpdateGoodsState({
                       onFocus={() => setEditState({ state: true })}
                     />
                   </p>
-                  <p>
-                    후&nbsp; 원 &nbsp; 가
+                  <p
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    후&nbsp; 원 &nbsp; 가 :
                     <GoodsDonationInput
                       value={editPriceText}
-                      onChange={updateGoodsPriceChange}
-                      name="price"
                       onFocus={() => setEditState({ state: true })}
                     />
                     원
