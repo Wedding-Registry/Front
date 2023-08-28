@@ -21,7 +21,7 @@ export default function Test() {
       <GoodsModal setIsOpen={true}>
         {modalData.state === "View" ? (
           <div>
-            modal Data id {modalData.id} + {modalData.state}
+            modal Data id1 {modalData.id} + {modalData.state}
           </div>
         ) : (
           <div> edit</div>
@@ -30,4 +30,3 @@ export default function Test() {
     </>
   );
 }
-  
