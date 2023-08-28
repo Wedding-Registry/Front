@@ -10,6 +10,9 @@ import { getGoodsSupportItemsList } from "../../services/gustGoods/GuestGoodsPro
 import RadioButtonGroup from "../../components/radiobutton/RadioButtonGroup";
 import { useRecoilState } from "recoil";
 import { marriedInformationState } from "../../state/marriedInformationState";
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 function MarriedInforMation({ guestToken }) {
   //신랑 신부 statae
@@ -20,6 +23,20 @@ function MarriedInforMation({ guestToken }) {
   //도로명주소
   const [addressData, setAdressData] = useState([]);
   const [dateTimeData, setDateTimeData] = useState("");
+
+  //날짜
+  const DateFicker = () => {
+    return (
+      <DatePicker
+        selected={dateTimeData}
+        timeInputLabel="Time:"
+        dateFormat="yyyy/MM/dd h:mm aa"
+        showTimeInput
+        className="datePicker"
+        readOnly={true}
+      />
+    );
+  };
   //신랑 신부 내용 조회
   async function getInforMationListRender(guestToken) {
     const getMerriedInfoMationData = await getInforMationList(guestToken);
@@ -30,14 +47,23 @@ function MarriedInforMation({ guestToken }) {
     const getMrriedInforMationDataHusWife =
       getMerriedInfoMationData.data?.account[1];
     setMerriedWifeNameData(getMrriedInforMationDataHusWife);
-    setAdressData(getMerriedInfoMationData.data?.location);
-    setDateTimeData(
-      getMerriedInfoMationData.data?.weddingDate +
-        "T" +
-        getMerriedInfoMationData.data?.weddingTime
-    );
-  }
 
+    setAdressData(getMerriedInfoMationData.data?.location);
+    const weddingDate = getMerriedInfoMationData.data?.weddingDate;
+    const weddingTime = getMerriedInfoMationData.data?.weddingTime;
+    const toStringDate = originalDate(weddingDate, weddingTime);
+    setDateTimeData(toStringDate);
+  }
+  //원래 날짜 데이터로 변환
+  function originalDate(date, time) {
+    if (date === "" || time === "") {
+      return;
+    }
+    if (date !== undefined) {
+      const originalDate = new Date(date + " " + time);
+      return originalDate;
+    }
+  }
   useEffect(() => {
     getInforMationListRender(guestToken);
   }, []);
@@ -59,30 +85,17 @@ function MarriedInforMation({ guestToken }) {
           )}
         </TitleDiv>
         <GoodsWeddingdiv>
-          {addressData && (
-            <GoodsInformationAddressandDateTimeDiv key={addressData}>
-              <GoodsWeddingadress
-                style={{
-                  marginBottom: "20px",
-                }}
-                disabled={true}
-                value={addressData || ""}
-                placeholder="예식장 주소"
-              />
-              <input
-                type="datetime-local"
-                style={{
-                  width: "200px",
-                  borderRadius: "10px",
-                  backgroundColor: "#EBEBEB",
-                  height: "33px",
-                  border: "1px solid #EBEBEB",
-                }}
-                value={dateTimeData || ""}
-                disabled={true}
-              />
-            </GoodsInformationAddressandDateTimeDiv>
-          )}
+          <GoodsInformationAddressandDateTimeDiv key={addressData}>
+            <GoodsWeddingadress
+              style={{
+                marginBottom: "20px",
+              }}
+              disabled={true}
+              value={addressData || ""}
+              placeholder="예식장 주소"
+            />
+            <DateFicker />
+          </GoodsInformationAddressandDateTimeDiv>
         </GoodsWeddingdiv>
         <CenterTextdiv>
           <RadioButtonGroup guestToken={guestToken} />
@@ -380,7 +393,7 @@ const GoodsWeddingadress = styled.input`
   outline: none;
   border: none;
   background-color: #ebebeb;
-  width: 200px;
+  width: 320px;
   border-radius: 10px;
   margin-left: 5px;
   height: 33px;
@@ -390,4 +403,6 @@ const GoodsWeddingadress = styled.input`
 const GoodsInformationAddressandDateTimeDiv = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
+  width: 100%;
 `;
