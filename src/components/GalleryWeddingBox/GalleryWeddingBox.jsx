@@ -7,6 +7,7 @@ import { galleryWeddingImageState } from "../../state/galleryWeddingImageState";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { uuidState } from "../../state/uuidState";
 import { AiOutlineClose } from "react-icons/ai";
+import imageCompression from "browser-image-compression";
 
 export default function GalleryWeddingBox({ url, deleteImageOnClick, id }) {
   const setImgData = useSetRecoilState(galleryWeddingImageState);
@@ -17,16 +18,50 @@ export default function GalleryWeddingBox({ url, deleteImageOnClick, id }) {
   }
   const imageInput = useRef();
 
-  const onUploadImage = useCallback((e) => {
+  const onUploadImage = useCallback(async (e) => {
+    const options = {
+      maxSizeMB: 2,
+      maxWidthOrHeight: 500,
+      useWebWorker: true,
+    };
     if (!e.target.files[0]) {
       return;
     }
     if (e.target.files[0]) {
-      const formData = new FormData();
-      formData.append("galleryImg", e.target.files[0]);
-      addGalleryWeddingImageRender(formData);
+      let targetFile = e.target.files[0];
+      try {
+        const compressedFile = await imageCompression(targetFile, options);
+
+        const reader = new FileReader();
+        reader.readAsDataURL(compressedFile);
+        reader.onloadend = () => {
+          const base64data = reader.result;
+          handlingDataForm(base64data);
+        };
+      } catch (error) {
+        console.log(error);
+      }
     }
   }, []);
+
+  //formdata로 변환
+  const handlingDataForm = async (dataURI) => {
+    const byteString = atob(dataURI.split(",")[1]);
+
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([ia], {
+      type: "image/jpeg",
+    });
+    const file = new File([blob], "image.jpg");
+
+    const formData = new FormData();
+    formData.append("galleryImg", file);
+    addGalleryWeddingImageRender(formData);
+  };
 
   const onClickImage = useCallback(() => {
     if (!imageInput.current) {
@@ -34,6 +69,7 @@ export default function GalleryWeddingBox({ url, deleteImageOnClick, id }) {
     }
     imageInput.current.click();
   }, []);
+
   return (
     <>
       <Base>
@@ -65,7 +101,19 @@ export default function GalleryWeddingBox({ url, deleteImageOnClick, id }) {
             </Image>
           </>
         ) : (
-          <PlusImage src={Plus} onClick={onClickImage} />
+          <div>
+            <button
+              onClick={onClickImage}
+              style={{
+                width: "300px",
+                height: "300px",
+                backgroundColor: "transparent",
+                border: "0",
+              }}
+            >
+              <img src={Plus} style={{ width: "5%", height: "5%" }} />
+            </button>
+          </div>
         )}
       </Base>
     </>
@@ -96,14 +144,9 @@ const Image = styled.div`
   justify-content: flex-end;
 `;
 
-const PlusImage = styled.div`
-  background: ${(props) => `url(${props.src}) no-repeat center`};
-  width: 5%;
-  height: 5%;
-  background-size: cover;
-`;
 const Imageinput = styled.div`
   margin: 0 8px 0 8px;
+
   label {
     display: inline-block;
     font-size: inherit;
