@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import logo from "@/assets/icons/logo.png";
@@ -9,6 +9,7 @@ import { Link, useLocation } from "react-router-dom";
 import { getAccessToken } from "../../repository/AuthTokenRepository";
 import { useRecoilValue } from "recoil";
 import { uuidState } from "../../state/uuidState";
+import { getUUid1Token } from "../../repository/GuestUuidRespository";
 
 function TokenStatusLink({ token, setNavbar, navbar }) {
   if (token === null || token === undefined || token === false) {
@@ -44,10 +45,21 @@ function TokenStatusLink({ token, setNavbar, navbar }) {
 
 export default function Header({ border }) {
   const [navbar, setNavbar] = useState(false);
+  //true가 게스트 상태 false가 기본 상태
+  const [guestState, setGuestState] = useState(false);
+
   const uuidStateValue = useRecoilValue(uuidState);
   const path = useLocation();
   const uuid1 = path.pathname.trim().split("/")[2];
+
+  const localUuid1 = getUUid1Token();
+
   const token = getAccessToken();
+  useEffect(() => {
+    if (uuid1 !== null && localUuid1 === null) {
+      setGuestState(true);
+    }
+  }, [uuid1]);
 
   return (
     <>
@@ -75,7 +87,12 @@ export default function Header({ border }) {
         </HeaderLogoDiv>
       </HeaderDiv>
       {navbar ? (
-        <Navbar setNavbar={setNavbar} token={token} uuid1={uuid1} />
+        <Navbar
+          setNavbar={setNavbar}
+          token={token}
+          uuid1={uuid1}
+          guestState={guestState}
+        />
       ) : null}
     </>
   );
