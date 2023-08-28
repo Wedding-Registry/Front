@@ -10,6 +10,11 @@ const StyledDiv = styled.div`
   display: flex;
   justify-content: center;
 
+  .edit {
+    margin: 10px auto 5px;
+    height: 1.5rem;
+    padding: 2px;
+  }
   div.img {
     width: 600px;
     margin-right: 50px;
@@ -20,12 +25,25 @@ const StyledDiv = styled.div`
       box-sizing: border-box;
       width: 600px;
       padding: 20px 80px 0;
-      height: 140px;
+      min-height: 140px;
       margin-top: 25px;
       margin-bottom: 30px;
       background-color: #d9d9d9;
       border-radius: 50px;
       box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+
+      p:first-child {
+        max-width: 100%;
+        margin: 0;
+        word-break: break-all;
+      }
+      p:nth-child(2) {
+        word-break: break-all;
+      }
+      span {
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+      }
 
       span.add {
         margin-left: 80%;
@@ -90,6 +108,7 @@ function AdminMemoContainer() {
   const [goodsName, setGoodsName] = useState("");
   const [memoPad, setMemoPad] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
+  const [editedItemId, setEditedItemId] = useState(null);
   // const [count, setCount] = useState(0);
   const memoValue = (e) => {
     setMemoPad(e.target.value);
@@ -141,14 +160,13 @@ function AdminMemoContainer() {
     }
   };
 
-  const onEdit = () => {
+  const onEdit = (id) => {
     console.log(isEdit);
     setIsEdit(true);
+    setEditedItemId(id);
   };
   const fetchMemoData = async () => {
-    const { data } = await HttpClient.get(
-      `${apiUrl}admin/memo/item/wish?size=5&sort=id,DESC&lastId=3`
-    );
+    const { data } = await HttpClient.get(`${apiUrl}admin/memo/item/wish`);
     console.log(data);
     setIsLoaded(false);
     return data.data;
@@ -161,23 +179,35 @@ function AdminMemoContainer() {
     console.log(data);
     return data.data;
   };
-  const putMemoData = async () => {
-    const { data } = await HttpClient.put(`${apiUrl}admin/memo/item/wish`, {
-      url: url,
-      usersGoodsName: goodsName,
-      usersGoodsPrice: goodsPrice,
-    });
 
-    console.log(data);
+  const putMemoData = async (id) => {
+    const { data } = await HttpClient.post(
+      `${apiUrl}usersgoods/name/update?usersGoodsId=${id}`,
+      {
+        usersGoodsName: goodsName,
+        usersGoodsPrice: goodsPrice,
+      }
+    );
+
+    console.log(goodsPrice, data);
     setIsEdit(false);
     return data.data;
   };
   const deleteMemoData = async (id) => {
-    const { data } = await HttpClient.delete(`${apiUrl}admin/memo/item/wish`, {
-      usersGoodsId: id,
-    });
-    console.log(data);
-    return data.data;
+    if (confirm("삭제하시겠어요?")) {
+      const { data } = await HttpClient.delete(
+        `${apiUrl}usersgoods?usersGoodsId=${id}`,
+        {
+          usersGoodsId: id,
+        }
+      );
+      alert("삭제 성공!");
+      location.reload();
+
+      return data.data;
+    } else {
+      return false;
+    }
   };
 
   const getMemoPad = async () => {
@@ -190,7 +220,7 @@ function AdminMemoContainer() {
     const { data } = await HttpClient.post(`${apiUrl}admin/memo/pad`, {
       contents: memoPad,
     });
-    alert("저장성공!");
+    alert("저장 성공!");
     return data.data;
   };
 
@@ -218,28 +248,32 @@ function AdminMemoContainer() {
         {data.content?.map((i) => (
           <div key={i.usersGoodsId} className="item">
             <p>{i.usersGoodsImgUrl}</p>
-            {isEdit === true ? (
+            {isEdit === true && i.usersGoodsId === editedItemId ? (
               <>
                 <input
-                  value={i.usersGoodsName}
+                  defaultValue={i.usersGoodsName}
                   onChange={inputValue}
                   name="name"
+                  className="edit"
                 />
                 <input
-                  value={i.usersGoodsPrice}
+                  className="edit"
+                  defaultValue={i.usersGoodsPrice}
                   onChange={inputValue}
                   name="price"
                 />
-                <span onClick={putMemoData(i.usersGoodsId)}>적용하기</span>
+                <span onClick={() => putMemoData(i.usersGoodsId)}>
+                  적용하기
+                </span>
               </>
             ) : (
               <>
                 <p>상품 이름: {i.usersGoodsName}</p>
                 <p>상품 가격: {i.usersGoodsPrice}</p>
-                <span onClick={onEdit}>수정하기</span>
+                <span onClick={() => onEdit(i.usersGoodsId)}>수정하기</span>
               </>
             )}
-            <span onClick={deleteMemoData(i.usersGoodsId)}>삭제하기</span>
+            <span onClick={() => deleteMemoData(i.usersGoodsId)}>삭제하기</span>
           </div>
         ))}
         <div className="item">

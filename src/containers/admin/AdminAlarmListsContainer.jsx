@@ -30,6 +30,18 @@ const StyledDiv = styled.div`
       margin-top: 3px;
       font-size: 13px;
     }
+    span.price {
+      display: inline;
+      color: red;
+      font-weight: 600;
+      font-size: 16px;
+    }
+    span.name {
+      display: inline;
+      color: #000;
+      font-weight: 600;
+      font-size: 16px;
+    }
   }
 
   .attend {
@@ -101,7 +113,8 @@ function AdminAlarmListsContainer() {
         {data.donation?.map((i) => (
           <div key={i.goodsDonationId} className="item">
             <p>
-              {i.name}님이 {i.goods}에 {i.amount}원을 후원하셨습니다.
+              <span className="name">{i.name}</span>님이 {i.goods}에
+              <span className="price"> {i.amount}</span>원을 후원하셨습니다.
             </p>
             <span>
               {i.date} {i.time}
