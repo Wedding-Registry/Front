@@ -60,7 +60,7 @@ function NotificationItem({ data }) {
   }
   return (
     <AlarmDiv>
-      <CiMoneyBill style={{ width: "21px", height: "21px" }} />
+      <CiMoneyBill style={{ width: "50px", height: "21px" }} />
       <AlarmDonationText>
         {data.name}님이 {data.goods}에 {data.donation}원을 후원하셨습니다.
       </AlarmDonationText>
@@ -388,7 +388,7 @@ const GuestTopItem = styled.div`
 
 const CenterItemDiv = styled.div`
   border-bottom: 1px solid rgba(0, 0, 0, 0.5);
-  height: 461px;
+  height: 500px;
 `;
 const CenterItemTitle = styled.div`
   font-style: normal;
@@ -426,7 +426,7 @@ const AlarmDiv = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  height: 80px;
+  height: 20%;
   margin-left: 5px;
 `;
 const AlarmAttendText = styled.p`
