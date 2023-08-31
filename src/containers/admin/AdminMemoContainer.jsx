@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { useQuery } from "@tanstack/react-query";
 import HttpClient from "@/apis/HttpClient.js";
 
 const StyledDiv = styled.div`
@@ -76,7 +75,7 @@ const StyledDiv = styled.div`
     border-left: 1px solid #000;
     margin: 25px auto;
     textarea {
-      margin: 0px auto 0 25px;
+      margin: 0 auto 0 25px;
       width: 600px;
       height: 800px;
       resize: none;
@@ -107,48 +106,71 @@ function AdminMemoContainer() {
   const [goodsPrice, setGoodsPrice] = useState("");
   const [goodsName, setGoodsName] = useState("");
   const [memoPad, setMemoPad] = useState("");
-  const [isLoaded, setIsLoaded] = useState(false);
   const [editedItemId, setEditedItemId] = useState(null);
-  // const [count, setCount] = useState(0);
+  const [lastId, setLastId] = useState(0);
+  const [isLast, setIsLast] = useState(false);
+  const listRef = useRef(null);
+  const [items, setItems] = useState([]);
+  const [memoDefaultValue, setMemoDefaultValue] = useState("");
+
   const memoValue = (e) => {
     setMemoPad(e.target.value);
   };
 
   const apiUrl = import.meta.env.VITE_HTTP_API_URL;
 
-  const defaultOption = {
-    root: null,
-    threshold: 0.5,
-    rootMargin: "0px",
-  };
-  const useIntersect = (onIntersect, option) => {
-    const [ref, setRef] = useState(null);
-    const checkIntersect = useCallback(([entry], observer) => {
-      if (entry.isIntersecting) {
-        onIntersect(entry, observer);
-      }
-    }, []);
+  useEffect(() => {
+    getMemoPad();
+    const observer = new IntersectionObserver(handleObserver, {
+      root: null,
+      rootMargin: "0px",
+      threshold: 1,
+    });
 
-    useEffect(() => {
-      let observer;
-      if (ref) {
-        observer = new IntersectionObserver(checkIntersect, {
-          ...defaultOption,
-          ...option,
-        });
-        observer.observe(ref);
-      }
-      return () => observer && observer.disconnect();
-    }, [ref, option.root, option.threshold, option.rootMargin, checkIntersect]);
-    return [ref, setRef];
-  };
+    if (listRef.current) {
+      observer.observe(listRef.current);
+    }
 
-  const [_, setRef] = useIntersect(async (entry, observer) => {
-    observer.observe(entry.target);
-    setIsLoaded(true);
-    console.log(_);
-    await fetchMemoData();
-  }, {});
+    return () => {
+      if (listRef.current) {
+        observer.unobserve(listRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const fetchMemoData = async () => {
+      if (!isLast) {
+        if (lastId === 0) {
+          const { data } = await HttpClient.get(
+            `${apiUrl}admin/memo/item/wish?size=5&sort=id,DESC`
+          );
+          setLastId(data.data.lastId);
+          setItems(() => [...data.data.content]);
+        } else {
+          const { data } = await HttpClient.get(
+            `${apiUrl}admin/memo/item/wish?size=5&sort=id,DESC&lastId=${lastId}`
+          );
+          setLastId(data.data.lastId);
+          setItems((prevItems) => [...prevItems, ...data.data.content]);
+          if (data.data.isLast) {
+            setIsLast(true);
+          } else {
+            setIsLast(false);
+          }
+        }
+      }
+    };
+
+    fetchMemoData();
+  }, [lastId]);
+
+  const handleObserver = (entries) => {
+    const target = entries[0];
+    if (target.isIntersecting) {
+      console.log(entries);
+    }
+  };
 
   const inputValue = (e) => {
     if (e.target.name === "url") {
@@ -164,40 +186,45 @@ function AdminMemoContainer() {
     setIsEdit(true);
     setEditedItemId(id);
   };
-  const fetchMemoData = async () => {
-    const { data } = await HttpClient.get(`${apiUrl}admin/memo/item/wish`);
-    console.log(data);
-    setIsLoaded(false);
-    return data.data;
-  };
 
   const postMemoData = async () => {
-    const { data } = await HttpClient.post(`${apiUrl}admin/memo/item/wish`, {
-      url: url,
-    });
-    console.log(data);
-    return data.data;
+    if (url.trim()) {
+      await HttpClient.post(`${apiUrl}admin/memo/item/wish`, {
+        url: url,
+      });
+      location.reload();
+    } else {
+      alert("등록할 상품의 url을 입력해주세요");
+      setUrl("");
+    }
   };
 
   const putMemoData = async (id) => {
-    const { data } = await HttpClient.post(
-      `${apiUrl}usersgoods/cost/update?usersGoodsId=${id}`,
-      {
-        usersGoodsPrice: goodsPrice,
+    try {
+      if (goodsPrice) {
+        await HttpClient.post(
+          `${apiUrl}usersgoods/cost/update?usersGoodsId=${id}`,
+          {
+            usersGoodsPrice: goodsPrice,
+          }
+        ).catch((err) => {
+          console.log(err);
+        });
+      } else {
+        await HttpClient.post(
+          `${apiUrl}usersgoods/name/update?usersGoodsId=${id}`,
+          {
+            usersGoodsName: goodsName,
+          }
+        ).catch((err) => {
+          console.log(err);
+        });
       }
-    );
-
-    const res = await HttpClient.post(
-      `${apiUrl}usersgoods/name/update?usersGoodsId=${id}`,
-      {
-        usersGoodsName: goodsName,
-      }
-    );
-
-    console.log(res);
+      location.reload();
+    } catch (err) {
+      console.log(err);
+    }
     setIsEdit(false);
-    location.reload();
-    return data.data;
   };
   const deleteMemoData = async (id) => {
     if (confirm("삭제하시겠어요?")) {
@@ -209,7 +236,6 @@ function AdminMemoContainer() {
       );
       alert("삭제 성공!");
       location.reload();
-
       return data.data;
     } else {
       return false;
@@ -217,41 +243,30 @@ function AdminMemoContainer() {
   };
 
   const getMemoPad = async () => {
-    const { data } = await HttpClient.get(`${apiUrl}admin/memo/pad`);
-
-    console.log(data);
-    return data.data;
+    try {
+      const { data } = await HttpClient.get(`${apiUrl}admin/memo/pad`);
+      setMemoDefaultValue(data.data.contents);
+      return data.data;
+    } catch (err) {
+      console.log(err);
+    }
   };
   const postMemoPad = async () => {
-    const { data } = await HttpClient.post(`${apiUrl}admin/memo/pad`, {
-      contents: memoPad,
-    });
-    alert("저장 성공!");
-    return data.data;
+    try {
+      const { data } = await HttpClient.post(`${apiUrl}admin/memo/pad`, {
+        contents: memoPad,
+      });
+      alert("저장 성공!");
+      return data.data;
+    } catch (err) {
+      console.log(err);
+    }
   };
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["fetchMemoData"],
-    queryFn: fetchMemoData,
-  });
-
-  const memoPadQuery = useQuery({
-    queryKey: ["fetchMemoPadData"],
-    queryFn: getMemoPad,
-  });
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
 
   return (
     <StyledDiv>
       <div className="img">
-        {data.content?.map((i) => (
+        {items.map((i) => (
           <div key={i.usersGoodsId} className="item">
             <p>{i.usersGoodsImgUrl}</p>
             {isEdit === true && i.usersGoodsId === editedItemId ? (
@@ -294,13 +309,13 @@ function AdminMemoContainer() {
             등록하기
           </span>
         </div>
-        {isLoaded && <p ref={setRef}>Loading...</p>}
+        {!isLast && <p ref={listRef}>Loading...</p>}
       </div>
       <div className="pad">
         <textarea
           cols="30"
           rows="10"
-          defaultValue={memoPadQuery.data.contents}
+          defaultValue={memoDefaultValue}
           onChange={memoValue}
         ></textarea>
         <button onClick={postMemoPad}>저장하기</button>
