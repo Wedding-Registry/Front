@@ -39,7 +39,6 @@ export default function GoodsSupportModal({
       (v) => v.usersGoodsId === usersGoodsId
     );
     setGoodsSupportDataList(filterGoodsData);
-    //setDonationText(filterGoodsData[0].usersGoodsTotalDonation);
   }, []);
 
   const updateGoodsDonation = () => {
