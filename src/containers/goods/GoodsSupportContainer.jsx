@@ -8,11 +8,10 @@ import GoodsSupportModal from "../../components/goodssupportmodal/GoodsSupportMo
 import { getInforMationList } from "../../services/gustGoods/GuestMarriedService";
 import { getGoodsSupportItemsList } from "../../services/gustGoods/GuestGoodsProductSerivce";
 import RadioButtonGroup from "../../components/radiobutton/RadioButtonGroup";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { marriedInformationState } from "../../state/marriedInformationState";
-import DatePicker from "react-datepicker";
-
-import "react-datepicker/dist/react-datepicker.css";
+import DateTimePeicker from "../../components/datetimePicker/DateTimePeicker";
+import { datePickerSate } from "../../state/datePickerState";
 
 function MarriedInforMation({ guestToken }) {
   //신랑 신부 statae
@@ -20,23 +19,11 @@ function MarriedInforMation({ guestToken }) {
   const [merriedWifeNameData, setMerriedWifeNameData] = useRecoilState(
     marriedInformationState
   );
+  const dateTimeReadOnlyState = useSetRecoilState(datePickerSate);
   //도로명주소
   const [addressData, setAdressData] = useState([]);
   const [dateTimeData, setDateTimeData] = useState("");
 
-  //날짜
-  const DateFicker = () => {
-    return (
-      <DatePicker
-        selected={dateTimeData}
-        timeInputLabel="Time:"
-        dateFormat="yyyy/MM/dd h:mm aa"
-        showTimeInput
-        className="datePicker"
-        readOnly={true}
-      />
-    );
-  };
   //신랑 신부 내용 조회
   async function getInforMationListRender(guestToken) {
     const getMerriedInfoMationData = await getInforMationList(guestToken);
@@ -67,6 +54,11 @@ function MarriedInforMation({ guestToken }) {
   useEffect(() => {
     getInforMationListRender(guestToken);
   }, []);
+
+  useEffect(() => {
+    dateTimeReadOnlyState(true);
+  }, []);
+
   return (
     <>
       <>
@@ -94,7 +86,7 @@ function MarriedInforMation({ guestToken }) {
               value={addressData || ""}
               placeholder="예식장 주소"
             />
-            <DateFicker />
+            <DateTimePeicker dateTimeData={dateTimeData} />
           </GoodsInformationAddressandDateTimeDiv>
         </GoodsWeddingdiv>
         <CenterTextdiv>

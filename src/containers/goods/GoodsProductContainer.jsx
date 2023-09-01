@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { RiArrowDropLeftLine, RiArrowDropRightLine } from "react-icons/ri";
-import DatePicker from "react-datepicker";
 
-import "react-datepicker/dist/react-datepicker.css";
 //공유 이미지 가져오기
 import Share from "@/assets/icons/share.png";
 import ShareBox from "@/components/ShareBox";
@@ -24,22 +22,22 @@ import {
 import GoodsModal from "../../components/goodsmodal/GoodsModal";
 import { useRecoilState } from "recoil";
 import { marriedInformationState } from "../../state/marriedInformationState";
+import DateTimePeicker from "../../components/datetimePicker/DateTimePeicker";
+import useDateTimeConver from "../../hooks/useDateTImeConver";
+import useDateTimeFormat from "../../hooks/useDateTimeFormat";
 
 export default function GoodsProductContainer() {
   const [sharebox, setSharebox] = useState(false);
   const [didmount, setDidmount] = useState(false);
   const [fetchData, setFetchData] = useState([]);
   const [addressText, setAddressText] = useState("");
-
   const [dateText, setDateText] = useState("");
-
   const [wifeNameText, setWifeNameText] = useState("");
   const [husbandNameText, setHusbandNameText] = useState("");
   const [wifeBankText, setWifeBankText] = useState("");
   const [wifeAccountText, setWifeAccountText] = useState("");
   const [husbandBankText, setHusbandBankText] = useState("");
   const [husbandAccountText, setHusBandAccountText] = useState("");
-
   const [marriedWeddingData, setMarriedWeddingData] = useRecoilState(
     marriedInformationState
   );
@@ -49,6 +47,7 @@ export default function GoodsProductContainer() {
     userGoodsId: "",
   });
   const [currentSlide, setCurrentSlide] = useState(0);
+
   //state 상태에 따른 비동기 통신중 fetchdata의 값이 undefined일때 상태를 고려한 code
   const arrayLength = fetchData ? fetchData.length : 0;
   const TOTAL_SLIDES = 1;
@@ -110,60 +109,19 @@ export default function GoodsProductContainer() {
     const data = await addWeddingHallTime(date);
     const converData = data.data.weddingDate;
     const converTime = data.data.weddingTime;
-    const toStringDate = originalDate(converData, converTime);
-
+    const toStringDate = useDateTimeConver(converData, converTime);
     setDateText(toStringDate);
   }
   //결혼식 날짜 Change 이벤트
   const dateTimeChange = async (date) => {
     //yyyymmdd format
-    const formatData = formatDateToYYYYMMDD(date);
+    const formatData = useDateTimeFormat(date);
     if (formatData) {
       await addWeddingHallTimeRender(formatData);
       alert("예식 날짜가 저장되었습니다.");
     }
   };
-  //선택한 날짜를 yyymmdd로 변환
-  function formatDateToYYYYMMDD(date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
-  }
 
-  // 예식장 날짜 전체 조회 후 보여주는 값
-  function marriedWeddingTimeHandler() {
-    const weddingDate = marriedWeddingData.data?.weddingDate;
-    const weddingTime = marriedWeddingData.data?.weddingTime;
-    const toStringDate = originalDate(weddingDate, weddingTime);
-    setDateText(toStringDate);
-  }
-
-  // 원래 날짜 데이터로 변환
-  function originalDate(date, time) {
-    if (date === "" || time === "") {
-      return;
-    }
-    if (date !== undefined) {
-      const originalDate = new Date(date + " " + time);
-      return originalDate;
-    }
-  }
-  //날짜
-  const DateFicker = () => {
-    return (
-      <DatePicker
-        selected={dateText}
-        onChange={(date) => dateTimeChange(date)}
-        timeInputLabel="Time:"
-        dateFormat="yyyy/MM/dd h:mm aa"
-        showTimeInput
-        className="datePicker"
-      />
-    );
-  };
   // 신부 이름 text
   const wifeTextChange = (e) => {
     const value = e.target.value;
@@ -199,12 +157,6 @@ export default function GoodsProductContainer() {
     const value = e.target.value;
     setAddressText(value);
   };
-  // // 결혼식 날짜 Change 이벤트
-  // const dateTimeChange = (e) => {
-  //   const value = e.target.value;
-  //   setLocationText(value);
-  //   addWeddingHallTimeRender(locationText);
-  // };
 
   //이름 계좌 시간 전체 등록 버튼
   const addMarriedInformationClick = async () => {
@@ -312,6 +264,18 @@ export default function GoodsProductContainer() {
     const marriedWeddingLocation = marriedWeddingData.data?.location;
     setAddressText(marriedWeddingLocation);
   }
+  // 예식장 날짜 전체 조회 후 보여주는 값
+  function marriedWeddingTimeHandler() {
+    const weddingDate = marriedWeddingData.data?.weddingDate;
+    const weddingTime = marriedWeddingData.data?.weddingTime;
+    console.log(weddingDate, weddingTime);
+    if (weddingDate !== undefined && weddingTime !== undefined) {
+      const toStringDate = useDateTimeConver(weddingDate, weddingTime);
+
+      setDateText(toStringDate);
+    }
+  }
+
   useEffect(() => {
     slideRef.current.style.transition = "all 0.5s ease-in-out";
     slideRef.current.style.transform = `translateX(-${currentSlide}00%)`; // 백틱을 사용하여 슬라이드로 이동하는 애니메이션을 만듭니다.
@@ -381,7 +345,10 @@ export default function GoodsProductContainer() {
               defaultValue={addressText || ""}
               onKeyDown={(e) => activeEnter(e)}
             />
-            <DateFicker />
+            <DateTimePeicker
+              dateTimeData={dateText}
+              dateTimeChange={dateTimeChange}
+            />
           </GoodsWeddingdiv>
           <CenterTextdiv>
             <div
