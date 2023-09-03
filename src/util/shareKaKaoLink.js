@@ -1,29 +1,33 @@
-export const shareKakao = (route, title) => {
-  // url이 id값에 따라 변경되기 때문에 route를 인자값으로 받아줌
-  //let REACT_APP_SHARE_KAKAO_LINK_KEY = "0140d2f1cdb4b1f0e243294bdeb84e57";
+export const shareKaKaoLink = (HUSBAND_NAME, WIFE_NAME, uuid1, uuid2) => {
+  //kakao sdk script 부른 후 window.kakao로 접근
+  const INITIAL_LINK = `https://zolabayo.com/GallerySupport/${uuid1}/${uuid2}`;
+
   if (window.Kakao) {
     const kakao = window.Kakao;
+    //중복 initalization 방지
+    // 카카오에서 제공하는 javascirpt key를 이용하여  initiallze
     if (!kakao.isInitialized()) {
-      kakao.init(process.env.REACT_APP_SHARE_KAKAO_LINK_KEY); // 카카오에서 제공받은 javascript key를 넣어줌 -> .env파일에서 호출시킴
+      //자바스크립트 키
+      kakao.init("0140d2f1cdb4b1f0e243294bdeb84e57");
     }
-
     kakao.Link.sendDefault({
-      objectType: "feed", // 카카오 링크 공유 여러 type들 중 feed라는 타입 -> 자세한 건 카카오에서 확인
+      objectType: "feed",
       content: {
-        title: title, // 인자값으로 받은 title
-        description: "설명", // 인자값으로 받은 title
-        imageUrl: "이미지 url",
+        title: "ZOLABAYO",
+        description: `${HUSBAND_NAME} ❤ ${WIFE_NAME}`,
+        imageUrl:
+          "https://www.urbanbrush.net/web/wp-content/uploads/edd/2022/09/urbanbrush-20220922134835594912.jpg", //local이나 내 ip는 사용할 수 없기 떄문에 test 불가 ,
+        imageWidth: 1200,
+        imageHeight: 630,
         link: {
-          mobileWebUrl: route, // 인자값으로 받은 route(uri 형태)
-          webUrl: route,
+          webUrl: INITIAL_LINK,
         },
       },
       buttons: [
         {
-          title: "title",
+          title: "웹으로 보기",
           link: {
-            mobileWebUrl: route,
-            webUrl: route,
+            webUrl: INITIAL_LINK,
           },
         },
       ],
