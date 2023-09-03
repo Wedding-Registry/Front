@@ -3,18 +3,21 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import kakaotalk from "@/assets/icons/kakaotalk.png";
 import sharelink from "@/assets/icons/sharelink.png";
-import { getGoodsUrlUUID } from "../services/uuid/UrlUuidService";
+import { getGoodsUrlUUID } from "../../services/uuid/UrlUuidService";
 
-import { useRecoilValue } from "recoil";
-import { marriedInformationState } from "../state/marriedInformationState";
 import {
   getUUid1Token,
   getUUid2Token,
   setUUidToken,
-} from "../repository/GuestUuidRespository";
+} from "../../repository/GuestUuidRespository";
+import { shareKaKaoLink } from "../../util/shareKaKaoLink";
+import { useRecoilValue } from "recoil";
+import { marriedInformationState } from "../../state/marriedInformationState";
 
 export default function ShareBox({ setSharebox }) {
   const marriedInformationData = useRecoilValue(marriedInformationState);
+  const HUSBAND_NAME = marriedInformationData.data.account[0].name;
+  const WIFE_NAME = marriedInformationData.data.account[1].name;
   const localUuid1 = getUUid1Token();
   const localUuid2 = getUUid2Token();
   async function getGoodsUrlUuidRender() {
@@ -26,6 +29,12 @@ export default function ShareBox({ setSharebox }) {
   }
 
   useEffect(() => {
+    if (!localUuid1) {
+      getGoodsUrlUuidRender();
+    }
+  }, []);
+
+  useEffect(() => {
     //카카오톡 sdk 추가
     const script = document.createElement("script");
     script.src = "https://developers.kakao.com/sdk/js/kakao.js";
@@ -34,48 +43,6 @@ export default function ShareBox({ setSharebox }) {
     return () => document.body.removeChild(script);
   }, []);
 
-  useEffect(() => {
-    if (!localUuid1) {
-      getGoodsUrlUuidRender();
-    }
-  }, []);
-  const shareKaKao = () => {
-    //kakao sdk script 부른 후 window.kakao로 접근
-    const INITIAL_LINK = `https://zolabayo.com/GallerySupport/${localUuid2}/${localUuid2}`;
-    const HUSBAND_NAME = marriedInformationData.data.account[0].name;
-    const WIFE_NAME = marriedInformationData.data.account[1].name;
-    if (window.Kakao) {
-      const kakao = window.Kakao;
-      //중복 initalization 방지
-      // 카카오에서 제공하는 javascirpt key를 이용하여  initiallze
-      if (!kakao.isInitialized()) {
-        //자바스크립트 키
-        kakao.init("0140d2f1cdb4b1f0e243294bdeb84e57");
-      }
-      kakao.Link.sendDefault({
-        objectType: "feed",
-        content: {
-          title: "ZOLABAYO",
-          description: `${HUSBAND_NAME} ❤ ${WIFE_NAME}`,
-          imageUrl:
-            "https://www.urbanbrush.net/web/wp-content/uploads/edd/2022/09/urbanbrush-20220922134835594912.jpg", //local이나 내 ip는 사용할 수 없기 떄문에 test 불가 ,
-          imageWidth: 1200,
-          imageHeight: 630,
-          link: {
-            webUrl: INITIAL_LINK,
-          },
-        },
-        buttons: [
-          {
-            title: "웹으로 보기",
-            link: {
-              webUrl: INITIAL_LINK,
-            },
-          },
-        ],
-      });
-    }
-  };
   const urlLinkClick = () => {
     try {
       navigator.clipboard.writeText(
@@ -88,11 +55,14 @@ export default function ShareBox({ setSharebox }) {
       alert("다시 시도해주세요.");
     }
   };
+
   return (
     <Shareboxdiv>
       <Shareboxp>
         <span
-          onClick={shareKaKao}
+          onClick={() =>
+            shareKaKaoLink(HUSBAND_NAME, WIFE_NAME, localUuid1, localUuid2)
+          }
           style={{ marginRight: "12px", display: "flex", alignItems: "center" }}
         >
           <img src={kakaotalk} style={{ marginRight: "3px" }} />

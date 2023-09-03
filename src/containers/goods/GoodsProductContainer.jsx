@@ -3,7 +3,7 @@ import { RiArrowDropLeftLine, RiArrowDropRightLine } from "react-icons/ri";
 
 //공유 이미지 가져오기
 import Share from "@/assets/icons/share.png";
-import ShareBox from "@/components/ShareBox";
+import ShareBox from "@/components/sharebox/ShareBox";
 import styled from "styled-components";
 import Box from "@/components/box/Box";
 import {
