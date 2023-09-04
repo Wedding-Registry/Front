@@ -25,6 +25,7 @@ import { marriedInformationState } from "../../state/marriedInformationState";
 import DateTimePeicker from "../../components/datetimePicker/DateTimePeicker";
 import useDateTimeConver from "../../hooks/useDateTImeConver";
 import useDateTimeFormat from "../../hooks/useDateTimeFormat";
+import GoodsElementList from "../../components/goodsElementList/GoodsElementList";
 
 export default function GoodsProductContainer() {
   const [sharebox, setSharebox] = useState(false);
@@ -60,6 +61,7 @@ export default function GoodsProductContainer() {
 
     setFetchData(products.data);
   }
+
   //이름 계좌 시간 전체 조회
   async function getWeddingHallRender() {
     const weddingHallData = await getWeddingHall();
@@ -209,25 +211,6 @@ export default function GoodsProductContainer() {
       renderProduct();
     }
   }, [isOpen]);
-
-  const GoodsElementList = () => {
-    let element = [];
-    for (let i = 0; i < FIX_SIZE - arrayLength; i++) {
-      element.push(
-        <BoxItem
-          style={{ width: "100%", marginRight: "150px" }}
-          onClick={() => {
-            setIsOpen({ result: true, state: "Edit", userGoodsId: "" });
-          }}
-          key={i}
-        >
-          <Box />
-          <ItemDiv></ItemDiv>
-        </BoxItem>
-      );
-    }
-    return element;
-  };
 
   const nextSlide = () => {
     if (currentSlide >= TOTAL_SLIDES) {
@@ -447,7 +430,11 @@ export default function GoodsProductContainer() {
                       </ItemDiv>
                     </BoxItem>
                   ))}
-                {GoodsElementList()}
+                <GoodsElementList
+                  FIX_SIZE={FIX_SIZE}
+                  arrayLength={arrayLength}
+                  setIsOpen={setIsOpen}
+                />
               </>
             </BoxWapper>
           </BoxSlider>

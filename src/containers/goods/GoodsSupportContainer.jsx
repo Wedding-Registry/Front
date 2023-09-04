@@ -12,6 +12,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { marriedInformationState } from "../../state/marriedInformationState";
 import DateTimePeicker from "../../components/datetimePicker/DateTimePeicker";
 import { datePickerSate } from "../../state/datePickerState";
+import GoodsElementList from "../../components/goodsElementList/GoodsElementList";
 
 function MarriedInforMation({ guestToken }) {
   //신랑 신부 statae
@@ -170,18 +171,7 @@ export default function GoodsSupportContainer({ guestToken }) {
       setCurrentSlide(currentSlide - 1);
     }
   };
-  const goodsElemntList = () => {
-    let element = [];
-    for (let i = 0; i < FIX_SIZE - arrayLength; i++) {
-      element.push(
-        <BoxItem style={{ width: "100%", marginRight: "150px" }}>
-          <Box />
-          <ItemDiv />
-        </BoxItem>
-      );
-    }
-    return element;
-  };
+
   //Api 2번 호출 막기
   useEffect(() => {
     setDidMount(true);
@@ -228,7 +218,7 @@ export default function GoodsSupportContainer({ guestToken }) {
                     </ItemDiv>
                   </BoxItem>
                 ))}
-              {goodsElemntList()}
+              <GoodsElementList FIX_SIZE={FIX_SIZE} arrayLength={arrayLength} />
             </BoxWapper>
           </BoxSlider>
           {isOpen && (
