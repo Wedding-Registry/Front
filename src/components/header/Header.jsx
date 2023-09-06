@@ -55,8 +55,10 @@ export default function Header({ border }) {
   const localUuid1 = getUUid1Token();
 
   const token = getAccessToken();
+  console.log(uuid1);
+  console.log(localUuid1);
   useEffect(() => {
-    if (uuid1 !== null && localUuid1 === null) {
+    if (uuid1 !== undefined && localUuid1 === null) {
       setGuestState(true);
     }
   }, [uuid1]);
