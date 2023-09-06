@@ -35,22 +35,18 @@ const KakaoSignInButton = () => {
   const navigate = useNavigate();
   const setAuthToken = useSetRecoilState(authTokenAtom);
   const urlPathState = useRecoilValue(prevUrlPathState);
-
   const kakaoClientId = import.meta.env.VITE_KAKAO_JS_KEY;
+  const apiUrl = import.meta.env.VITE_HTTP_API_URL;
   const kakaoOnSuccess = async (data) => {
-    console.log(data.profile.id);
-    console.log(data.profile.kakao_account.email);
+    // console.log(data.profile.id);
+    // console.log(data.profile.kakao_account.email);
 
-    const response = await axios.post(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/login/oauth/kakao",
-      {
-        email: data.profile.kakao_account.email,
-        password: "K" + data.profile.id,
-      }
-    );
+    const response = await axios.post(`${apiUrl}login/oauth/kakao`, {
+      email: data.profile.kakao_account.email,
+      password: "K" + data.profile.id,
+    });
     // sns 로그인 최초
     if (response.data.data.needMoreInfo) {
-      console.log("needMore?", response.data.data.needMoreInfo);
       navigate("/signup-moreinfo", {
         state: {
           password: "K" + data.profile.id,

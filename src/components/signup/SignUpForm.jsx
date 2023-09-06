@@ -126,9 +126,8 @@ function SignUpForm() {
         }}
         validationSchema={signUpValidationSchema}
         onSubmit={(values) => {
-          console.log(values);
           httpClient
-            .post(`${apiUrl}/auth/signup`, {
+            .post(`${apiUrl}auth/signup`, {
               name: values.username,
               email: values.email,
               password: values.password,
@@ -136,7 +135,6 @@ function SignUpForm() {
               notification: values.agreeEvent,
             })
             .then((res) => {
-              console.log(res.data.data);
               if (res.data.success === true) {
                 setAuthState({
                   userId: res.data.data.userId,

@@ -116,7 +116,7 @@ function SignUpMoreInfo() {
         onSubmit={async (values) => {
           try {
             const response = await HttpClient.post(
-              `${apiUrl}/auth/social/info`,
+              `${apiUrl}auth/social/info`,
               {
                 email: values.email,
                 name: values.username,
