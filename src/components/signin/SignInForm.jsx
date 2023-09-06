@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { authTokenAtom } from "@/state/authState.js";
-import axios from "axios";
 import { prevUrlPathState } from "../../state/prevUrlPathState";
+import HttpClient from "@/apis/HttpClient.js";
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -81,12 +81,14 @@ function SignInForm() {
     });
   };
 
+  const apiUrl = import.meta.env.VITE_HTTP_API_URL;
+
   const handleLogin = async () => {
     try {
-      const response = await axios.post(
-        "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/login/service",
-        { email: inputValue.email, password: inputValue.password }
-      );
+      const response = await HttpClient.post(`${apiUrl}login/service`, {
+        email: inputValue.email,
+        password: inputValue.password,
+      });
 
       if (response.data.status === 200) {
         const { accessToken, refreshToken } = response.data.data;

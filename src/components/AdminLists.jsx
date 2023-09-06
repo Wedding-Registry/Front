@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 // import { ReactSortable } from "react-sortablejs";
 import styled from "styled-components";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import httpClient from "@/apis/HttpClient.js";
 
 const StyledDiv = styled.div`
   display: flex;
@@ -39,18 +39,15 @@ function AdminLists() {
     unknown: {},
   });
 
-  // const tempToken = import.meta.env.VITE_TEMPTOKEN;
+  const apiUrl = import.meta.env.VITE_HTTP_API_URL;
 
   const token = localStorage.getItem("accessToken") || "needSignIn";
   const fetchAttendanceDetailData = async () => {
-    const { data } = await axios.get(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/attendance/detail",
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const { data } = await httpClient.get(`${apiUrl}admin/attendance/detail`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
 
     setListsData(data.data);
 

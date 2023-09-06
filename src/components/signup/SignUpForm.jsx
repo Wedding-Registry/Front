@@ -5,8 +5,8 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { authStateAtom } from "@/state/authState.js";
-import axios from "axios";
 import { prevUrlPathState } from "../../state/prevUrlPathState";
+import httpClient from "@/apis/HttpClient.js";
 
 const signUpValidationSchema = Yup.object().shape({
   username: Yup.string()
@@ -112,6 +112,7 @@ function SignUpForm() {
   const navigate = useNavigate();
   const setAuthState = useSetRecoilState(authStateAtom);
   const urlPathState = useRecoilValue(prevUrlPathState);
+  const apiUrl = import.meta.env.VITE_HTTP_API_URL;
 
   return (
     <StyledWrapper>
@@ -126,17 +127,14 @@ function SignUpForm() {
         validationSchema={signUpValidationSchema}
         onSubmit={(values) => {
           console.log(values);
-          axios
-            .post(
-              "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/auth/signup",
-              {
-                name: values.username,
-                email: values.email,
-                password: values.password,
-                passwordCheck: values.passwordCheck,
-                notification: values.agreeEvent,
-              }
-            )
+          httpClient
+            .post(`${apiUrl}/auth/signup`, {
+              name: values.username,
+              email: values.email,
+              password: values.password,
+              passwordCheck: values.passwordCheck,
+              notification: values.agreeEvent,
+            })
             .then((res) => {
               console.log(res.data.data);
               if (res.data.success === true) {
