@@ -251,7 +251,6 @@ export default function GoodsProductContainer() {
   function marriedWeddingTimeHandler() {
     const weddingDate = marriedWeddingData.data?.weddingDate;
     const weddingTime = marriedWeddingData.data?.weddingTime;
-    console.log(weddingDate, weddingTime);
     if (weddingDate !== undefined && weddingTime !== undefined) {
       const toStringDate = useDateTimeConver(weddingDate, weddingTime);
 
@@ -584,7 +583,7 @@ const StyledTrack = styled.div`
 const StyledRange = styled.div`
   display: flex;
   width: 100%;
-  height: ${({ width }) => `${width}%`};
+  height: ${({ width }) => (width > 100 ? "100%" : `${width}%`)};
   background: linear-gradient(to right, blue, blue);
 `;
 
