@@ -323,7 +323,7 @@ const StyledTrack = styled.div`
 const StyledRange = styled.div`
   display: flex;
   width: 100%;
-  height: ${({ width }) => `${width}%`};
+  height: ${({ width }) => (width > 100 ? "100%" : `${width}%`)};
   background: linear-gradient(to right, blue, blue);
 `;
 
