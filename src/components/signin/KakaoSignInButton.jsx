@@ -42,7 +42,7 @@ const KakaoSignInButton = () => {
     console.log(data.profile.kakao_account.email);
 
     const response = await axios.post(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/login/oauth/kakao",
+      "http://api.zolabayo.com/login/oauth/kakao",
       {
         email: data.profile.kakao_account.email,
         password: "K" + data.profile.id,

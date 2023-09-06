@@ -84,7 +84,7 @@ function SignInForm() {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/login/service",
+        "http://api.zolabayo.com/login/service",
         { email: inputValue.email, password: inputValue.password }
       );
 

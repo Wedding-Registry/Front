@@ -50,7 +50,7 @@ function GoogleButton() {
       });
 
       const response = await axios.post(
-        "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/login/oauth/google",
+        "http://api.zolabayo.com/login/oauth/google",
         {
           email: email,
           password: "G" + sub,

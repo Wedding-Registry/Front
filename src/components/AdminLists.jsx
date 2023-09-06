@@ -44,7 +44,7 @@ function AdminLists() {
   const token = localStorage.getItem("accessToken") || "needSignIn";
   const fetchAttendanceDetailData = async () => {
     const { data } = await axios.get(
-      "http://ec2-54-180-191-154.ap-northeast-2.compute.amazonaws.com:8081/admin/attendance/detail",
+      "http://api.zolabayo.com/admin/attendance/detail",
       {
         headers: {
           Authorization: "Bearer " + token,

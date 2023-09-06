@@ -3,7 +3,7 @@ name: Wedding-Registry
 on:
   push:
     branches:
-      - dev
+      - main
   workflow_dispatch:
 
 jobs:
@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: "dev"
+          ref: "main"
       - run: yarn
       - name: Generate Environment Variables File for Production
         run: |
@@ -25,7 +25,6 @@ jobs:
           echo "VITE_TOKEN=$VITE_TOKEN" >> .env.production
           echo "VITE_TEMPTOKEN=$VITE_TEMPTOKEN" >> .env.production
           echo "VITE_HTTP_API_URL=$VITE_HTTP_API_URL" >> .env.production
-          echo "VITE_API_URL=$VITE_API_URL" >> .env.production        
           yarn run build
         env:
           VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
@@ -37,7 +36,6 @@ jobs:
           VITE_TOKEN: ${{ secrets.VITE_TOKEN }}
           VITE_TEMPTOKEN: ${{ secrets.VITE_TEMPTOKEN }}
           VITE_HTTP_API_URL: ${{ secrets.VITE_HTTP_API_URL }}
-          VITE_API_URL: ${{ secrets.VITE_API_URL }}
       - name: Wedding-Registry deploy to s3
         uses: jakejarvis/s3-sync-action@master
         with:
