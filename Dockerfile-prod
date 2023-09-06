@@ -1,5 +1,5 @@
 # 노드 14 이미지 사용
-FROM node:14 as build
+FROM node:16.17.0 as build
 
 # 앱 디렉토리 생성
 WORKDIR /app

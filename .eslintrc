@@ -1,0 +1,25 @@
+{
+  "parserOptions": {
+    "requireConfigFile": false, // <== ADD THIS
+    "parser": "babel-eslint",
+
+    "sourceType": "module",
+    "allowImportExportEverywhere": true,
+    "ecmaVersion": 2022,
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  // eslint 규칙 추가
+  "rules": { "react/prop-types": "off" }
+}

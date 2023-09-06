@@ -1,0 +1,17 @@
+#root {
+  background-image: url(./src/assets/icons/backgroundimage.png);
+  background-size: "cover";
+  background-attachment: fixed;
+  font-family: Inter;
+}
+
+.datePicker {
+  outline: none;
+  border: none;
+  background-color: #ebebeb;
+  width: 300px;
+  border-radius: 10px;
+  margin-left: 5px;
+  height: 33px;
+  text-align: center;
+}
