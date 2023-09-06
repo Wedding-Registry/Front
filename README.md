@@ -113,6 +113,14 @@ yarn run build
 - 상품 후원 페이지
 - 웨딩 사진 등록 페이지
 - 웨딩 사진 후원 페이지
+- 회원 가입 페이지
+- 로그인 페이지
+- 관리자 페이지(메인)
+- 관리자 페이지(후원자 리스트)
+- 관리자 페이지(결혼식 참석 여부 리스트)
+- 관리자 페이지(알림 목록)
+- 관리자 페이지(메모)
+ 
 
 <br />
 
@@ -209,3 +217,19 @@ export default HttpClient;
 - Github actions를 통한 CI/CD
 
 리팩토링 진행,ts 추가
+
+---
+
+- YunHeeW
+
+1. 서비스를 생각하며 사용자 관점에서 편의성, 시각적 처리를 적용하는 것이 중요하다는 것을 체감했다.
+2. 협업을 위한 네이밍, 코드, 구조 등 많은 것을 팀원과 함께 고민할수록 이후 작업의 효율이 높아진다는 것을 느꼈다.
+3. SNS로그인(구글,카카오)를 적용하기 위해 OAuth2.0를 사용하면서 인증 방식에 대한 개념을 다시 생각해보게 되었다.
+
+#### OAuth2.0 flow
+![img_2](https://firebasestorage.googleapis.com/v0/b/imgsources.appspot.com/o/img_2.png?alt=media&token=38b0c54d-8a2b-4803-aaf4-7612985e4360)
+
+
+### JWT flow
+![img_3](https://firebasestorage.googleapis.com/v0/b/imgsources.appspot.com/o/img_3.png?alt=media&token=8acdceed-3223-4a65-b951-3bf796f3cc91)
+
