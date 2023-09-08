@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { authTokenAtom } from "@/state/authState.js";
-import axios from "axios";
 import { prevUrlPathState } from "../../state/prevUrlPathState";
+import HttpClient from "@/apis/HttpClient.js";
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -81,12 +81,14 @@ function SignInForm() {
     });
   };
 
+  const apiUrl = import.meta.env.VITE_HTTP_API_URL;
+
   const handleLogin = async () => {
     try {
-      const response = await axios.post(
-        "http://api.zolabayo.com/login/service",
-        { email: inputValue.email, password: inputValue.password }
-      );
+      const response = await HttpClient.post(`${apiUrl}login/service`, {
+        email: inputValue.email,
+        password: inputValue.password,
+      });
 
       if (response.data.status === 200) {
         const { accessToken, refreshToken } = response.data.data;
@@ -106,6 +108,12 @@ function SignInForm() {
       }
     } catch (error) {
       console.error("Login 실패:", error);
+    }
+  };
+
+  const handleOnKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleLogin(); // Enter 입력이 되면 클릭 이벤트 실행
     }
   };
 
@@ -129,6 +137,7 @@ function SignInForm() {
         value={inputValue.password}
         onChange={onChangeInputValue}
         placeholder="비밀번호"
+        onKeyDown={handleOnKeyPress}
       />
       <StyledDiv>
         <StyledSpan onClick={() => navigate(`/signup`)}>

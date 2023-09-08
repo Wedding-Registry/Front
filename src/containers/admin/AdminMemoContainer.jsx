@@ -201,7 +201,7 @@ function AdminMemoContainer() {
 
   const putMemoData = async (id) => {
     try {
-      if (goodsPrice) {
+      if (goodsPrice && goodsName) {
         await HttpClient.post(
           `${apiUrl}usersgoods/cost/update?usersGoodsId=${id}`,
           {
@@ -210,7 +210,25 @@ function AdminMemoContainer() {
         ).catch((err) => {
           console.log(err);
         });
-      } else {
+
+        await HttpClient.post(
+          `${apiUrl}usersgoods/name/update?usersGoodsId=${id}`,
+          {
+            usersGoodsName: goodsName,
+          }
+        ).catch((err) => {
+          console.log(err);
+        });
+      } else if (goodsPrice) {
+        await HttpClient.post(
+          `${apiUrl}usersgoods/cost/update?usersGoodsId=${id}`,
+          {
+            usersGoodsPrice: goodsPrice,
+          }
+        ).catch((err) => {
+          console.log(err);
+        });
+      } else if (goodsName) {
         await HttpClient.post(
           `${apiUrl}usersgoods/name/update?usersGoodsId=${id}`,
           {
@@ -268,7 +286,7 @@ function AdminMemoContainer() {
       <div className="img">
         {items.map((i) => (
           <div key={i.usersGoodsId} className="item">
-            <p>{i.usersGoodsImgUrl}</p>
+            <p>{i.usersGoodsUrl}</p>
             {isEdit === true && i.usersGoodsId === editedItemId ? (
               <>
                 <input
