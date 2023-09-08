@@ -111,6 +111,12 @@ function SignInForm() {
     }
   };
 
+  const handleOnKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleLogin(); // Enter 입력이 되면 클릭 이벤트 실행
+    }
+  };
+
   function onClickButton(event) {
     event.preventDefault();
     handleLogin();
@@ -131,6 +137,7 @@ function SignInForm() {
         value={inputValue.password}
         onChange={onChangeInputValue}
         placeholder="비밀번호"
+        onKeyDown={handleOnKeyPress}
       />
       <StyledDiv>
         <StyledSpan onClick={() => navigate(`/signup`)}>
