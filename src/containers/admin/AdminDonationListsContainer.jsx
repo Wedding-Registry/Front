@@ -9,7 +9,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const StyledDiv = styled.div`
   width: 1300px;
-  height: 90vh;
+  //height: 90vh;
   margin: auto;
   div.container {
     display: flex;
@@ -68,13 +68,14 @@ const StyledArticle = styled.article`
   }
   div.box {
     border: 1px solid #4b4b4b;
+    height: 335px;
     border-radius: 10px;
     overflow-y: scroll;
     margin-bottom: 60px;
     button {
       margin-left: 10px;
     }
-    p {
+    div {
       border-bottom: 1px solid #4b4b4b;
       max-width: 300px;
       word-break: break-all;
@@ -109,6 +110,7 @@ const StyledArticle = styled.article`
 `;
 const StyledBox = styled.div`
   display: flex;
+  //width: 1500px;
   margin: auto;
 `;
 const StyledDivItem = styled.div`
@@ -197,7 +199,6 @@ function AdminDonationListsContainer() {
     const { data } = await HttpClient.get(
       `${apiUrl}admin/donation/product/detail`
     );
-
     return data.data;
   };
 
@@ -205,7 +206,6 @@ function AdminDonationListsContainer() {
     const { data } = await HttpClient.get(
       `${apiUrl}admin/donation/transfer/detail`
     );
-
     setData(data.data);
     return data.data;
   };
@@ -229,6 +229,14 @@ function AdminDonationListsContainer() {
         transferMemo: value,
       }
     );
+    return data.data;
+  };
+
+  const deleteDonationTransferData = async (id) => {
+    const { data } = await HttpClient.delete(
+      `${apiUrl}admin/donation/transfer/detail?accountTransferId=${id}`
+    );
+    location.reload();
     return data.data;
   };
 
@@ -302,10 +310,10 @@ function AdminDonationListsContainer() {
           <h3>계좌 이체 후원자 리스트</h3>
           <div className="box">
             {donationTransferQuery.data?.map((i) => (
-              <p key={i.accountTransferId} onClick={() => setIsEditing(true)}>
-                {i.transferMemo}
+              <div key={i.accountTransferId} onClick={() => setIsEditing(true)}>
+                <span>{i.transferMemo}</span>
                 {isEditing === true ? (
-                  <>
+                  <span>
                     {editingId === i.accountTransferId ? (
                       <>
                         <input
@@ -315,30 +323,45 @@ function AdminDonationListsContainer() {
                           value={data.transferMemo}
                           onChange={(e) => editValue(e, i.accountTransferId)}
                         />
-                        <span
-                          id={i.accountTransferId}
+                        <button
                           onClick={() => onClickEdit(i.accountTransferId, i)}
                         >
                           수정하기
-                        </span>
+                        </button>
                       </>
                     ) : (
-                      <button
-                        id={i.accountTransferId}
-                        onClick={() => setEditingId(i.accountTransferId)}
-                      >
-                        수정
-                      </button>
+                      <>
+                        <button
+                          id={i.accountTransferId}
+                          onClick={() => setEditingId(i.accountTransferId)}
+                        >
+                          수정
+                        </button>
+                        <button
+                          onClick={() =>
+                            deleteDonationTransferData(i.accountTransferId)
+                          }
+                        >
+                          삭제
+                        </button>
+                      </>
                     )}
-                  </>
+                  </span>
                 ) : (
-                  <>
+                  <span>
                     <button onClick={() => setEditingId(i.accountTransferId)}>
                       수정
                     </button>
-                  </>
+                    <button
+                      onClick={() =>
+                        deleteDonationTransferData(i.accountTransferId)
+                      }
+                    >
+                      삭제
+                    </button>
+                  </span>
                 )}
-              </p>
+              </div>
             ))}
             <div className="button">
               <input
@@ -363,11 +386,11 @@ function AdminDonationListsContainer() {
       <StyledBox>
         <StyledDivItem className="item">
           {donationDetailQuery.data?.map((i) => (
-            <div key={i.usersgoodsId}>
-              <img src={i.goodsImgUrl} alt={i.user} />
+            <div key={i.usersGoodsId}>
+              <img src={i.goodsImgUrl} alt="상품이미지" />
               <h4>{i.updatedUsersGoodsName}</h4>
               {i.donationList?.map((j) => (
-                <p key={j.guestId}>
+                <p key={j.goodsDonationId}>
                   {j.name} 님 {j.amount}원
                 </p>
               ))}
