@@ -36,10 +36,11 @@ function GoogleButton() {
   const navigate = useNavigate();
   const setAuthToken = useSetRecoilState(authTokenAtom);
   const urlPathState = useRecoilValue(prevUrlPathState);
+  const apiUrl = import.meta.env.VITE_HTTP_API_URL;
 
   const googleLogin = useGoogleLogin({
     onSuccess: async (res) => {
-      console.log(res.access_token);
+      // console.log(res.access_token);
 
       const {
         data: { email, sub },
@@ -49,16 +50,14 @@ function GoogleButton() {
         },
       });
 
-      const response = await axios.post(
-        "http://api.zolabayo.com/login/oauth/google",
-        {
-          email: email,
-          password: "G" + sub,
-        }
-      );
+
+      const response = await axios.post(`${apiUrl}login/oauth/google`, {
+        email: email,
+        password: "G" + sub,
+      });
+
       // sns 로그인 최초
       if (response.data.data.needMoreInfo) {
-        console.log("needMore?", response.data.data.needMoreInfo);
         navigate("/signup-moreinfo", {
           state: { password: "G" + sub, email: email },
         });

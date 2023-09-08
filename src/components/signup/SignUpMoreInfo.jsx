@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { authTokenAtom } from "@/state/authState.js";
+import HttpClient from "@/apis/HttpClient.js";
+
 
 const signUpValidationSchema = Yup.object().shape({
   username: Yup.string()
@@ -103,6 +104,8 @@ function SignUpMoreInfo() {
   const navigate = useNavigate();
   const setAuthToken = useSetRecoilState(authTokenAtom);
 
+  const apiUrl = import.meta.env.VITE_HTTP_API_URL;
+
   return (
     <StyledWrapper>
       <Formik
@@ -114,8 +117,8 @@ function SignUpMoreInfo() {
         validationSchema={signUpValidationSchema}
         onSubmit={async (values) => {
           try {
-            const response = await axios.post(
-              "http://api.zolabayo.com/auth/social/info",
+            const response = await HttpClient.post(
+              `${apiUrl}auth/social/info`,
               {
                 email: values.email,
                 name: values.username,
