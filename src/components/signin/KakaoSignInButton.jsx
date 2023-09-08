@@ -45,6 +45,7 @@ const KakaoSignInButton = () => {
       email: data.profile.kakao_account.email,
       password: "K" + data.profile.id,
     });
+
     // sns 로그인 최초
     if (response.data.data.needMoreInfo) {
       navigate("/signup-moreinfo", {

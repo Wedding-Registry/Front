@@ -43,11 +43,13 @@ function AdminLists() {
 
   const token = localStorage.getItem("accessToken") || "needSignIn";
   const fetchAttendanceDetailData = async () => {
+
     const { data } = await httpClient.get(`${apiUrl}admin/attendance/detail`, {
       headers: {
         Authorization: "Bearer " + token,
       },
     });
+
 
     setListsData(data.data);
 

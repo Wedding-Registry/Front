@@ -50,10 +50,12 @@ function GoogleButton() {
         },
       });
 
+
       const response = await axios.post(`${apiUrl}login/oauth/google`, {
         email: email,
         password: "G" + sub,
       });
+
       // sns 로그인 최초
       if (response.data.data.needMoreInfo) {
         navigate("/signup-moreinfo", {

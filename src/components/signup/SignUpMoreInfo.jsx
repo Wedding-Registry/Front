@@ -7,6 +7,7 @@ import { useSetRecoilState } from "recoil";
 import { authTokenAtom } from "@/state/authState.js";
 import HttpClient from "@/apis/HttpClient.js";
 
+
 const signUpValidationSchema = Yup.object().shape({
   username: Yup.string()
     .min(2, "너무 짧아요!")
@@ -102,6 +103,7 @@ function SignUpMoreInfo() {
   const location = useLocation();
   const navigate = useNavigate();
   const setAuthToken = useSetRecoilState(authTokenAtom);
+
   const apiUrl = import.meta.env.VITE_HTTP_API_URL;
 
   return (
