@@ -48,7 +48,10 @@ export default function GoodsProductContainer() {
     userGoodsId: "",
   });
   const [currentSlide, setCurrentSlide] = useState(0);
-
+  const outSideRef = handleAdressOutsideApi(
+    addWeddingHallLocationRender,
+    addressText
+  );
   //state 상태에 따른 비동기 통신중 fetchdata의 값이 undefined일때 상태를 고려한 code
   const arrayLength = fetchData ? fetchData.length : 0;
   const TOTAL_SLIDES = 1;
@@ -187,14 +190,6 @@ export default function GoodsProductContainer() {
     await getWeddingHallRender();
   };
 
-  //엔터키
-  const activeEnter = (e) => {
-    if (e.key === "Enter") {
-      addWeddingHallLocationRender(addressText);
-      alert("예식장 주소가 저장되었습니다.");
-    }
-  };
-
   useEffect(() => {
     setDidmount(true);
   }, []);
@@ -277,6 +272,7 @@ export default function GoodsProductContainer() {
     }
     setIsOpen(false);
   }
+  console.log(addressText);
   return (
     <>
       <GoodsContainer>
@@ -325,7 +321,7 @@ export default function GoodsProductContainer() {
               }}
               onChange={(e) => addressChange(e)}
               defaultValue={addressText || ""}
-              onKeyDown={(e) => activeEnter(e)}
+              ref={outSideRef}
             />
             <DateTimePeicker
               dateTimeData={dateText}
@@ -452,6 +448,25 @@ export default function GoodsProductContainer() {
       </GoodsContainer>
     </>
   );
+}
+
+function handleAdressOutsideApi(addWeddingHallLocationRender, addressText) {
+  const weddingRef = useRef();
+  async function handleFocus(e) {
+    if (weddingRef.current && !weddingRef.current.contains(e.target)) {
+      await addWeddingHallLocationRender(addressText);
+      alert("예식장 주소가 저장되었습니다.");
+    }
+  }
+
+  useEffect(() => {
+    // 이벤트 리스너에 handleFocus 함수 등록
+    document.addEventListener("mouseup", handleFocus);
+    return () => {
+      document.removeEventListener("mouseup", handleFocus);
+    };
+  });
+  return weddingRef;
 }
 
 const GoodsText = styled.input`
