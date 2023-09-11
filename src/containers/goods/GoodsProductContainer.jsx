@@ -272,7 +272,6 @@ export default function GoodsProductContainer() {
     }
     setIsOpen(false);
   }
-  console.log(addressText);
   return (
     <>
       <GoodsContainer>
@@ -315,7 +314,7 @@ export default function GoodsProductContainer() {
           </div>
           <GoodsWeddingdiv>
             <GoodsWeddingadress
-              placeholder="예식장 주소(Enter키를 눌러 저장해주세요)"
+              placeholder="예식장 주소"
               style={{
                 marginBottom: "20px",
               }}
@@ -452,16 +451,16 @@ export default function GoodsProductContainer() {
 
 function handleAdressOutsideApi(addWeddingHallLocationRender, addressText) {
   const weddingRef = useRef();
-  async function handleFocus(e) {
+  function handleFocus(e) {
     if (weddingRef.current && !weddingRef.current.contains(e.target)) {
-      await addWeddingHallLocationRender(addressText);
-      alert("예식장 주소가 저장되었습니다.");
+      addWeddingHallLocationRender(addressText);
     }
   }
 
   useEffect(() => {
-    // 이벤트 리스너에 handleFocus 함수 등록
     document.addEventListener("mouseup", handleFocus);
+
+    // 이벤트 리스너에 handleFocus 함수 등록
     return () => {
       document.removeEventListener("mouseup", handleFocus);
     };

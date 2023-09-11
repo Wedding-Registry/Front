@@ -17,6 +17,7 @@ export default function DateTimePeicker({ dateTimeData, dateTimeChange }) {
         showTimeInput
         className="datePicker"
         readOnly={dateTimeReadOnlyState ? true : false}
+        placeholderText="결혼식 날짜를 저장해주세요."
       />
     );
   };
