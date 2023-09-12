@@ -29,11 +29,12 @@ const StyledSection = styled.section`
     text-align: center;
   }
 
-  div.item {
+  .wrapper {
     display: flex;
     align-items: center;
     margin: 0 250px;
   }
+
   .right {
     margin-left: auto;
   }
