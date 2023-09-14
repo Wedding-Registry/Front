@@ -252,7 +252,7 @@ export default function Navbar({ setNavbar, token, guestState, uuid1 }) {
       console.error(e);
     }
   };
-  console.log(localUuid1);
+  
   return (
     <>
       {!guestState ? (

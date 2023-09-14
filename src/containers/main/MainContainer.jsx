@@ -13,91 +13,6 @@ import {
   setAccessToken,
 } from "../../repository/AuthTokenRepository";
 
-const Base = styled.div`
-  display: flex;
-  justify-content: center;
-  height: 91vh;
-  align-items: center;
-  margin-left: 10%;
-  position: relative;
-`;
-
-const Centerdiv = styled.div`
-  width: 339px;
-  height: 508px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid #000000;
-  border-radius: 230px;
-`;
-
-const ZolabayoDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  height: 80%;
-  position: relative;
-`;
-
-const ZolabayoText = styled.p`
-  font-style: normal;
-  font-weight: 600;
-  font-size: 40px;
-  text-align: right;
-`;
-
-const ZolabayoMemoText = styled.p`
-  font-style: normal;
-  font-weight: 300;
-  font-size: 15px;
-  line-height: 18px;
-  color: rgba(0, 0, 0, 0.8);
-  text-align: right;
-  margin-top: 1rem;
-`;
-
-const Weddingdiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  height: 50%;
-  margin-left: 1rem;
-`;
-
-const WeddingText = styled.p`
-  font-style: normal;
-  font-weight: 600;
-  font-size: 40px;
-`;
-const WeddingMemoText = styled.p`
-  font-style: normal;
-  font-weight: 300;
-  font-size: 15px;
-  line-height: 18px;
-  color: rgba(0, 0, 0, 0.8);
-  margin-top: 1rem;
-`;
-
-const ImgDiv = styled.div`
-  height: 80%;
-  display: flex;
-  justify-content: flex-end;
-  flex-direction: column;
-  position: absolute;
-  top: 15%;
-  left: 70%;
-`;
-
-const MainImage = styled.div`
-  filter: drop-shadow(0px 20px 5px rgba(85, 91, 102, 0.3));
-  background: url(${FirstAnimation});
-  width: 400px;
-  height: 400px;
-  background-size: cover;
-  background-position: center;
-`;
-
 export default function MainContainer({ guestToken }) {
   const [bordorIdModal, setBorderIdModal] = useState(false);
   const [bodersIdState, setBodersIdState] = useState(false);
@@ -188,3 +103,88 @@ export default function MainContainer({ guestToken }) {
     </>
   );
 }
+
+const Base = styled.div`
+  display: flex;
+  justify-content: center;
+  height: 91vh;
+  align-items: center;
+  margin-left: 10%;
+  position: relative;
+`;
+
+const Centerdiv = styled.div`
+  width: 339px;
+  height: 508px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #000000;
+  border-radius: 230px;
+`;
+
+const ZolabayoDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 80%;
+  position: relative;
+`;
+
+const ZolabayoText = styled.p`
+  font-style: normal;
+  font-weight: 600;
+  font-size: 40px;
+  text-align: right;
+`;
+
+const ZolabayoMemoText = styled.p`
+  font-style: normal;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 18px;
+  color: rgba(0, 0, 0, 0.8);
+  text-align: right;
+  margin-top: 1rem;
+`;
+
+const Weddingdiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 50%;
+  margin-left: 1rem;
+`;
+
+const WeddingText = styled.p`
+  font-style: normal;
+  font-weight: 600;
+  font-size: 40px;
+`;
+const WeddingMemoText = styled.p`
+  font-style: normal;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 18px;
+  color: rgba(0, 0, 0, 0.8);
+  margin-top: 1rem;
+`;
+
+const ImgDiv = styled.div`
+  height: 550px;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  position: absolute;
+  top: 15%;
+  left: 70%;
+`;
+
+const MainImage = styled.div`
+  filter: drop-shadow(0px 20px 5px rgba(85, 91, 102, 0.3));
+  background: url(${FirstAnimation});
+  width: 400px;
+  height: 400px;
+  background-size: cover;
+  background-position: center;
+`;

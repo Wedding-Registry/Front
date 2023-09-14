@@ -182,7 +182,7 @@ function UpdateGoodsState({
                     />
                   </p>
                   <p>
-                    후&nbsp; 원 &nbsp; 가
+                    후&nbsp; 원 &nbsp; 가 :
                     <GoodsDonationInput
                       name="price"
                       value={editPriceText}
@@ -238,7 +238,7 @@ function UpdateGoodsState({
                       alignItems: "center",
                     }}
                   >
-                    후&nbsp; 원 &nbsp; 가 :
+                    후&nbsp; 원 &nbsp; 가 :{" "}
                     <GoodsDonationInput
                       value={editPriceText}
                       onFocus={() => setEditState({ state: true })}
@@ -430,7 +430,7 @@ const GoodsImage = styled.div`
   background-repeat: no-repeat;
   background-position: center;
   margin-bottom: 10px;
-  margin-left: 30%;
+  margin-left: 35%;
 `;
 
 const GoodsText = styled.p`
