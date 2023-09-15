@@ -48,10 +48,7 @@ export default function GoodsProductContainer() {
     userGoodsId: "",
   });
   const [currentSlide, setCurrentSlide] = useState(0);
-  const outSideRef = handleAdressOutsideApi(
-    addWeddingHallLocationRender,
-    addressText
-  );
+
   //state 상태에 따른 비동기 통신중 fetchdata의 값이 undefined일때 상태를 고려한 code
   const arrayLength = fetchData ? fetchData.length : 0;
   const TOTAL_SLIDES = 1;
@@ -106,7 +103,7 @@ export default function GoodsProductContainer() {
   }
   //예식장 주소 및 날짜 변경
   async function addWeddingHallLocationRender(address) {
-    await updateWeddingHallLocation(address);
+    return await updateWeddingHallLocation(address);
   }
 
   //예식 시간
@@ -252,6 +249,13 @@ export default function GoodsProductContainer() {
       setDateText(toStringDate);
     }
   }
+  //예식장 주소
+  const handlelocationButton = async () => {
+    const data = await addWeddingHallLocationRender(addressText);
+    if (data.status === 201) {
+      alert("예식장 주소가 저장되었습니다.");
+    }
+  };
 
   useEffect(() => {
     slideRef.current.style.transition = "all 0.5s ease-in-out";
@@ -320,12 +324,17 @@ export default function GoodsProductContainer() {
               }}
               onChange={(e) => addressChange(e)}
               defaultValue={addressText || ""}
-              ref={outSideRef}
             />
             <DateTimePeicker
               dateTimeData={dateText}
               dateTimeChange={dateTimeChange}
             />
+            <AddMarriedButton
+              onClick={() => handlelocationButton()}
+              style={{ marginTop: "20px" }}
+            >
+              예식장 주소 저장하기
+            </AddMarriedButton>
           </GoodsWeddingdiv>
           <CenterTextdiv>
             <div
@@ -447,25 +456,6 @@ export default function GoodsProductContainer() {
       </GoodsContainer>
     </>
   );
-}
-
-function handleAdressOutsideApi(addWeddingHallLocationRender, addressText) {
-  const weddingRef = useRef();
-  function handleFocus(e) {
-    if (weddingRef.current && !weddingRef.current.contains(e.target)) {
-      addWeddingHallLocationRender(addressText);
-    }
-  }
-
-  useEffect(() => {
-    document.addEventListener("mouseup", handleFocus);
-
-    // 이벤트 리스너에 handleFocus 함수 등록
-    return () => {
-      document.removeEventListener("mouseup", handleFocus);
-    };
-  });
-  return weddingRef;
 }
 
 const GoodsText = styled.input`
