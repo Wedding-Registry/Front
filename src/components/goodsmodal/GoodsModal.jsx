@@ -38,57 +38,55 @@ function CreateGoodsState({
   };
   return (
     <>
-      {goodsData?.length !== 0 && goodsData ? (
-        <div id={goodsData.usersGoodsId} key={goodsData.usersGoodsId}>
-          <GoodsImage url={goodsData.usersGoodsImgUrl} />
-          <div>
-            <p>상품 이름 :{goodsData.usersGoodsName}</p>
-            <GoodsDonationDiv>
-              <GoodsText>
-                후&nbsp; 원 &nbsp; 가 : {goodsData.usersGoodsPrice}원
-              </GoodsText>
-            </GoodsDonationDiv>
+      <GoodsDiv>
+        {goodsData?.length !== 0 && goodsData ? (
+          <div id={goodsData.usersGoodsId} key={goodsData.usersGoodsId}>
+            <CreateGoodsImage url={goodsData.usersGoodsImgUrl} />
+            <div>
+              <p>상품 이름 :{goodsData.usersGoodsName}</p>
+              <GoodsDonationDiv>
+                <GoodsText>
+                  후&nbsp; 원 &nbsp; 가 : {goodsData.usersGoodsPrice}원
+                </GoodsText>
+              </GoodsDonationDiv>
+            </div>
+            <div style={{ width: "100%" }}>
+              <OkorColsebuttonDiv>
+                <div style={{ position: "absolute", top: "85%", right: "10%" }}>
+                  <ApiButton onClick={okButton}>확인</ApiButton>|
+                  <ApiButton
+                    onClick={() => deleteButton(goodsData.usersGoodsId)}
+                  >
+                    취소
+                  </ApiButton>
+                </div>
+              </OkorColsebuttonDiv>
+            </div>
           </div>
-          <div style={{ width: "100%" }}>
-            <OkorColsebuttonDiv>
-              <div style={{ position: "absolute", top: "85%", right: "10%" }}>
-                <ApiButton onClick={okButton}>확인</ApiButton>|
-                <ApiButton onClick={() => deleteButton(goodsData.usersGoodsId)}>
-                  취소
-                </ApiButton>
-              </div>
-            </OkorColsebuttonDiv>
-          </div>
-        </div>
-      ) : (
-        <>
-          {goodsData?.length !== 0 && goodsData ? <></> : <Logo src={logo} />}
-          <Text onChange={getGoodsUrl} value={getGoodsUrlItem} />
-          <div>
-            <p>
-              상품 이름 : <GoodsNameInput />
-            </p>
-            <GoodsDonationDiv>
+        ) : (
+          <>
+            {goodsData?.length !== 0 && goodsData ? <></> : <Logo src={logo} />}
+            <Text onChange={getGoodsUrl} value={getGoodsUrlItem} />
+            <div>
               <p>
-                후&nbsp; 원 &nbsp; 가 : <GoodsDonationInput />원
+                상품 이름 : <GoodsNameInput />
               </p>
-            </GoodsDonationDiv>
-          </div>
-          <div style={{ width: "100%" }}>
-            <OkorColsebuttonDiv>
-              <div>
-                <ApiButton onClick={registerGoodsButton}>등록하기</ApiButton>
-              </div>
-              <div style={{ position: "absolute", top: "85%", right: "10%" }}>
-                <ApiButton>확인</ApiButton>|
-                <ApiButton onClick={() => deleteButton(goodsData.usersGoodsId)}>
-                  취소
-                </ApiButton>
-              </div>
-            </OkorColsebuttonDiv>
-          </div>
-        </>
-      )}
+              <GoodsDonationDiv>
+                <p>
+                  후&nbsp; 원 &nbsp; 가 : <GoodsDonationInput />원
+                </p>
+              </GoodsDonationDiv>
+            </div>
+            <div style={{ width: "100%" }}>
+              <OkorColsebuttonDiv>
+                <div>
+                  <ApiButton onClick={registerGoodsButton}>등록하기</ApiButton>
+                </div>
+              </OkorColsebuttonDiv>
+            </div>
+          </>
+        )}
+      </GoodsDiv>
     </>
   );
 }
@@ -172,7 +170,7 @@ function UpdateGoodsState({
             postFilterGoodsData.map((v) => (
               <div key={v.usersGoodsId}>
                 <GoodsImage url={v.usersGoodsImgUrl} />
-                <GoodsDonationDiv>
+                <div>
                   <p>
                     상품 이름 :{" "}
                     <GoodsNameInput
@@ -181,16 +179,18 @@ function UpdateGoodsState({
                       onChange={updateGoodsNameChange}
                     />
                   </p>
-                  <p>
-                    후&nbsp; 원 &nbsp; 가 :
-                    <GoodsDonationInput
-                      name="price"
-                      value={editPriceText}
-                      onChange={updateGoodsPriceChange}
-                    />
-                    원
-                  </p>
-                </GoodsDonationDiv>
+                  <GoodsDonationDiv>
+                    <p>
+                      후&nbsp; 원 &nbsp; 가 :
+                      <GoodsDonationInput
+                        name="price"
+                        value={editPriceText}
+                        onChange={updateGoodsPriceChange}
+                      />
+                      원
+                    </p>
+                  </GoodsDonationDiv>
+                </div>
                 <div style={{ width: "100%" }}>
                   <OkorColsebuttonDiv>
                     <div
@@ -222,7 +222,7 @@ function UpdateGoodsState({
             postFilterGoodsData.map((v) => (
               <div key={v.usersGoodsId} id={v.usersGoodsId}>
                 <GoodsImage url={v.usersGoodsImgUrl} />
-                <GoodsDonationDiv>
+                <div>
                   <p>
                     상품 이름 :{" "}
                     <GoodsNameInput
@@ -232,20 +232,22 @@ function UpdateGoodsState({
                       onFocus={() => setEditState({ state: true })}
                     />
                   </p>
-                  <p
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    후&nbsp; 원 &nbsp; 가 :{" "}
-                    <GoodsDonationInput
-                      value={editPriceText}
-                      onFocus={() => setEditState({ state: true })}
-                    />
-                    원
-                  </p>
-                </GoodsDonationDiv>
+                  <GoodsDonationDiv>
+                    <p
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      후&nbsp; 원 &nbsp; 가 :{" "}
+                      <GoodsDonationInput
+                        value={editPriceText}
+                        onFocus={() => setEditState({ state: true })}
+                      />
+                      원
+                    </p>
+                  </GoodsDonationDiv>
+                </div>
                 <div style={{ width: "100%" }}>
                   <OkorColsebuttonDiv>
                     <div
@@ -431,6 +433,20 @@ const GoodsImage = styled.div`
   background-position: center;
   margin-bottom: 10px;
   margin-left: 35%;
+`;
+
+const CreateGoodsImage = styled.div`
+  width: 150px;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url(${(props) => props.url});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-bottom: 10px;
+  margin-left: 30%;
 `;
 
 const GoodsText = styled.p`
