@@ -6,8 +6,7 @@ import HttpClient from "@/apis/HttpClient.js";
 
 const StyledSection = styled.section`
   margin: 40px auto;
-
-  width: 1285px;
+  width: 1300px;
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -25,6 +24,18 @@ const StyledSection = styled.section`
     align-items: center;
     margin: 0 250px;
   }
+
+  .notice {
+    color: darkred;
+    margin: 5rem auto;
+    text-align: center;
+  }
+
+  .wrapper {
+    display: flex;
+    align-items: center;
+  }
+
   .right {
     margin-left: auto;
   }
@@ -121,33 +132,40 @@ function AdminAttendanceListsContainer() {
   if (error) {
     return <div>Error: {error.message}</div>;
   }
-
   return (
     <StyledSection>
       <div className="item">
-        <div>
-          <h3>결혼식 참석 여부</h3>
-          <Doughnut
-            options={options}
-            data={attendanceTable}
-            width="300px"
-            height="300px"
-          />
-        </div>
-        <span>
-          <h4>참석</h4>
-          <p>
-            {data.yes.rate}%, {data.yes.count}명
-          </p>
-          <h4>불참석</h4>
-          <p>
-            {data.no.rate}%, {data.no.count}명
-          </p>
-          <h4>미정</h4>
-          <p>
-            {data.unknown.rate}%, {data.unknown.count}명
-          </p>
-        </span>
+        {data.no.rate === data.no.rate &&
+        data.yes.rate === data.unknown.rate &&
+        data.yes.rate === 0 ? (
+          <h3 className="notice">결혼식 참석 여부 관련 데이터가 없습니다</h3>
+        ) : (
+          <div className="wrapper">
+            <div>
+              <h3>결혼식 참석 여부</h3>
+              <Doughnut
+                options={options}
+                data={attendanceTable}
+                width="300px"
+                height="300px"
+              />
+            </div>
+            <span>
+              <h4>참석</h4>
+              <p>
+                {data.yes.rate}%, {data.yes.count}명
+              </p>
+              <h4>불참석</h4>
+              <p>
+                {data.no.rate}%, {data.no.count}명
+              </p>
+              <h4>미정</h4>
+              <p>
+                {data.unknown.rate}%, {data.unknown.count}명
+              </p>
+            </span>
+          </div>
+        )}
       </div>
     </StyledSection>
   );
