@@ -132,6 +132,7 @@ const StyledDivItem = styled.div`
   width: 1500px;
   display: flex;
   justify-content: center;
+
   div {
     display: flex;
     min-width: 350px;
@@ -166,6 +167,13 @@ const StyledDivItem = styled.div`
   }
   p {
     margin: 8px 0;
+  }
+
+  p.notice {
+    color: darkred;
+    font-weight: 600;
+    border-bottom: 1px solid #aaa;
+    padding: 8px 0;
   }
 `;
 
@@ -432,17 +440,23 @@ function AdminDonationListsContainer() {
       </div>
       <StyledBox>
         <StyledDivItem className="item">
-          {donationDetailQuery.data?.map((i) => (
-            <div key={i.usersGoodsId}>
-              <img src={i.goodsImgUrl} alt="상품이미지" />
-              <h4>{i.updatedUsersGoodsName}</h4>
-              {i.donationList?.map((j) => (
-                <p key={j.goodsDonationId}>
-                  {j.name} 님 {j.amount}원
-                </p>
+          {donationTransferQuery.data?.length === 0 ? (
+            <p className="notice">상품 목록이 없습니다</p>
+          ) : (
+            <>
+              {donationDetailQuery.data?.map((i) => (
+                <div key={i.usersGoodsId}>
+                  <img src={i.goodsImgUrl} alt="상품이미지" />
+                  <h4>{i.updatedUsersGoodsName}</h4>
+                  {i.donationList?.map((j) => (
+                    <p key={j.goodsDonationId}>
+                      {j.name} 님 {j.amount}원
+                    </p>
+                  ))}
+                </div>
               ))}
-            </div>
-          ))}
+            </>
+          )}
         </StyledDivItem>
       </StyledBox>
     </StyledDiv>
