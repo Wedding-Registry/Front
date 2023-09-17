@@ -111,7 +111,7 @@ function AdminLists() {
 
   return (
     <StyledDiv>
-      {listsData.yes.guestList.length === 0 ? (
+      {listsData.yes.guestList?.length === 0 ? (
         <h3 className="notice">참석 목록이 없습니다</h3>
       ) : (
         <div className="item">
