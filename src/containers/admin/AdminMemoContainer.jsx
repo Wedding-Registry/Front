@@ -113,65 +113,60 @@ function AdminMemoContainer() {
   const [items, setItems] = useState([]);
   const [memoDefaultValue, setMemoDefaultValue] = useState("");
 
-  const memoValue = (e) => {
-    setMemoPad(e.target.value);
-  };
-
   const apiUrl = import.meta.env.VITE_HTTP_API_URL;
 
   useEffect(() => {
     getMemoPad();
-    const observer = new IntersectionObserver(handleObserver, {
+  }, []);
+
+  useEffect(() => {
+    const handleIntersection = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // listRef 보여질 때
+          fetchMemoData();
+        }
+      });
+    };
+
+    const options = {
       root: null,
       rootMargin: "0px",
-      threshold: 1,
-    });
+      threshold: 0.8,
+    };
 
+    const observer = new IntersectionObserver(handleIntersection, options);
+
+    // listRef 감시
     if (listRef.current) {
       observer.observe(listRef.current);
     }
 
+    // listRef 감시 해제
     return () => {
       if (listRef.current) {
         observer.unobserve(listRef.current);
       }
     };
-  }, []);
-
-  useEffect(() => {
-    const fetchMemoData = async () => {
-      if (!isLast) {
-        if (lastId === 0) {
-          const { data } = await HttpClient.get(
-            `${apiUrl}admin/memo/item/wish?size=5&sort=id,DESC`
-          );
-          setLastId(data.data.lastId);
-          setItems(() => [...data.data.content]);
-        } else {
-          const { data } = await HttpClient.get(
-            `${apiUrl}admin/memo/item/wish?size=5&sort=id,DESC&lastId=${lastId}`
-          );
-          setLastId(data.data.lastId);
-          setItems((prevItems) => [...prevItems, ...data.data.content]);
-          if (data.data.isLast) {
-            setIsLast(true);
-          } else {
-            setIsLast(false);
-          }
-        }
-      }
-    };
-
-    fetchMemoData();
   }, [lastId]);
 
-  const handleObserver = (entries) => {
-    const target = entries[0];
-    if (target.isIntersecting) {
-      console.log(entries);
+  const fetchMemoData = async () => {
+    const { data } = await HttpClient.get(
+      `${apiUrl}admin/memo/item/wish?size=5&sort=id,DESC&lastId=${lastId}`
+    );
+    setLastId(data.data.lastId);
+    setItems((prevItems) => [...prevItems, ...data.data.content]);
+
+    if (data.data.isLast) {
+      setIsLast(true);
+    } else {
+      setIsLast(false);
     }
   };
 
+  const memoValue = (e) => {
+    setMemoPad(e.target.value);
+  };
   const inputValue = (e) => {
     if (e.target.name === "url") {
       setUrl(e.target.value);
@@ -307,6 +302,7 @@ function AdminMemoContainer() {
               </>
             ) : (
               <>
+                id: {i.usersGoodsId}
                 <p>상품 이름: {i.usersGoodsName}</p>
                 <p>상품 가격: {i.usersGoodsPrice}</p>
                 <span onClick={() => onEdit(i.usersGoodsId)}>수정하기</span>

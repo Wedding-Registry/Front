@@ -58,6 +58,12 @@ const StyledDiv = styled.div`
       color: red;
     }
   }
+
+  .notice {
+    color: darkred;
+    margin: 3rem auto;
+    font-weight: 600;
+  }
 `;
 
 function AdminAlarmListsContainer() {
@@ -84,43 +90,50 @@ function AdminAlarmListsContainer() {
     <StyledDiv>
       <div>
         <h3>참석여부 알림</h3>
-        {data.attendance?.map((i) => (
-          <div key={i.userId} className="item">
-            <p className="attend">
-              <span>{i.name}</span>님이 결혼식
-              <span
-                className={
-                  i.attend === "참석"
-                    ? "yes"
-                    : i.attend === "불참"
-                    ? "no"
-                    : "unknown"
-                }
-              >
-                {" "}
-                {i.attend}
+        {data.attendance?.length === 0 ? (
+          <h3 className="notice">목록이 없습니다</h3>
+        ) : (
+          data.attendance?.map((i) => (
+            <div key={i.userId} className="item">
+              <p className="attend">
+                <span>{i.name}</span>님이 결혼식
+                <span
+                  className={
+                    i.attend === "참석"
+                      ? "yes"
+                      : i.attend === "불참"
+                      ? "no"
+                      : "unknown"
+                  }
+                >
+                  {i.attend}
+                </span>
+                에 체크하셨습니다.
+              </p>
+              <span>
+                {i.date} {i.time}
               </span>
-              에 체크하셨습니다.
-            </p>
-            <span>
-              {i.date} {i.time}
-            </span>
-          </div>
-        ))}
+            </div>
+          ))
+        )}
       </div>
       <div>
         <h3>후원 알림</h3>
-        {data.donation?.map((i) => (
-          <div key={i.goodsDonationId} className="item">
-            <p>
-              <span className="name">{i.name}</span>님이 {i.goods}에
-              <span className="price"> {i.amount}</span>원을 후원하셨습니다.
-            </p>
-            <span>
-              {i.date} {i.time}
-            </span>
-          </div>
-        ))}
+        {data.donation?.length === 0 ? (
+          <h3 className="notice">후원 받은 목록이 없습니다</h3>
+        ) : (
+          data.donation?.map((i) => (
+            <div key={i.goodsDonationId} className="item">
+              <p>
+                <span className="name">{i.name}</span>님이 {i.goods}에
+                <span className="price"> {i.amount}</span>원을 후원하셨습니다.
+              </p>
+              <span>
+                {i.date} {i.time}
+              </span>
+            </div>
+          ))
+        )}
       </div>
     </StyledDiv>
   );
