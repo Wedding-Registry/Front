@@ -180,7 +180,7 @@ export default function Navbar({ setNavbar, token, guestState, uuid1 }) {
   const [navbarNotification, setNavbarNotification] = useState([]);
   const navigate = useNavigate();
   const localUuid1 = getUUid1Token();
-
+  const navbarState = () => setNavbar(false);
   const localUuid2 = getUUid2Token();
   async function getNavibarNotificationRender() {
     const navbarData = await getAlarm();
@@ -252,6 +252,7 @@ export default function Navbar({ setNavbar, token, guestState, uuid1 }) {
       console.error(e);
     }
   };
+  
   return (
     <>
       {!guestState ? (
@@ -265,7 +266,17 @@ export default function Navbar({ setNavbar, token, guestState, uuid1 }) {
               {nickName ? (
                 <span>{nickName}님을 환영합니다.</span>
               ) : (
-                <span>로그인을 진행해주세요.</span>
+                <Link
+                  to="/signin"
+                  style={{
+                    color: "black",
+                    textDecoration: "none",
+                    border: "none",
+                  }}
+                  onClick={navbarState}
+                >
+                  <span>로그인을 진행해주세요.</span>
+                </Link>
               )}
             </NickNameText>
           </NickNamediv>
@@ -286,7 +297,13 @@ export default function Navbar({ setNavbar, token, guestState, uuid1 }) {
             >
               링크 공유하기
             </span>
-            <LogButton onClick={removeAcctokenRender}>Log out</LogButton>
+            {token ? (
+              <LogButton onClick={removeAcctokenRender}>Log out</LogButton>
+            ) : (
+              <Link to="/signin" onClick={navbarState}>
+                <LogButton>Login</LogButton>
+              </Link>
+            )}
           </BottomItemDiv>
         </Base>
       ) : (
