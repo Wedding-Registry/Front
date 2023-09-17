@@ -69,8 +69,16 @@ const StyledDiv = styled.div`
 function AdminAlarmListsContainer() {
   const apiUrl = import.meta.env.VITE_HTTP_API_URL;
   const fetchAlarmData = async () => {
-    const { data } = await HttpClient.get(`${apiUrl}admin/alarm`);
-    return data.data;
+    try {
+      const { data, status } = await HttpClient.get(`${apiUrl}admin/alarm`);
+      if (status === 200 || status === 201) {
+        return data.data;
+      } else {
+        console.log(data.message);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const { data, isLoading, error } = useQuery({
