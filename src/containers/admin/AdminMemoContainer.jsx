@@ -151,16 +151,26 @@ function AdminMemoContainer() {
   }, [lastId]);
 
   const fetchMemoData = async () => {
-    const { data } = await HttpClient.get(
-      `${apiUrl}admin/memo/item/wish?size=5&sort=id,DESC&lastId=${lastId}`
-    );
-    setLastId(data.data.lastId);
-    setItems((prevItems) => [...prevItems, ...data.data.content]);
+    try {
+      const { data, status } = await HttpClient.get(
+        `${apiUrl}admin/memo/item/wish?size=5&sort=id,DESC&lastId=${lastId}`
+      );
 
-    if (data.data.isLast) {
-      setIsLast(true);
-    } else {
-      setIsLast(false);
+      if (status === 200 || status === 201) {
+        setLastId(data.data.lastId);
+        setItems((prevItems) => [...prevItems, ...data.data.content]);
+
+        if (data.data.isLast) {
+          setIsLast(true);
+        } else {
+          setIsLast(false);
+        }
+        return data.data;
+      } else {
+        alert(data.message);
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -184,10 +194,22 @@ function AdminMemoContainer() {
 
   const postMemoData = async () => {
     if (url.trim()) {
-      await HttpClient.post(`${apiUrl}admin/memo/item/wish`, {
-        url: url,
-      });
-      location.reload();
+      try {
+        const { data, status } = await HttpClient.post(
+          `${apiUrl}admin/memo/item/wish`,
+          {
+            url: url,
+          }
+        );
+        if (status === 200 || status === 201) {
+          location.reload();
+          return data.data;
+        } else {
+          alert(data.message);
+        }
+      } catch (e) {
+        console.log(e);
+      }
     } else {
       alert("등록할 상품의 url을 입력해주세요");
       setUrl("");
@@ -202,36 +224,68 @@ function AdminMemoContainer() {
           {
             usersGoodsPrice: goodsPrice,
           }
-        ).catch((err) => {
-          console.log(err);
-        });
+        )
+          .then((res) => {
+            if (res.data.status === 200 || res.data.status === 201) {
+              return res.data.data;
+            } else {
+              alert(res.data.message);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
 
         await HttpClient.post(
           `${apiUrl}usersgoods/name/update?usersGoodsId=${id}`,
           {
             usersGoodsName: goodsName,
           }
-        ).catch((err) => {
-          console.log(err);
-        });
+        )
+          .then((res) => {
+            if (res.data.status === 200 || res.data.status === 201) {
+              return res.data.data;
+            } else {
+              alert(res.data.message);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       } else if (goodsPrice) {
         await HttpClient.post(
           `${apiUrl}usersgoods/cost/update?usersGoodsId=${id}`,
           {
             usersGoodsPrice: goodsPrice,
           }
-        ).catch((err) => {
-          console.log(err);
-        });
+        )
+          .then((res) => {
+            if (res.data.status === 200 || res.data.status === 201) {
+              return res.data.data;
+            } else {
+              alert(res.data.message);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       } else if (goodsName) {
         await HttpClient.post(
           `${apiUrl}usersgoods/name/update?usersGoodsId=${id}`,
           {
             usersGoodsName: goodsName,
           }
-        ).catch((err) => {
-          console.log(err);
-        });
+        )
+          .then((res) => {
+            if (res.data.status === 200 || res.data.status === 201) {
+              return res.data.data;
+            } else {
+              alert(res.data.message);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
       location.reload();
     } catch (err) {
@@ -241,15 +295,23 @@ function AdminMemoContainer() {
   };
   const deleteMemoData = async (id) => {
     if (confirm("삭제하시겠어요?")) {
-      const { data } = await HttpClient.delete(
-        `${apiUrl}usersgoods?usersGoodsId=${id}`,
-        {
-          usersGoodsId: id,
+      try {
+        const { data, status } = await HttpClient.delete(
+          `${apiUrl}usersgoods?usersGoodsId=${id}`,
+          {
+            usersGoodsId: id,
+          }
+        );
+        if (status === 200 || status === 201) {
+          alert("삭제 성공!");
+          location.reload();
+          return data.data;
+        } else {
+          alert(data.message);
         }
-      );
-      alert("삭제 성공!");
-      location.reload();
-      return data.data;
+      } catch (e) {
+        console.log(e);
+      }
     } else {
       return false;
     }
@@ -257,20 +319,32 @@ function AdminMemoContainer() {
 
   const getMemoPad = async () => {
     try {
-      const { data } = await HttpClient.get(`${apiUrl}admin/memo/pad`);
-      setMemoDefaultValue(data.data.contents);
-      return data.data;
+      const { data, status } = await HttpClient.get(`${apiUrl}admin/memo/pad`);
+      if (status === 200 || status === 201) {
+        setMemoDefaultValue(data.data.contents);
+        return data.data;
+      } else {
+        alert(data.message);
+      }
     } catch (err) {
       console.log(err);
     }
   };
   const postMemoPad = async () => {
     try {
-      const { data } = await HttpClient.post(`${apiUrl}admin/memo/pad`, {
-        contents: memoPad,
-      });
-      alert("저장 성공!");
-      return data.data;
+      const { data, status } = await HttpClient.post(
+        `${apiUrl}admin/memo/pad`,
+        {
+          contents: memoPad,
+        }
+      );
+
+      if (status === 200 || status === 201) {
+        alert("저장 성공!");
+        return data.data;
+      } else {
+        alert(data.message);
+      }
     } catch (err) {
       console.log(err);
     }
