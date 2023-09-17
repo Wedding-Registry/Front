@@ -8,7 +8,7 @@ const StyledDiv = styled.div`
   display: flex;
   width: 1200px;
   justify-content: space-between;
-  height: 45vh;
+  height: 70vh;
   margin: auto;
 
   div.item {
@@ -50,13 +50,25 @@ function AdminLists() {
 
   const token = localStorage.getItem("accessToken") || "needSignIn";
   const fetchAttendanceDetailData = async () => {
-    const { data } = await httpClient.get(`${apiUrl}admin/attendance/detail`, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
+    try {
+      const { data, status } = await httpClient.get(
+        `${apiUrl}admin/attendance/detail`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
 
-    setListsData(data.data);
+      if (status === 200 || status === 201) {
+        setListsData(data.data);
+        return data.data;
+      } else {
+        alert(data.message);
+      }
+    } catch (e) {
+      console.log(e);
+    }
 
     // setAbsence([...data.data.no.guestList]);
     // setUndecided([...data.data.unknown.guestList]);
@@ -65,7 +77,6 @@ function AdminLists() {
     // setUndecided([...undecided, ...data.data.unknown.guestList]);
     // setAttendance([...attendance, ...data.data.yes.guestList]);
     // console.log("yes::", attendance, "no::", absence, "unknown::", undecided);
-    return data.data;
   };
 
   const { isLoading, error } = useQuery({
@@ -111,7 +122,7 @@ function AdminLists() {
 
   return (
     <StyledDiv>
-      {listsData.yes.guestList.length === 0 ? (
+      {listsData.yes.guestList?.length === 0 ? (
         <h3 className="notice">참석 목록이 없습니다</h3>
       ) : (
         <div className="item">

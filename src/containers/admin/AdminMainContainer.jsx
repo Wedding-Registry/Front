@@ -64,13 +64,33 @@ const StyledSection = styled.section`
 function AdminMainContainer() {
   const apiUrl = import.meta.env.VITE_HTTP_API_URL;
   const fetchAttendanceData = async () => {
-    const { data } = await HttpClient.get(`${apiUrl}admin/summary/attendance`);
-    return data.data;
+    try {
+      const { data, status } = await HttpClient.get(
+        `${apiUrl}admin/summary/attendance`
+      );
+      if (status === 200 || status === 201) {
+        return data.data;
+      } else {
+        alert(data.message);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const fetchDonationData = async () => {
-    const { data } = await HttpClient.get(`${apiUrl}admin/summary/donation`);
-    return data.data;
+    try {
+      const { data, status } = await HttpClient.get(
+        `${apiUrl}admin/summary/donation`
+      );
+      if (status === 200 || status === 201) {
+        return data.data;
+      } else {
+        alert(data.message);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const { data, isLoading, error } = useQuery({

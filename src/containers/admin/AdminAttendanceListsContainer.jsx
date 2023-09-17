@@ -67,14 +67,20 @@ function AdminAttendanceListsContainer() {
 
   const fetchAttendanceData = async () => {
     try {
-      const { data } = await HttpClient.get(`${apiUrl}admin/attendance/detail`);
-      setAttendanceData({
-        ...attendanceData,
-        ["yes"]: data.data.yes,
-        ["no"]: data.data.no,
-        ["unknown"]: data.data.unknown,
-      });
-      return data.data;
+      const { data, status } = await HttpClient.get(
+        `${apiUrl}admin/attendance/detail`
+      );
+      if (status === 200 || status === 201) {
+        setAttendanceData({
+          ...attendanceData,
+          ["yes"]: data.data.yes,
+          ["no"]: data.data.no,
+          ["unknown"]: data.data.unknown,
+        });
+        return data.data;
+      } else {
+        console.log(data.message);
+      }
     } catch (e) {
       console.log(e);
     }

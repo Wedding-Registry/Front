@@ -214,53 +214,107 @@ function AdminDonationListsContainer() {
 
   const apiUrl = import.meta.env.VITE_HTTP_API_URL;
   const fetchDonationData = async () => {
-    const { data } = await HttpClient.get(`${apiUrl}admin/summary/donation`);
-    return data.data;
+    try {
+      const { data, status } = await HttpClient.get(
+        `${apiUrl}admin/summary/donation`
+      );
+      if (status === 200 || status === 201) {
+        return data.data;
+      } else {
+        alert(data.message);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const fetchDonationDetailData = async () => {
-    const { data } = await HttpClient.get(
-      `${apiUrl}admin/donation/product/detail`
-    );
-    return data.data;
+    try {
+      const { data, status } = await HttpClient.get(
+        `${apiUrl}admin/donation/product/detail`
+      );
+      if (status === 200 || status === 201) {
+        return data.data;
+      } else {
+        alert(data.message);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const fetchDonationTransferData = async () => {
-    const { data } = await HttpClient.get(
-      `${apiUrl}admin/donation/transfer/detail`
-    );
-    setData(data.data);
-    return data.data;
+    try {
+      const { data, status } = await HttpClient.get(
+        `${apiUrl}admin/donation/transfer/detail`
+      );
+      if (status === 200 || status === 201) {
+        setData(data.data);
+        return data.data;
+      } else {
+        alert(data.message);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const postDonationTransferData = async () => {
-    const { data } = await HttpClient.post(
-      `${apiUrl}admin/donation/transfer/detail`,
-      {
-        transferMemo: `${name} ${price}`,
+    if (name.trim() === "" || price.trim() === "") {
+      alert("이름, 금액을 모두 입력해 주세요");
+    } else {
+      try {
+        const { data, status } = await HttpClient.post(
+          `${apiUrl}admin/donation/transfer/detail`,
+          {
+            transferMemo: `${name} ${price}`,
+          }
+        );
+        if (status === 200 || status === 201) {
+          location.reload();
+          return data.data;
+        } else {
+          alert(data.message);
+        }
+      } catch (e) {
+        console.log(e);
       }
-    );
-    location.reload();
-    return data.data;
+    }
   };
 
   const putDonationTransferData = async (id, value) => {
-    const { data } = await HttpClient.put(
-      `${apiUrl}admin/donation/transfer/detail`,
-      {
-        accountTransferId: id,
-        transferMemo: value,
+    try {
+      const { data, status } = await HttpClient.put(
+        `${apiUrl}admin/donation/transfer/detail`,
+        {
+          accountTransferId: id,
+          transferMemo: value,
+        }
+      );
+      if (status === 200 || status === 201) {
+        return data.data;
+      } else {
+        alert(data.message);
       }
-    );
-    return data.data;
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const deleteDonationTransferData = async (id) => {
-    const { data } = await HttpClient.delete(
-      `${apiUrl}admin/donation/transfer/detail?accountTransferId=${id}`
-    );
-    location.reload();
-    return data.data;
+    try {
+      const { data, status } = await HttpClient.delete(
+        `${apiUrl}admin/donation/transfer/detail?accountTransferId=${id}`
+      );
+      if (status === 200 || status === 201) {
+        location.reload();
+        return data.data;
+      } else {
+        alert(data.message);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const donationQuery = useQuery({
