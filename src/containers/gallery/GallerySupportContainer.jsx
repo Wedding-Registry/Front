@@ -51,7 +51,7 @@ export default function GallerySupportContainer() {
     const getImage = await getGallerySupportImage();
     if (getImage.success === false) {
       const postStatus = await getGallerySupportUUID(uuid1, uuid2);
-
+      console.log(postStatus);
       localStorage.setItem("Guest-Info", Object.values(postStatus.data));
       const getLocalGeustInfo = localStorage.getItem("Guest-Info");
       if (getLocalGeustInfo) {

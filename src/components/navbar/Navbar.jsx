@@ -71,8 +71,8 @@ function NotificationItem({ data }) {
     </AlarmDiv>
   );
 }
-//로그인상태에따른 navbar click 행위 핸들링
 
+//로그인상태에따른 navbar click 행위 핸들링
 function MarriedNavbar({ token, setNavbar }) {
   const tokenState = token === null || token === undefined;
   const navbarClose = () => {
@@ -175,6 +175,8 @@ function GuestNavbar({ setNavbar }) {
 }
 
 export default function Navbar({ setNavbar, token, guestState, uuid1 }) {
+  console.log(uuid1);
+  console.log(guestState);
   const [_, nickName] = useTokenDecode(token);
 
   const [navbarNotification, setNavbarNotification] = useState([]);
@@ -252,7 +254,7 @@ export default function Navbar({ setNavbar, token, guestState, uuid1 }) {
       console.error(e);
     }
   };
-  
+
   return (
     <>
       {!guestState ? (
