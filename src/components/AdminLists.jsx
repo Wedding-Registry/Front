@@ -8,7 +8,7 @@ const StyledDiv = styled.div`
   display: flex;
   width: 1200px;
   justify-content: space-between;
-  height: 45vh;
+  height: 70vh;
   margin: auto;
 
   div.item {
@@ -30,6 +30,13 @@ const StyledDiv = styled.div`
       margin-right: 30px;
     }
   }
+
+  .notice {
+    color: darkred;
+    font-weight: 600;
+    margin: 5rem auto;
+    text-align: center;
+  }
 `;
 
 function AdminLists() {
@@ -43,15 +50,25 @@ function AdminLists() {
 
   const token = localStorage.getItem("accessToken") || "needSignIn";
   const fetchAttendanceDetailData = async () => {
+    try {
+      const { data, status } = await httpClient.get(
+        `${apiUrl}admin/attendance/detail`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
 
-    const { data } = await httpClient.get(`${apiUrl}admin/attendance/detail`, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
-
-
-    setListsData(data.data);
+      if (status === 200 || status === 201) {
+        setListsData(data.data);
+        return data.data;
+      } else {
+        alert(data.message);
+      }
+    } catch (e) {
+      console.log(e);
+    }
 
     // setAbsence([...data.data.no.guestList]);
     // setUndecided([...data.data.unknown.guestList]);
@@ -60,7 +77,6 @@ function AdminLists() {
     // setUndecided([...undecided, ...data.data.unknown.guestList]);
     // setAttendance([...attendance, ...data.data.yes.guestList]);
     // console.log("yes::", attendance, "no::", absence, "unknown::", undecided);
-    return data.data;
   };
 
   const { isLoading, error } = useQuery({
@@ -106,35 +122,49 @@ function AdminLists() {
 
   return (
     <StyledDiv>
-      <div className="item">
-        <h4>참석</h4>
-        {/*{fetchAttendanceDetailData.data.map((item) => (*/}
-        {/*  <p key={item.userId}>*/}
-        {/*    {item.userId} / = {item.name}*/}
-        {/*  </p>*/}
-        {/*))}*/}
-        <div>
-          {listsData.yes.guestList?.map((item) => (
-            <p key={item.userId}>{item.name}</p>
-          ))}
+      {listsData.yes.guestList?.length === 0 ? (
+        <h3 className="notice">참석 목록이 없습니다</h3>
+      ) : (
+        <div className="item">
+          <h4>참석</h4>
+          {/*{fetchAttendanceDetailData.data.map((item) => (*/}
+          {/*  <p key={item.userId}>*/}
+          {/*    {item.userId} / = {item.name}*/}
+          {/*  </p>*/}
+          {/*))}*/}
+          <div>
+            {listsData.yes.guestList?.map((item) => (
+              <p key={item.userId}>{item.name}</p>
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="item">
-        <h4>불참</h4>
-        <div>
-          {listsData.no.guestList?.map((item) => (
-            <p key={item.userId}>{item.name}</p>
-          ))}
+      )}
+
+      {listsData.no.guestList?.length === 0 ? (
+        <h3 className="notice">불참 목록이 없습니다</h3>
+      ) : (
+        <div className="item">
+          <h4>불참</h4>
+          <div>
+            {listsData.no.guestList?.map((item) => (
+              <p key={item.userId}>{item.name}</p>
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="item">
-        <h4>미정</h4>
-        <div>
-          {listsData.unknown.guestList?.map((item) => (
-            <p key={item.userId}>{item.name}</p>
-          ))}
+      )}
+
+      {listsData.unknown.guestList?.length === 0 ? (
+        <h3 className="notice">미정 목록이 없습니다</h3>
+      ) : (
+        <div className="item">
+          <h4>미정</h4>
+          <div>
+            {listsData.unknown.guestList?.map((item) => (
+              <p key={item.userId}>{item.name}</p>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
       {/*<button onClick={putAttendanceData}>저장하기</button>*/}
     </StyledDiv>
   );
