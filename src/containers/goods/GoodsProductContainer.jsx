@@ -296,7 +296,6 @@ export default function GoodsProductContainer() {
           </GoodsSharelink>
           <div>{sharebox ? <ShareBox setSharebox={setSharebox} /> : null}</div>
         </GoodsShareLinkdiv>
-
         <>
           <div>
             <GoodsText

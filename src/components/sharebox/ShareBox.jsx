@@ -43,9 +43,9 @@ export default function ShareBox({ setSharebox }) {
     return () => document.body.removeChild(script);
   }, []);
 
-  const urlLinkClick = () => {
+  async function urlLinkClick() {
     try {
-      navigator.clipboard.writeText(
+      await navigator.clipboard.writeText(
         `https://zolabayo.com/GallerySupport/${localUuid1}/${localUuid2}`
       );
       setSharebox(false);
@@ -54,7 +54,7 @@ export default function ShareBox({ setSharebox }) {
       console.error(e);
       alert("다시 시도해주세요.");
     }
-  };
+  }
 
   return (
     <Shareboxdiv>
