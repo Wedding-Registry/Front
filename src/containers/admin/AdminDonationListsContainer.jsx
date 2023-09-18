@@ -9,7 +9,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const StyledDiv = styled.div`
   width: 1300px;
-  //height: 90vh;
+  height: 90vh;
   margin: auto;
   div.container {
     display: flex;
@@ -23,6 +23,7 @@ const StyledSection = styled.section`
   display: flex;
   flex-direction: column;
   padding: 20px 0;
+  min-width: 800px;
 
   h3 {
     color: #4b4b4b;
@@ -32,8 +33,15 @@ const StyledSection = styled.section`
     text-align: center;
   }
 
-  div.item {
+  .notice {
+    color: darkred;
+    margin: 5rem auto;
+    text-align: center;
+  }
+
+  .wrapper {
     display: flex;
+    justify-content: flex-start;
     align-items: center;
   }
 
@@ -107,6 +115,13 @@ const StyledArticle = styled.article`
     margin-left: 10px;
     margin-right: 10px;
   }
+
+  p.notice {
+    color: darkred;
+    font-weight: 600;
+    margin: 7rem auto 0.5rem;
+    text-align: center;
+  }
 `;
 const StyledBox = styled.div`
   display: flex;
@@ -117,6 +132,7 @@ const StyledDivItem = styled.div`
   width: 1500px;
   display: flex;
   justify-content: center;
+
   div {
     display: flex;
     min-width: 350px;
@@ -151,6 +167,13 @@ const StyledDivItem = styled.div`
   }
   p {
     margin: 8px 0;
+  }
+
+  p.notice {
+    color: darkred;
+    font-weight: 600;
+    border-bottom: 1px solid #aaa;
+    padding: 8px 0;
   }
 `;
 
@@ -191,53 +214,107 @@ function AdminDonationListsContainer() {
 
   const apiUrl = import.meta.env.VITE_HTTP_API_URL;
   const fetchDonationData = async () => {
-    const { data } = await HttpClient.get(`${apiUrl}admin/summary/donation`);
-    return data.data;
+    try {
+      const { data, status } = await HttpClient.get(
+        `${apiUrl}admin/summary/donation`
+      );
+      if (status === 200 || status === 201) {
+        return data.data;
+      } else {
+        alert(data.message);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const fetchDonationDetailData = async () => {
-    const { data } = await HttpClient.get(
-      `${apiUrl}admin/donation/product/detail`
-    );
-    return data.data;
+    try {
+      const { data, status } = await HttpClient.get(
+        `${apiUrl}admin/donation/product/detail`
+      );
+      if (status === 200 || status === 201) {
+        return data.data;
+      } else {
+        alert(data.message);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const fetchDonationTransferData = async () => {
-    const { data } = await HttpClient.get(
-      `${apiUrl}admin/donation/transfer/detail`
-    );
-    setData(data.data);
-    return data.data;
+    try {
+      const { data, status } = await HttpClient.get(
+        `${apiUrl}admin/donation/transfer/detail`
+      );
+      if (status === 200 || status === 201) {
+        setData(data.data);
+        return data.data;
+      } else {
+        alert(data.message);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const postDonationTransferData = async () => {
-    const { data } = await HttpClient.post(
-      `${apiUrl}admin/donation/transfer/detail`,
-      {
-        transferMemo: `${name} ${price}`,
+    if (name.trim() === "" || price.trim() === "") {
+      alert("이름, 금액을 모두 입력해 주세요");
+    } else {
+      try {
+        const { data, status } = await HttpClient.post(
+          `${apiUrl}admin/donation/transfer/detail`,
+          {
+            transferMemo: `${name} ${price}`,
+          }
+        );
+        if (status === 200 || status === 201) {
+          location.reload();
+          return data.data;
+        } else {
+          alert(data.message);
+        }
+      } catch (e) {
+        console.log(e);
       }
-    );
-    location.reload();
-    return data.data;
+    }
   };
 
   const putDonationTransferData = async (id, value) => {
-    const { data } = await HttpClient.put(
-      `${apiUrl}admin/donation/transfer/detail`,
-      {
-        accountTransferId: id,
-        transferMemo: value,
+    try {
+      const { data, status } = await HttpClient.put(
+        `${apiUrl}admin/donation/transfer/detail`,
+        {
+          accountTransferId: id,
+          transferMemo: value,
+        }
+      );
+      if (status === 200 || status === 201) {
+        return data.data;
+      } else {
+        alert(data.message);
       }
-    );
-    return data.data;
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const deleteDonationTransferData = async (id) => {
-    const { data } = await HttpClient.delete(
-      `${apiUrl}admin/donation/transfer/detail?accountTransferId=${id}`
-    );
-    location.reload();
-    return data.data;
+    try {
+      const { data, status } = await HttpClient.delete(
+        `${apiUrl}admin/donation/transfer/detail?accountTransferId=${id}`
+      );
+      if (status === 200 || status === 201) {
+        location.reload();
+        return data.data;
+      } else {
+        alert(data.message);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const donationQuery = useQuery({
@@ -284,118 +361,156 @@ function AdminDonationListsContainer() {
       <div className="container">
         <StyledSection>
           <div className="item">
-            <div className="right">
-              <h3>상품 그래프</h3>
-              <Doughnut
-                options={options}
-                data={donationTable}
-                width="330px"
-                height="330px"
-              />
-            </div>
-            <span>
-              {donationQuery.data?.map((i) => (
-                <div key={i.usersGoodsId}>
-                  <h4>{i.usersGoodsName}</h4>
-                  <p className="total">
-                    {i.usersGoodsTotalDonation}원(
-                    {i.usersGoodsTotalDonationRate}% 달성)
-                  </p>
+            {donationQuery.data?.length === 0 ? (
+              <h3 className="notice">상품 그래프 관련 데이터가 없습니다</h3>
+            ) : (
+              <div className="wrapper">
+                <div className="right">
+                  <h3>상품 그래프</h3>
+                  <Doughnut
+                    options={options}
+                    data={donationTable}
+                    width="330px"
+                    height="330px"
+                  />
                 </div>
-              ))}
-            </span>
+                <span>
+                  {donationQuery.data?.map((i) => (
+                    <div key={i.usersGoodsId}>
+                      <h4>{i.usersGoodsName}</h4>
+                      <p className="total">
+                        {i.usersGoodsTotalDonation}원(
+                        {i.usersGoodsTotalDonationRate}% 달성)
+                      </p>
+                    </div>
+                  ))}
+                </span>
+              </div>
+            )}
           </div>
         </StyledSection>
         <StyledArticle>
           <h3>계좌 이체 후원자 리스트</h3>
-          <div className="box">
-            {donationTransferQuery.data?.map((i) => (
-              <div key={i.accountTransferId} onClick={() => setIsEditing(true)}>
-                <span>{i.transferMemo}</span>
-                {isEditing === true ? (
-                  <span>
-                    {editingId === i.accountTransferId ? (
-                      <>
-                        <input
-                          className="edit"
-                          defaultValue={i.transferMemo}
-                          id={i.accountTransferId}
-                          value={data.transferMemo}
-                          onChange={(e) => editValue(e, i.accountTransferId)}
-                        />
-                        <button
-                          onClick={() => onClickEdit(i.accountTransferId, i)}
-                        >
-                          수정하기
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          id={i.accountTransferId}
-                          onClick={() => setEditingId(i.accountTransferId)}
-                        >
-                          수정
-                        </button>
-                        <button
-                          onClick={() =>
-                            deleteDonationTransferData(i.accountTransferId)
-                          }
-                        >
-                          삭제
-                        </button>
-                      </>
-                    )}
-                  </span>
-                ) : (
-                  <span>
-                    <button onClick={() => setEditingId(i.accountTransferId)}>
-                      수정
-                    </button>
-                    <button
-                      onClick={() =>
-                        deleteDonationTransferData(i.accountTransferId)
-                      }
-                    >
-                      삭제
-                    </button>
-                  </span>
-                )}
+          {donationTransferQuery.data?.length === 0 ? (
+            <div className="box">
+              <p className="notice">데이터가 없습니다</p>
+              <div className="button">
+                <input
+                  type="text"
+                  onChange={inputValue}
+                  name="name"
+                  value={name}
+                  placeholder="이름"
+                />
+                <input
+                  type="text"
+                  onChange={inputValue}
+                  name="price"
+                  placeholder="금액"
+                  value={price}
+                />
+                <span onClick={postDonationTransferData}>추가</span>
               </div>
-            ))}
-            <div className="button">
-              <input
-                type="text"
-                onChange={inputValue}
-                name="name"
-                value={name}
-                placeholder="이름"
-              />
-              <input
-                type="text"
-                onChange={inputValue}
-                name="price"
-                placeholder="금액"
-                value={price}
-              />
-              <span onClick={postDonationTransferData}>추가</span>
             </div>
-          </div>
+          ) : (
+            <div className="box">
+              {donationTransferQuery.data?.map((i) => (
+                <div
+                  key={i.accountTransferId}
+                  onClick={() => setIsEditing(true)}
+                >
+                  <span>{i.transferMemo}</span>
+                  {isEditing === true ? (
+                    <span>
+                      {editingId === i.accountTransferId ? (
+                        <>
+                          <input
+                            className="edit"
+                            defaultValue={i.transferMemo}
+                            id={i.accountTransferId}
+                            value={data.transferMemo}
+                            onChange={(e) => editValue(e, i.accountTransferId)}
+                          />
+                          <button
+                            onClick={() => onClickEdit(i.accountTransferId, i)}
+                          >
+                            수정하기
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            id={i.accountTransferId}
+                            onClick={() => setEditingId(i.accountTransferId)}
+                          >
+                            수정
+                          </button>
+                          <button
+                            onClick={() =>
+                              deleteDonationTransferData(i.accountTransferId)
+                            }
+                          >
+                            삭제
+                          </button>
+                        </>
+                      )}
+                    </span>
+                  ) : (
+                    <span>
+                      <button onClick={() => setEditingId(i.accountTransferId)}>
+                        수정
+                      </button>
+                      <button
+                        onClick={() =>
+                          deleteDonationTransferData(i.accountTransferId)
+                        }
+                      >
+                        삭제
+                      </button>
+                    </span>
+                  )}
+                </div>
+              ))}
+              <div className="button">
+                <input
+                  type="text"
+                  onChange={inputValue}
+                  name="name"
+                  value={name}
+                  placeholder="이름"
+                />
+                <input
+                  type="text"
+                  onChange={inputValue}
+                  name="price"
+                  placeholder="금액"
+                  value={price}
+                />
+                <span onClick={postDonationTransferData}>추가</span>
+              </div>
+            </div>
+          )}
         </StyledArticle>
       </div>
       <StyledBox>
         <StyledDivItem className="item">
-          {donationDetailQuery.data?.map((i) => (
-            <div key={i.usersGoodsId}>
-              <img src={i.goodsImgUrl} alt="상품이미지" />
-              <h4>{i.updatedUsersGoodsName}</h4>
-              {i.donationList?.map((j) => (
-                <p key={j.goodsDonationId}>
-                  {j.name} 님 {j.amount}원
-                </p>
+          {donationTransferQuery.data?.length === 0 ? (
+            <p className="notice">상품 목록이 없습니다</p>
+          ) : (
+            <>
+              {donationDetailQuery.data?.map((i) => (
+                <div key={i.usersGoodsId}>
+                  <img src={i.goodsImgUrl} alt="상품이미지" />
+                  <h4>{i.updatedUsersGoodsName}</h4>
+                  {i.donationList?.map((j) => (
+                    <p key={j.goodsDonationId}>
+                      {j.name} 님 {j.amount}원
+                    </p>
+                  ))}
+                </div>
               ))}
-            </div>
-          ))}
+            </>
+          )}
         </StyledDivItem>
       </StyledBox>
     </StyledDiv>

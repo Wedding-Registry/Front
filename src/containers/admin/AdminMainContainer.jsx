@@ -23,11 +23,18 @@ const StyledSection = styled.section`
     text-align: center;
   }
 
-  div.item {
+  .notice {
+    color: darkred;
+    margin: 5rem auto;
+    text-align: center;
+  }
+
+  .wrapper {
     display: flex;
     align-items: center;
     margin: 0 250px;
   }
+
   .right {
     margin-left: auto;
   }
@@ -57,13 +64,33 @@ const StyledSection = styled.section`
 function AdminMainContainer() {
   const apiUrl = import.meta.env.VITE_HTTP_API_URL;
   const fetchAttendanceData = async () => {
-    const { data } = await HttpClient.get(`${apiUrl}admin/summary/attendance`);
-    return data.data;
+    try {
+      const { data, status } = await HttpClient.get(
+        `${apiUrl}admin/summary/attendance`
+      );
+      if (status === 200 || status === 201) {
+        return data.data;
+      } else {
+        alert(data.message);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const fetchDonationData = async () => {
-    const { data } = await HttpClient.get(`${apiUrl}admin/summary/donation`);
-    return data.data;
+    try {
+      const { data, status } = await HttpClient.get(
+        `${apiUrl}admin/summary/donation`
+      );
+      if (status === 200 || status === 201) {
+        return data.data;
+      } else {
+        alert(data.message);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const { data, isLoading, error } = useQuery({
@@ -131,53 +158,67 @@ function AdminMainContainer() {
     <StyledDiv>
       <StyledSection>
         <div className="item">
-          <div>
-            <h3>결혼식 참석 여부</h3>
-            <Doughnut
-              options={options}
-              data={attendanceTable}
-              width="300px"
-              height="300px"
-            />
-          </div>
-          <span>
-            <h4>참석</h4>
-            <p>
-              {data.yesRate}%, {data.yes}명
-            </p>
-            <h4>불참석</h4>
-            <p>
-              {data.noRate}%, {data.no}명
-            </p>
-            <h4>미정</h4>
-            <p>
-              {data.unknownRate}%, {data.unknown}명
-            </p>
-          </span>
+          {data.yesRate === data.noRate &&
+          data.yesRate === data.unknownRate &&
+          data.yesRate === 0 ? (
+            <h3 className="notice">결혼식 참석 여부 관련 데이터가 없습니다</h3>
+          ) : (
+            <div className="wrapper">
+              <div>
+                <h3>결혼식 참석 여부</h3>
+                <Doughnut
+                  options={options}
+                  data={attendanceTable}
+                  width="300px"
+                  height="300px"
+                />
+              </div>
+              <span>
+                <h4>참석</h4>
+                <p>
+                  {data.yesRate}%, {data.yes}명
+                </p>
+                <h4>불참석</h4>
+                <p>
+                  {data.noRate}%, {data.no}명
+                </p>
+                <h4>미정</h4>
+                <p>
+                  {data.unknownRate}%, {data.unknown}명
+                </p>
+              </span>
+            </div>
+          )}
         </div>
       </StyledSection>
       <StyledSection>
         <div className="item">
-          <div className="right">
-            <h3>상품 그래프</h3>
-            <Doughnut
-              options={options}
-              data={donationTable}
-              width="330px"
-              height="330px"
-            />
-          </div>
-          <span>
-            {donationQuery.data?.map((i) => (
-              <div key={i.usersGoodsId}>
-                <h4>{i.usersGoodsName}</h4>
-                <p className="total">
-                  {i.usersGoodsTotalDonation}원({i.usersGoodsTotalDonationRate}%
-                  달성)
-                </p>
+          {donationQuery.data?.length === 0 ? (
+            <h3 className="notice">상품 그래프 관련 데이터가 없습니다</h3>
+          ) : (
+            <div className="wrapper">
+              <div className="right">
+                <h3>상품 그래프</h3>
+                <Doughnut
+                  options={options}
+                  data={donationTable}
+                  width="330px"
+                  height="330px"
+                />
               </div>
-            ))}
-          </span>
+              <span>
+                {donationQuery.data?.map((i) => (
+                  <div key={i.usersGoodsId}>
+                    <h4>{i.usersGoodsName}</h4>
+                    <p className="total">
+                      {i.usersGoodsTotalDonation}원(
+                      {i.usersGoodsTotalDonationRate}% 달성)
+                    </p>
+                  </div>
+                ))}
+              </span>
+            </div>
+          )}
         </div>
       </StyledSection>
     </StyledDiv>
