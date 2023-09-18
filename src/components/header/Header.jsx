@@ -50,7 +50,6 @@ export default function Header({ border }) {
   const uuidStateValue = useRecoilValue(uuidState);
   const path = useLocation();
   const uuid1 = path.pathname.trim().split("/")[2];
-  console.log(uuid1);
   const token = getAccessToken();
   useEffect(() => {
     if (uuid1 !== undefined) {

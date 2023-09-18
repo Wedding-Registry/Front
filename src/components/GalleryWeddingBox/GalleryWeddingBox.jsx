@@ -9,7 +9,7 @@ import { uuidState } from "../../state/uuidState";
 import { AiOutlineClose } from "react-icons/ai";
 import imageCompression from "browser-image-compression";
 
-export default function GalleryWeddingBox({ url, deleteImageOnClick, id }) {
+export default function GalleryWeddingBox({ url, id, deleteImageOnClick }) {
   const setImgData = useSetRecoilState(galleryWeddingImageState);
   const pathUrlData = useRecoilValue(uuidState);
   async function addGalleryWeddingImageRender(dataImage) {
