@@ -51,6 +51,7 @@ export default function Header({ border }) {
   const uuidStateValue = useRecoilValue(uuidState);
   const path = useLocation();
   const uuid1 = path.pathname.trim().split("/")[1];
+  const uuid2 = path.pathname.trim().split("/")[2];
   console.log(uuid1);
   const token = getAccessToken();
 
@@ -69,7 +70,7 @@ export default function Header({ border }) {
       <HeaderDiv isBoolean={border}>
         <HeaderLogoDiv>
           <div>
-            {uuidStateValue.uuidFirst === uuid1 ? (
+            {uuidStateValue.uuidFirst === uuid2 ? (
               <Link
                 to={`/Guest/${uuidStateValue.uuidFirst}/${uuidStateValue.uuidSecond}`}
                 onClick={() => setNavbar(false)}

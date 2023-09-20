@@ -39,37 +39,40 @@ function NotificationItemList({ notifications }) {
 }
 
 function NotificationItem({ data }) {
+  console.log(data.type);
   if (data === null || data === undefined) {
     return <></>;
   }
   const NAME = data.name;
   const ATTEND = data.attend;
-  if (data.type === "attend") {
-    return (
-      <AlarmDiv>
-        <BsFillEnvelopeFill style={{ width: "21px", height: "21px" }} />
-        <AlarmAttendText>
-          {ATTEND === "UNKNOWN" ? (
-            <span>{NAME}님이 미정에 체크하셨습니다.</span>
-          ) : (
-            <span>
-              {NAME}님이
-              {ATTEND === "NO" ? <span> 불참석</span> : <span> 참석</span>}에
-              체크하셨습니다.
-            </span>
-          )}
-        </AlarmAttendText>
-      </AlarmDiv>
-    );
+  switch (data.type) {
+    case "attend":
+      return (
+        <AlarmDiv>
+          <BsFillEnvelopeFill style={{ width: "21px", height: "21px" }} />
+          <AlarmAttendText>
+            {ATTEND === "UNKNOWN" ? (
+              <span>{NAME}님이 미정에 체크하셨습니다.</span>
+            ) : (
+              <span>
+                {NAME}님이
+                {ATTEND === "NO" ? <span> 불참석</span> : <span> 참석</span>}에
+                체크하셨습니다.
+              </span>
+            )}
+          </AlarmAttendText>
+        </AlarmDiv>
+      );
+    case "donation":
+      return (
+        <AlarmDiv>
+          <CiMoneyBill style={{ width: "50px", height: "21px" }} />
+          <AlarmDonationText>
+            {NAME}님이 {data.goods}에 {data.donation}원을 후원하셨습니다.
+          </AlarmDonationText>
+        </AlarmDiv>
+      );
   }
-  return (
-    <AlarmDiv>
-      <CiMoneyBill style={{ width: "50px", height: "21px" }} />
-      <AlarmDonationText>
-        {NAME}님이 {data.goods}에 {data.donation}원을 후원하셨습니다.
-      </AlarmDonationText>
-    </AlarmDiv>
-  );
 }
 
 //로그인상태에따른 navbar click 행위 핸들링
@@ -189,6 +192,7 @@ export default function Navbar({
   const localUuid2 = getUUid2Token();
   async function getNavibarNotificationRender() {
     const navbarData = await getAlarm();
+    console.log(navbarData.data);
     setNavbarNotification(navbarData.data);
   }
   console.log(pathUuidFirst);
