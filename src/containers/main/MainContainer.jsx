@@ -177,7 +177,7 @@ const ImgDiv = styled.div`
   flex-direction: column;
   position: absolute;
   top: 15%;
-  left: 70%;
+  left: 79%;
 `;
 
 const MainImage = styled.div`
