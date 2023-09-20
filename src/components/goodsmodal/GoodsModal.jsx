@@ -142,7 +142,8 @@ function UpdateGoodsState({
   };
 
   const goodsDeleteButton = async (id) => {
-    await deleteGoodsRender(id);
+    const data = await deleteGoodsRender(id);
+    console.log(data);
   };
   const updateGoodsNameChange = (e) => {
     const value = e.target.value;

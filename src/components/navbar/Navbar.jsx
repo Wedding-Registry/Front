@@ -181,7 +181,6 @@ export default function Navbar({
   guestState,
   pathUuidFirst,
 }) {
-  console.log(guestState);
   const [_, nickName] = useTokenDecode(token);
   const [navbarNotification, setNavbarNotification] = useState([]);
   const navigate = useNavigate();
