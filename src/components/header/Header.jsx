@@ -52,7 +52,7 @@ export default function Header({ border }) {
   const uuid1 = path.pathname.trim().split("/")[2];
   const token = getAccessToken();
   useEffect(() => {
-    if (uuid1 !== undefined) {
+    if (uuid1 !== undefined && uuid1 === uuidStateValue.uuidFirst) {
       setGuestState(true);
     }
   }, [uuid1]);
