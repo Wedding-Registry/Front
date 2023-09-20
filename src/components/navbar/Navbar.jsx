@@ -241,15 +241,15 @@ export default function Navbar({
     if (token) getNavibarNotificationRender();
   }, []);
 
-  const urlLinkClick = (first, secound) => {
+  const urlLinkClick = async (first, secound) => {
     if (token) {
-      clipboardHandle(first, secound);
+      await clipboardHandle(first, secound);
     }
   };
 
-  const clipboardHandle = (first, secound) => {
+  const clipboardHandle = async (first, secound) => {
     try {
-      navigator.clipboard.writeText(
+      await navigator.clipboard.writeText(
         `https://zolabayo.com/GallerySupport/${first}/${secound}`
       );
       setNavbar(false);
