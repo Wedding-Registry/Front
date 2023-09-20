@@ -43,8 +43,8 @@ function CreateGoodsState({
           <div id={goodsData.usersGoodsId} key={goodsData.usersGoodsId}>
             <CreateGoodsImage url={goodsData.usersGoodsImgUrl} />
             <div>
-              <p>상품 이름 :{goodsData.usersGoodsName}</p>
               <GoodsDonationDiv>
+                <p>상품 이름 :{goodsData.usersGoodsName}</p>
                 <GoodsText>
                   후&nbsp; 원 &nbsp; 가 : {goodsData.usersGoodsPrice}원
                 </GoodsText>
@@ -68,10 +68,10 @@ function CreateGoodsState({
             {goodsData?.length !== 0 && goodsData ? <></> : <Logo src={logo} />}
             <Text onChange={getGoodsUrl} value={getGoodsUrlItem} />
             <div>
-              <p>
-                상품 이름 : <GoodsNameInput />
-              </p>
               <GoodsDonationDiv>
+                <p>
+                  상품 이름 : <GoodsNameInput />
+                </p>
                 <p>
                   후&nbsp; 원 &nbsp; 가 : <GoodsDonationInput />원
                 </p>
@@ -232,7 +232,7 @@ function UpdateGoodsState({
                       onFocus={() => setEditState({ state: true })}
                     />
                   </p>
-                  <GoodsDonationDiv>
+                  <div>
                     <p
                       style={{
                         display: "flex",
@@ -246,7 +246,7 @@ function UpdateGoodsState({
                       />
                       원
                     </p>
-                  </GoodsDonationDiv>
+                  </div>
                 </div>
                 <div style={{ width: "100%" }}>
                   <OkorColsebuttonDiv>

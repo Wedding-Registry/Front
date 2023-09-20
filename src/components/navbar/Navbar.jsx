@@ -174,9 +174,15 @@ function GuestNavbar({ setNavbar }) {
   );
 }
 
-export default function Navbar({ setNavbar, token, guestState, uuid1 }) {
+export default function Navbar({
+  setNavbar,
+  token,
+  uuid1,
+  guestState,
+  pathUuidFirst,
+}) {
+  console.log(guestState);
   const [_, nickName] = useTokenDecode(token);
-
   const [navbarNotification, setNavbarNotification] = useState([]);
   const navigate = useNavigate();
   const localUuid1 = getUUid1Token();
@@ -186,7 +192,7 @@ export default function Navbar({ setNavbar, token, guestState, uuid1 }) {
     const navbarData = await getAlarm();
     setNavbarNotification(navbarData.data);
   }
-
+  console.log(pathUuidFirst);
   async function getGoodsUrlUuidRender() {
     const UUID = await getGoodsUrlUUID();
 
@@ -446,7 +452,7 @@ const AlarmDiv = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  height: 20%;
+  height: 140px;
   margin-left: 5px;
 `;
 const AlarmAttendText = styled.p`
