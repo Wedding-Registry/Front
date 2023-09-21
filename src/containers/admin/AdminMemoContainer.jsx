@@ -376,7 +376,7 @@ function AdminMemoContainer() {
               </>
             ) : (
               <>
-                id: {i.usersGoodsId}
+                {/*id: {i.usersGoodsId}*/}
                 <p>상품 이름: {i.usersGoodsName}</p>
                 <p>상품 가격: {i.usersGoodsPrice}</p>
                 <span onClick={() => onEdit(i.usersGoodsId)}>수정하기</span>

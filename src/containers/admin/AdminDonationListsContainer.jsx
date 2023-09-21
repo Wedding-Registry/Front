@@ -498,17 +498,54 @@ function AdminDonationListsContainer() {
             <p className="notice">상품 목록이 없습니다</p>
           ) : (
             <>
-              {donationDetailQuery.data?.map((i) => (
-                <div key={i.usersGoodsId}>
-                  <img src={i.goodsImgUrl} alt="상품이미지" />
-                  <h4>{i.updatedUsersGoodsName}</h4>
-                  {i.donationList?.map((j) => (
-                    <p key={j.goodsDonationId}>
-                      {j.name} 님 {j.amount}원
-                    </p>
-                  ))}
-                </div>
-              ))}
+              <div key={donationDetailQuery.data?.[0].usersGoodsId}>
+                <img
+                  src={donationDetailQuery.data?.[0].goodsImgUrl}
+                  alt="상품이미지"
+                />
+                <h4>{donationDetailQuery.data?.[0].updatedUsersGoodsName}</h4>
+                {donationDetailQuery.data?.[0].donationList?.map((j) => (
+                  <p key={j.goodsDonationId}>
+                    {j.name} 님 {j.amount}원
+                  </p>
+                ))}
+              </div>
+              <div key={donationDetailQuery.data?.[1].usersGoodsId}>
+                <img
+                  src={donationDetailQuery.data?.[1].goodsImgUrl}
+                  alt="상품이미지"
+                />
+                <h4>{donationDetailQuery.data?.[1].updatedUsersGoodsName}</h4>
+                {donationDetailQuery.data?.[1].donationList?.map((j) => (
+                  <p key={j.goodsDonationId}>
+                    {j.name} 님 {j.amount}원
+                  </p>
+                ))}
+              </div>
+              <div key={donationDetailQuery.data?.[2].usersGoodsId}>
+                <img
+                  src={donationDetailQuery.data?.[2].goodsImgUrl}
+                  alt="상품이미지"
+                />
+                <h4>{donationDetailQuery.data?.[2].updatedUsersGoodsName}</h4>
+                {donationDetailQuery.data?.[2].donationList?.map((j) => (
+                  <p key={j.goodsDonationId}>
+                    {j.name} 님 {j.amount}원
+                  </p>
+                ))}
+              </div>
+              <div key={donationDetailQuery.data?.[3].usersGoodsId}>
+                <img
+                  src={donationDetailQuery.data?.[3].goodsImgUrl}
+                  alt="상품이미지"
+                />
+                <h4>{donationDetailQuery.data?.[3].updatedUsersGoodsName}</h4>
+                {donationDetailQuery.data?.[3].donationList?.map((j) => (
+                  <p key={j.goodsDonationId}>
+                    {j.name} 님 {j.amount}원
+                  </p>
+                ))}
+              </div>
             </>
           )}
         </StyledDivItem>
