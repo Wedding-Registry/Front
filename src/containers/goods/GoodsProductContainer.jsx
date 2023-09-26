@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { RiArrowDropLeftLine, RiArrowDropRightLine } from "react-icons/ri";
+import { RiArrowDropLeftLine } from "@react-icons/all-files/ri/RiArrowDropLeftLine";
+import { RiArrowDropRightLine } from "@react-icons/all-files/ri/RiArrowDropRightLine";
 
 //공유 이미지 가져오기
 import Share from "@/assets/icons/share.png";

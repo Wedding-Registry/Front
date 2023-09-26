@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 import { postGoodsDonation } from "../../services/gustGoods/GuestGoodsProductSerivce";
 
 export default function GoodsSupportModal({
