@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import {
-  AiOutlineShoppingCart,
-  AiOutlineFileSync,
-  AiOutlinePicture,
-} from "react-icons/ai";
-import {
-  BsCalendar2Heart,
-  BsPersonGear,
-  BsFillEnvelopeFill,
-} from "react-icons/bs";
-import { MdKeyboardArrowRight } from "react-icons/md";
-import { CiMoneyBill } from "react-icons/ci";
-
+import { AiOutlineShoppingCart } from "@react-icons/all-files/ai/AiOutlineShoppingCart";
+import { AiOutlineFileSync } from "@react-icons/all-files/ai/AiOutlineFileSync";
+import { AiOutlinePicture } from "@react-icons/all-files/ai/AiOutlinePicture";
+import { BsFillEnvelopeFill } from "@react-icons/all-files/bs/BsFillEnvelopeFill";
+import { MdKeyboardArrowRight } from "@react-icons/all-files/md/MdKeyboardArrowRight";
+import { FaMoneyBill } from "@react-icons/all-files/fa/FaMoneyBill";
+import { BsFillPersonFill } from "@react-icons/all-files/bs/BsFillPersonFill";
+import wishlist from "../../assets/icons/wishlist.png";
 import { getGoodsUrlUUID } from "../../services/uuid/UrlUuidService";
 import useTokenDecode from "../../hooks/useTokenDecode";
 import { removeAccessToken } from "../../repository/AuthTokenRepository";
@@ -64,7 +59,7 @@ function NotificationItem({ data }) {
   }
   return (
     <AlarmDiv>
-      <CiMoneyBill style={{ width: "50px", height: "21px" }} />
+      <FaMoneyBill style={{ width: "50px", height: "21px" }} />
       <AlarmDonationText>
         {NAME}님이 {data.goods}에 {data.donation}원을 후원하셨습니다.
       </AlarmDonationText>
@@ -108,7 +103,10 @@ function MarriedNavbar({ token, setNavbar }) {
           <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
         </LinkInput>
         <LinkInput onClick={navbarClose}>
-          <BsCalendar2Heart style={{ marginRight: "5px", marginLeft: "3px" }} />
+          <img
+            src={wishlist}
+            style={{ width: "20px", height: "20px", marginLeft: "3px" }}
+          />
           위시 리스트/메모장
           <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
         </LinkInput>
@@ -138,7 +136,10 @@ function MarriedNavbar({ token, setNavbar }) {
           <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
         </LinkInput>
         <LinkInput to="/admin/memo" onClick={navbarClose}>
-          <BsCalendar2Heart style={{ marginRight: "5px", marginLeft: "3px" }} />
+          <img
+            src={wishlist}
+            style={{ width: "20px", height: "20px", marginLeft: "3px" }}
+          />
           위시 리스트/메모장
           <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
         </LinkInput>
@@ -181,7 +182,6 @@ export default function Navbar({
   guestState,
   pathUuidFirst,
 }) {
-  console.log(guestState);
   const [_, nickName] = useTokenDecode(token);
   const [navbarNotification, setNavbarNotification] = useState([]);
   const navigate = useNavigate();
@@ -266,7 +266,7 @@ export default function Navbar({
           <Title>ZOLABAYO</Title>
           <NickNamediv>
             <NickNameText>
-              <BsPersonGear
+              <BsFillPersonFill
                 style={{ width: "25px", height: "27px", marginRight: "5px" }}
               />
               {nickName ? (
@@ -317,7 +317,8 @@ export default function Navbar({
           <Title>ZOLABAYO</Title>
           <NickNamediv>
             <NickNameText>
-              <BsPersonGear
+              <img
+                src={wishlist}
                 style={{ width: "25px", height: "27px", marginRight: "5px" }}
               />
               {nickName ? (
