@@ -61,7 +61,7 @@ function NotificationItem({ data }) {
     case "donation":
       return (
         <AlarmDiv>
-          <CiMoneyBill style={{ width: "50px", height: "21px" }} />
+          <FaMoneyBill style={{ width: "50px", height: "21px" }} />
           <AlarmDonationText>
             {NAME}님이 {data.goods}에 {data.donation}원을 후원하셨습니다.
           </AlarmDonationText>
