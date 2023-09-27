@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 //공유 이미지 가져오기
 import styled from "styled-components";
 import Box from "@/components/box/Box";
-import { RiArrowDropLeftLine, RiArrowDropRightLine } from "react-icons/ri";
+import { RiArrowDropLeftLine } from "@react-icons/all-files/ri/RiArrowDropLeftLine";
+import { RiArrowDropRightLine } from "@react-icons/all-files/ri/RiArrowDropRightLine";
 
 import GoodsSupportModal from "../../components/goodssupportmodal/GoodsSupportModal";
 import { getInforMationList } from "../../services/gustGoods/GuestMarriedService";

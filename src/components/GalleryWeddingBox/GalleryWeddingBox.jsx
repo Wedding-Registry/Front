@@ -6,7 +6,7 @@ import { addGalleryWeddingImage } from "../../services/weddingGallery/WeddingImg
 import { galleryWeddingImageState } from "../../state/galleryWeddingImageState";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { uuidState } from "../../state/uuidState";
-import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 import imageCompression from "browser-image-compression";
 
 export default function GalleryWeddingBox({ url, id, deleteImageOnClick }) {
