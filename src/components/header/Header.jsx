@@ -9,7 +9,7 @@ import { Link, useLocation } from "react-router-dom";
 import { getAccessToken } from "../../repository/AuthTokenRepository";
 import { useRecoilValue } from "recoil";
 import { uuidState } from "../../state/uuidState";
-import { getUUid1Token } from "../../repository/GuestUuidRespository";
+//import { getUUid1Token } from "../../repository/GuestUuidRespository";
 
 function TokenStatusLink({ token, setNavbar, navbar }) {
   if (token === null || token === undefined || token === false) {
@@ -50,11 +50,17 @@ export default function Header({ border }) {
 
   const uuidStateValue = useRecoilValue(uuidState);
   const path = useLocation();
-  const uuid1 = path.pathname.trim().split("/")[2];
+  const uuid1 = path.pathname.trim().split("/")[1];
+  const uuid2 = path.pathname.trim().split("/")[2];
+  console.log(uuid1);
   const token = getAccessToken();
 
   useEffect(() => {
-    if (uuid1 !== undefined && getUUid1Token() === null) {
+    if (
+      uuid1 === "GallerySupport" ||
+      uuid1 === "GoodsSupport" ||
+      uuid1 === "Guest"
+    ) {
       setGuestState(true);
     }
   }, [uuid1]);
@@ -64,7 +70,7 @@ export default function Header({ border }) {
       <HeaderDiv isBoolean={border}>
         <HeaderLogoDiv>
           <div>
-            {uuidStateValue.uuidFirst === uuid1 ? (
+            {uuidStateValue.uuidFirst === uuid2 ? (
               <Link
                 to={`/Guest/${uuidStateValue.uuidFirst}/${uuidStateValue.uuidSecond}`}
                 onClick={() => setNavbar(false)}

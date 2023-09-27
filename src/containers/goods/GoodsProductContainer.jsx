@@ -275,6 +275,9 @@ export default function GoodsProductContainer() {
     if (data.data === null) {
       setFetchData((prev) => prev.filter((goods) => goods.usersGoodsId !== id));
     }
+    if (data.status === 400) {
+      alert(data.message);
+    }
     setIsOpen(false);
   }
   return (
