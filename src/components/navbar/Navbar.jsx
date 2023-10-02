@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AiOutlineShoppingCart } from "@react-icons/all-files/ai/AiOutlineShoppingCart";
 import { AiOutlineFileSync } from "@react-icons/all-files/ai/AiOutlineFileSync";
@@ -13,8 +13,7 @@ import { getGoodsUrlUUID } from "../../services/uuid/UrlUuidService";
 import useTokenDecode from "../../hooks/useTokenDecode";
 import { removeAccessToken } from "../../repository/AuthTokenRepository";
 import { getAlarm } from "../../services/navbar/NavbarService";
-import { useRecoilValue } from "recoil";
-import { uuidState } from "../../state/uuidState";
+
 import {
   getUUid1Token,
   getUUid2Token,
@@ -152,12 +151,14 @@ function MarriedNavbar({ token, setNavbar }) {
 }
 
 function GuestNavbar({ setNavbar }) {
-  const uuidStateData = useRecoilValue(uuidState);
+  const path = useLocation();
+  const uuid1 = path.pathname.trim().split("/")[2];
+  const uuid2 = path.pathname.trim().split("/")[3];
   return (
     <GuestTopItem>
       <TopTitleText>카테고리</TopTitleText>
       <LinkInput
-        to={`/GoodsSupport/${uuidStateData.uuidFirst}/${uuidStateData.uuidSecond}`}
+        to={`/GoodsSupport/${uuid1}/${uuid2}`}
         onClick={() => setNavbar(false)}
       >
         <AiOutlineShoppingCart
@@ -167,7 +168,7 @@ function GuestNavbar({ setNavbar }) {
         <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
       </LinkInput>
       <LinkInput
-        to={`/GallerySupport/${uuidStateData.uuidFirst}/${uuidStateData.uuidSecond}`}
+        to={`/GallerySupport/${uuid1}/${uuid2}`}
         onClick={() => setNavbar(false)}
       >
         <AiOutlinePicture style={{ marginRight: "5px", marginLeft: "3px" }} />

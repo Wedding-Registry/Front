@@ -7,8 +7,7 @@ import Menu from "@/assets/icons/menu.png";
 import Navbar from "../navbar/Navbar";
 import { Link, useLocation } from "react-router-dom";
 import { getAccessToken } from "../../repository/AuthTokenRepository";
-import { useRecoilValue } from "recoil";
-import { uuidState } from "../../state/uuidState";
+
 //import { getUUid1Token } from "../../repository/GuestUuidRespository";
 
 function TokenStatusLink({ token, setNavbar, navbar }) {
@@ -48,11 +47,9 @@ export default function Header({ border }) {
   //true가 게스트 상태 false가 기본 상태
   const [guestState, setGuestState] = useState(false);
 
-  const uuidStateValue = useRecoilValue(uuidState);
   const path = useLocation();
-  const uuid1 = path.pathname.trim().split("/")[1];
-  const uuid2 = path.pathname.trim().split("/")[2];
-  console.log(uuid1);
+  const uuid1 = path.pathname.trim().split("/")[2];
+  const uuid2 = path.pathname.trim().split("/")[3];
   const token = getAccessToken();
 
   useEffect(() => {
@@ -70,9 +67,9 @@ export default function Header({ border }) {
       <HeaderDiv isBoolean={border}>
         <HeaderLogoDiv>
           <div>
-            {uuidStateValue.uuidFirst === uuid2 ? (
+            {uuid1 !== undefined ? (
               <Link
-                to={`/Guest/${uuidStateValue.uuidFirst}/${uuidStateValue.uuidSecond}`}
+                to={`/Guest/${uuid1}/${uuid2}`}
                 onClick={() => setNavbar(false)}
               >
                 <Logo src={logo} />
