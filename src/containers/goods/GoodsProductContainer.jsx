@@ -55,7 +55,6 @@ export default function GoodsProductContainer() {
   const TOTAL_SLIDES = 1;
   const FIX_SIZE = 10;
   const slideRef = useRef(null);
-
   //상품전체조회
   async function renderProduct() {
     const products = await getGoodsProductList();
@@ -128,11 +127,13 @@ export default function GoodsProductContainer() {
   // 신부 이름 text
   const wifeTextChange = (e) => {
     const value = e.target.value;
+
     setWifeNameText(value);
   };
   // 신랑 이름 text
   const husbandTextChange = (e) => {
     const value = e.target.value;
+
     setHusbandNameText(value);
   };
   // 신부 은행 Change 이벤트
@@ -165,8 +166,10 @@ export default function GoodsProductContainer() {
   const addMarriedInformationClick = async () => {
     //신랑 이름 등록
     const husbandData = await addHusbandNameRender(husbandNameText);
+
     //신부 이름 등록
     const wifeData = await addWifeNameRender(wifeNameText);
+
     //신부 계좌 등록
     const wifeAccountData = await addWifeAccountRender(
       wifeAccountText,
