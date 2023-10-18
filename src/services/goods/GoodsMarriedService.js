@@ -79,6 +79,7 @@ async function addWeddingHallTime(date) {
     console.error(error);
   }
 }
+
 //예식장 주소 및 주소 변경
 async function updateWeddingHallLocation(address) {
   try {

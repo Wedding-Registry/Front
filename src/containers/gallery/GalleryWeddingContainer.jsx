@@ -9,6 +9,8 @@ import {
   deleteGalleryWeddingImage,
 } from "../../services/weddingGallery/WeddingImgService";
 import ImageSilder from "../../components/imageSilder/ImageSilder";
+import { Mobile, PC } from "../../components/media/gallery/Wedding";
+import MobileWedding from "../../components/mobile/wedding/MobileWedding";
 
 export default function GalleryWeddingContainer() {
   const [imgData, setImgData] = useRecoilState(galleryWeddingImageState);
@@ -37,17 +39,22 @@ export default function GalleryWeddingContainer() {
   }, [didMount]);
   return (
     <Base>
-      <ImageSilder
-        imgData={imgData}
-        FIX_SIZE={FIX_SIZE}
-        arrayLength={arrayLength}
-        deleteImageOnClick={deleteImageOnClick}
-        setImgData={setImgData}
-      />
+      <PC>
+        <ImageSilder
+          imgData={imgData}
+          FIX_SIZE={FIX_SIZE}
+          arrayLength={arrayLength}
+          deleteImageOnClick={deleteImageOnClick}
+          setImgData={setImgData}
+        />
+      </PC>
+      <Mobile>
+        <MobileWedding />
+      </Mobile>
     </Base>
   );
 }
 
 const Base = styled.div`
-  height: 90vh;
+  height: 90.5vh;
 `;
