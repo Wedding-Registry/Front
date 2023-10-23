@@ -32,13 +32,15 @@ export default function MobileWedding() {
       day: convertDay,
     });
   }
-  async function getImageDataRender() {
-    const weddingImgData = await getGalleryWeddingImage();
-    setImgData(weddingImgData.data);
-  }
+
   useEffect(() => {
     setDidMount(true);
   }, []);
+  async function getImageDataRender() {
+    const weddingImgData = await getGalleryWeddingImage();
+
+    setImgData(weddingImgData.data);
+  }
 
   useEffect(() => {
     if (didMount) {
@@ -64,6 +66,17 @@ export default function MobileWedding() {
     const dayOfWeek = week[new Date(date).getDay()];
     return dayOfWeek;
   };
+
+  //폴링
+  useEffect(() => {
+    const intervalResult = setInterval(() => {
+      getImageDataRender();
+    }, 5000);
+    return () => {
+      clearInterval(intervalResult);
+    };
+  }, []);
+
   return (
     <Base>
       <Wapper>
