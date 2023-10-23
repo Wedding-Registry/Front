@@ -17,7 +17,6 @@ export default function GalleryWeddingBox({ url, id, deleteImageOnClick }) {
     setImgData((prev) => [...prev, postImgData.data]);
   }
   const imageInput = useRef();
-
   const onUploadImage = useCallback(async (e) => {
     const options = {
       maxSizeMB: 2,
