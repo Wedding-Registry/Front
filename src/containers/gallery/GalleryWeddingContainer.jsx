@@ -9,7 +9,15 @@ import {
   deleteGalleryWeddingImage,
 } from "../../services/weddingGallery/WeddingImgService";
 import ImageSilder from "../../components/imageSilder/ImageSilder";
-import { Mobile, PC } from "../../components/media/gallery/Wedding";
+import {
+  Galaxy21Mobile,
+  PC,
+  Galaxy21UltraMobile,
+  Iphone14ProMobile,
+  Iphone14PlusMobile,
+  Iphone14Mobile,
+  Galaxy21PlusMobile,
+} from "../../components/media/gallery/Wedding";
 import MobileWedding from "../../components/mobile/wedding/MobileWedding";
 
 export default function GalleryWeddingContainer() {
@@ -48,9 +56,24 @@ export default function GalleryWeddingContainer() {
           setImgData={setImgData}
         />
       </PC>
-      <Mobile>
+      <Galaxy21Mobile>
         <MobileWedding />
-      </Mobile>
+      </Galaxy21Mobile>
+      <Galaxy21UltraMobile>
+        <MobileWedding />
+      </Galaxy21UltraMobile>
+      <Iphone14ProMobile>
+        <MobileWedding />
+      </Iphone14ProMobile>
+      <Iphone14Mobile>
+        <MobileWedding />
+      </Iphone14Mobile>
+      <Iphone14PlusMobile>
+        <MobileWedding />
+      </Iphone14PlusMobile>
+      <Galaxy21PlusMobile>
+        <MobileWedding />
+      </Galaxy21PlusMobile>
     </Base>
   );
 }
