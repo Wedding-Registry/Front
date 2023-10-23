@@ -216,6 +216,7 @@ export default function GoodsProductContainer() {
       setCurrentSlide(currentSlide + 1);
     }
   };
+
   const prevSlide = () => {
     if (currentSlide === 0) {
       setCurrentSlide(TOTAL_SLIDES);
@@ -249,7 +250,6 @@ export default function GoodsProductContainer() {
     const weddingTime = marriedWeddingData.data?.weddingTime;
     if (weddingDate !== undefined && weddingTime !== undefined) {
       const toStringDate = useDateTimeConver(weddingDate, weddingTime);
-
       setDateText(toStringDate);
     }
   }
