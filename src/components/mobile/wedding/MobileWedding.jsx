@@ -82,28 +82,34 @@ export default function MobileWedding() {
       <Wapper>
         <MarriedTopTextDiv>
           <MarridTopText>
-            {marriedData.date.slice(6, 8)}月{marriedData.date.slice(9, 12)}日
+            {marriedData.date && marriedData.date.slice(6, 8)}月{" "}
+            {marriedData.date && marriedData.date.slice(9, 12)}日
           </MarridTopText>
         </MarriedTopTextDiv>
         <div>
           <MarridText>
-            {marriedData.husband} & {marriedData.wife}
+            {marriedData.husband && marriedData.husband} &{" "}
+            {marriedData.wife && marriedData.wife}
           </MarridText>
         </div>
         {radomimg.map((img) => (
           <div key={img.galleryImgId}>
             <img
               src={img.galleryImgUrl}
-              style={{ width: "359px", height: "288px" }}
+              style={{ width: "80%", height: "288px" }}
             />
           </div>
         ))}
         <div style={{ width: "100%" }}>
           <MarridBottomText>OUR WEDDING-DAY</MarridBottomText>
           <MarridBottomText>
-            {marriedData.date} {marriedData.day}. {marriedData.time}
+            {marriedData.date && marriedData.date}{" "}
+            {marriedData.day && marriedData.day}.{" "}
+            {marriedData.time && marriedData.time}
           </MarridBottomText>
-          <MarridBottomText>{marriedData.location}</MarridBottomText>
+          <MarridBottomText>
+            {marriedData.location && marriedData.location}
+          </MarridBottomText>
         </div>
       </Wapper>
     </Base>
