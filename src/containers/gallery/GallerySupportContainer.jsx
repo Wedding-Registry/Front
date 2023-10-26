@@ -10,7 +10,8 @@ import {
   getGallerySupportUUID,
 } from "../../services/guestWedding/GuestWeddungImgSerivce";
 import { useLocation } from "react-router";
-
+import { Mobile, PC } from "../../components/media/gallery/Wedding";
+import MobileWedding from "../../components/mobile/wedding/MobileGuestWedding";
 // Import Swiper styles
 
 import "swiper/css";
@@ -19,10 +20,6 @@ import "swiper/css/navigation";
 
 import "../style/styles.css";
 import ImageSilder from "../../components/imageSilder/ImageSilder";
-
-const Base = styled.div`
-  height: 90vh;
-`;
 
 export default function GallerySupportContainer() {
   const [imgData, setImgData] = useRecoilState(galleryWeddingImageState);
@@ -63,14 +60,23 @@ export default function GallerySupportContainer() {
 
   return (
     <Base>
-      <ImageSilder
-        imgData={imgData}
-        FIX_SIZE={FIX_SIZE}
-        arrayLength={arrayLength}
-        GalleryWeddingBox={GalleryWeddingBox}
-        invitationStatus={invitationStatus}
-        setInvitationStatus={setInvitationStatus}
-      />
+      <PC>
+        <ImageSilder
+          imgData={imgData}
+          FIX_SIZE={FIX_SIZE}
+          arrayLength={arrayLength}
+          GalleryWeddingBox={GalleryWeddingBox}
+          invitationStatus={invitationStatus}
+          setInvitationStatus={setInvitationStatus}
+        />
+      </PC>
+      <Mobile>
+        <MobileWedding />
+      </Mobile>
     </Base>
   );
 }
+
+const Base = styled.div`
+  height: 90vh;
+`;

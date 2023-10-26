@@ -132,6 +132,9 @@ const Base = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  @media screen and (max-width: 768px) {
+    width: 700px;
+  }
 `;
 
 const Image = styled.div`
@@ -141,6 +144,10 @@ const Image = styled.div`
   background-size: cover;
   display: flex;
   justify-content: flex-end;
+  @media screen and (max-width: 768px) {
+    width: 500px;
+    height: 500px;
+  }
 `;
 
 const Imageinput = styled.div`
@@ -166,5 +173,8 @@ const Imageinput = styled.div`
   img {
     width: 20px;
     height: 20px;
+  }
+  @media screen and (max-width: 768px) {
+    width: 700px;
   }
 `;

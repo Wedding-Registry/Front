@@ -53,6 +53,7 @@ export default function ImageSilder({
       modules={[Navigation, EffectCoverflow]}
       className="swiper-container two"
       grabCursor={true}
+      style={{ height: "85%" }}
     >
       {imgData &&
         imgData.map((v) => (

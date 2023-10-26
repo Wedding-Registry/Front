@@ -6,6 +6,7 @@ import { galleryWeddingImageState } from "../../../state/galleryWeddingImageStat
 import { useRecoilState } from "recoil";
 import { getGalleryWeddingImage } from "../../../services/weddingGallery/WeddingImgService";
 import { getWeddingHall } from "../../../services/goods/GoodsMarriedService";
+import Wedding from "../../../assets/Wedding.png";
 
 export default function MobileWedding() {
   const [imgData, setImgData] = useRecoilState(galleryWeddingImageState);
@@ -19,10 +20,11 @@ export default function MobileWedding() {
     day: "",
   });
 
-  async function getWeddingMarred() {
+  async function getWeddingMarried() {
     const marriedDataList = await getWeddingHall();
     const convertDay = dayFindWeek(marriedDataList.data.weddingDate);
     const data = convertDate(marriedDataList.data.weddingDate);
+
     setMarriedData({
       husband: marriedDataList.data.account[0].name,
       wife: marriedDataList.data.account[1].name,
@@ -45,20 +47,24 @@ export default function MobileWedding() {
   useEffect(() => {
     if (didMount) {
       getImageDataRender();
-      getWeddingMarred();
+      getWeddingMarried();
     }
   }, [didMount]);
 
-  let randomnum = Math.floor(Math.random() * imgData.length);
-  const radomimg = imgData.filter((img, index) => {
-    if (index === randomnum) {
+  let randomNum = Math.floor(Math.random() * imgData.length);
+  const radomImg = imgData.filter((img, index) => {
+    if (index === randomNum) {
       return img.galleryImgUrl;
     }
   });
 
   const convertDate = (date) => {
-    const [year, month, day] = date.split("-");
-    return `${year}. ${month}. ${day}`;
+    if (date !== "undefined" && date !== "") {
+      const [year, month, day] = date.split("-");
+      return `${year}. ${month}. ${day}`;
+    } else {
+      return;
+    }
   };
 
   const dayFindWeek = (date) => {
@@ -66,7 +72,14 @@ export default function MobileWedding() {
     const dayOfWeek = week[new Date(date).getDay()];
     return dayOfWeek;
   };
+  const marreidDataConvertMonthDay =
+    marriedData.date?.slice(6, 8) +
+    "月" +
+    marriedData.date?.slice(9, 12) +
+    "日";
 
+  const marreidDataName = marriedData.husband + "&" + marriedData.wife;
+  ("日");
   //폴링
   useEffect(() => {
     const intervalResult = setInterval(() => {
@@ -76,35 +89,43 @@ export default function MobileWedding() {
       clearInterval(intervalResult);
     };
   }, []);
-
   return (
     <Base>
       <Wapper>
         <MarriedTopTextDiv>
           <MarridTopText>
-            {marriedData.date && marriedData.date.slice(6, 8)}月{" "}
-            {marriedData.date && marriedData.date.slice(9, 12)}日
+            {marriedData.date ? marreidDataConvertMonthDay : <></>}
           </MarridTopText>
         </MarriedTopTextDiv>
         <div>
           <MarridText>
-            {marriedData.husband && marriedData.husband} &{" "}
-            {marriedData.wife && marriedData.wife}
+            {marriedData.husband ? marreidDataName : <></>}
           </MarridText>
         </div>
-        {radomimg.map((img) => (
-          <div key={img.galleryImgId}>
-            <img
-              src={img.galleryImgUrl}
-              style={{ width: "80%", height: "288px" }}
-            />
-          </div>
-        ))}
+        <MarriedImageDiv>
+          {radomImg.length > 0 ? (
+            radomImg.map((img) => (
+              <div
+                key={img.galleryImgId}
+                style={{ display: "flex", justifyContent: "center" }}
+              >
+                <img
+                  src={img.galleryImgUrl}
+                  style={{ width: "100%", height: "288px" }}
+                />
+              </div>
+            ))
+          ) : (
+            <>
+              <img src={Wedding} style={{ width: "100%", height: "288px" }} />
+            </>
+          )}
+        </MarriedImageDiv>
         <div style={{ width: "100%" }}>
-          <MarridBottomText>OUR WEDDING-DAY</MarridBottomText>
+          <MarridBottomTopText>OUR WEDDING-DAY</MarridBottomTopText>
           <MarridBottomText>
             {marriedData.date && marriedData.date}{" "}
-            {marriedData.day && marriedData.day}.{" "}
+            {marriedData.day && marriedData.day}{" "}
             {marriedData.time && marriedData.time}
           </MarridBottomText>
           <MarridBottomText>
@@ -115,7 +136,6 @@ export default function MobileWedding() {
     </Base>
   );
 }
-
 const Base = styled.div`
   display: flex;
   flex-direction: column;
@@ -163,13 +183,12 @@ const MarridTopText = styled.p`
   width: 10px;
   font: bold;
   font-weight: 300px;
-  border-left: 1px solid black;
   padding-left: 10px;
 `;
 
-const MarridBottomText = styled.p`
+const MarridBottomTopText = styled.p`
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   text-align: center;
   font-size: 20px;
@@ -178,4 +197,23 @@ const MarridBottomText = styled.p`
   width: 100%;
   font: bold;
   font-weight: 300px;
+`;
+const MarridBottomText = styled.p`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 20px;
+  margin-top: 20px;
+  width: 100%;
+  font: bold;
+  font-weight: 300px;
+`;
+
+const MarriedImageDiv = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
 `;

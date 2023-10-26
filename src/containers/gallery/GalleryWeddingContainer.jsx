@@ -9,16 +9,6 @@ import {
   deleteGalleryWeddingImage,
 } from "../../services/weddingGallery/WeddingImgService";
 import ImageSilder from "../../components/imageSilder/ImageSilder";
-import {
-  Galaxy21Mobile,
-  PC,
-  Galaxy21UltraMobile,
-  Iphone14ProMobile,
-  Iphone14PlusMobile,
-  Iphone14Mobile,
-  Galaxy21PlusMobile,
-} from "../../components/media/gallery/Wedding";
-import MobileWedding from "../../components/mobile/wedding/MobileWedding";
 
 export default function GalleryWeddingContainer() {
   const [imgData, setImgData] = useRecoilState(galleryWeddingImageState);
@@ -47,33 +37,13 @@ export default function GalleryWeddingContainer() {
   }, [didMount]);
   return (
     <Base>
-      <PC>
-        <ImageSilder
-          imgData={imgData}
-          FIX_SIZE={FIX_SIZE}
-          arrayLength={arrayLength}
-          deleteImageOnClick={deleteImageOnClick}
-          setImgData={setImgData}
-        />
-      </PC>
-      <Galaxy21Mobile>
-        <MobileWedding />
-      </Galaxy21Mobile>
-      <Galaxy21UltraMobile>
-        <MobileWedding />
-      </Galaxy21UltraMobile>
-      <Iphone14ProMobile>
-        <MobileWedding />
-      </Iphone14ProMobile>
-      <Iphone14Mobile>
-        <MobileWedding />
-      </Iphone14Mobile>
-      <Iphone14PlusMobile>
-        <MobileWedding />
-      </Iphone14PlusMobile>
-      <Galaxy21PlusMobile>
-        <MobileWedding />
-      </Galaxy21PlusMobile>
+      <ImageSilder
+        imgData={imgData}
+        FIX_SIZE={FIX_SIZE}
+        arrayLength={arrayLength}
+        deleteImageOnClick={deleteImageOnClick}
+        setImgData={setImgData}
+      />
     </Base>
   );
 }
