@@ -3,40 +3,40 @@ import { useMediaQuery } from "react-responsive";
 
 const Galaxy21Mobile = ({ children }) => {
   const isMobile = useMediaQuery({
-    query: "(max-width:360px)",
+    query: "(min-width:360px)",
   });
   return <div>{isMobile ? children : null}</div>;
 };
 
 const Galaxy21PlusMobile = ({ children }) => {
   const isMobile = useMediaQuery({
-    query: "(max-width:384px)",
+    query: "(min-width:384px)",
   });
   return <div>{isMobile ? children : null}</div>;
 };
 
 const Galaxy21UltraMobile = ({ children }) => {
   const isMobile = useMediaQuery({
-    query: "(max-width:412px)",
+    query: "(min-width:412px)",
   });
   return <div>{isMobile ? children : null}</div>;
 };
 
 const Iphone14Mobile = ({ children }) => {
   const isMobile = useMediaQuery({
-    query: "(max-width:390px)",
+    query: "(min-width:390px)",
   });
   return <div>{isMobile ? children : null}</div>;
 };
 const Iphone14PlusMobile = ({ children }) => {
   const isMobile = useMediaQuery({
-    query: "(max-width:428px)",
+    query: "(min-width:428px)",
   });
   return <div>{isMobile ? children : null}</div>;
 };
 const Iphone14ProMobile = ({ children }) => {
   const isMobile = useMediaQuery({
-    query: "(max-width:393px)",
+    query: "(min-width:393px)",
   });
   return <div>{isMobile ? children : null}</div>;
 };
