@@ -1,44 +1,11 @@
 import React from "react";
 import { useMediaQuery } from "react-responsive";
 
-const Galaxy21Mobile = ({ children }) => {
+const Mobile = ({ children }) => {
   const isMobile = useMediaQuery({
-    query: "(min-width:360px)",
+    query: "(max-width:768px)",
   });
-  return <div>{isMobile ? children : null}</div>;
-};
-
-const Galaxy21PlusMobile = ({ children }) => {
-  const isMobile = useMediaQuery({
-    query: "(min-width:384px)",
-  });
-  return <div>{isMobile ? children : null}</div>;
-};
-
-const Galaxy21UltraMobile = ({ children }) => {
-  const isMobile = useMediaQuery({
-    query: "(min-width:412px)",
-  });
-  return <div>{isMobile ? children : null}</div>;
-};
-
-const Iphone14Mobile = ({ children }) => {
-  const isMobile = useMediaQuery({
-    query: "(min-width:390px)",
-  });
-  return <div>{isMobile ? children : null}</div>;
-};
-const Iphone14PlusMobile = ({ children }) => {
-  const isMobile = useMediaQuery({
-    query: "(min-width:428px)",
-  });
-  return <div>{isMobile ? children : null}</div>;
-};
-const Iphone14ProMobile = ({ children }) => {
-  const isMobile = useMediaQuery({
-    query: "(min-width:393px)",
-  });
-  return <div>{isMobile ? children : null}</div>;
+  return <div>{isMobile && children}</div>;
 };
 
 const PC = ({ children }) => {
@@ -52,12 +19,4 @@ const PC = ({ children }) => {
   );
 };
 
-export {
-  Galaxy21Mobile,
-  PC,
-  Galaxy21UltraMobile,
-  Iphone14ProMobile,
-  Iphone14PlusMobile,
-  Iphone14Mobile,
-  Galaxy21PlusMobile,
-};
+export { Mobile, PC };
