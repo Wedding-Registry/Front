@@ -40,8 +40,6 @@ function GoogleButton() {
 
   const googleLogin = useGoogleLogin({
     onSuccess: async (res) => {
-      // console.log(res.access_token);
-
       const {
         data: { email, sub },
       } = await axios.get("https://openidconnect.googleapis.com/v1/userinfo", {
@@ -49,7 +47,6 @@ function GoogleButton() {
           access_token: res.access_token,
         },
       });
-
 
       const response = await axios.post(`${apiUrl}login/oauth/google`, {
         email: email,

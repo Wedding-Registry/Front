@@ -16,8 +16,8 @@ import { marriedInformationState } from "../../state/marriedInformationState";
 
 export default function ShareBox({ setSharebox }) {
   const marriedInformationData = useRecoilValue(marriedInformationState);
-  const HUSBAND_NAME = marriedInformationData.data.account[0].name;
-  const WIFE_NAME = marriedInformationData.data.account[1].name;
+  const HUSBAND_NAME = marriedInformationData.data?.account[0].name;
+  const WIFE_NAME = marriedInformationData.data?.account[1].name;
   const localUuid1 = getUUid1Token();
   const localUuid2 = getUUid2Token();
   async function getGoodsUrlUuidRender() {

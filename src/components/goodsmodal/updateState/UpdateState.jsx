@@ -56,8 +56,7 @@ function UpdateState({
   };
 
   const goodsDeleteButton = async (id) => {
-    const data = await deleteGoodsRender(id);
-    console.log(data);
+    await deleteGoodsRender(id);
   };
   const updateGoodsNameChange = (e) => {
     const value = e.target.value;

@@ -1,5 +1,4 @@
 export default function useDateTimeFormat(date) {
-  console.log(date);
   if (date === undefined) {
     return;
   }

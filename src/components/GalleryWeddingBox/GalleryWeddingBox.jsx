@@ -8,6 +8,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { uuidState } from "../../state/uuidState";
 import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 import imageCompression from "browser-image-compression";
+import { media } from "../../style/media";
 
 export default function GalleryWeddingBox({ url, id, deleteImageOnClick }) {
   const setImgData = useSetRecoilState(galleryWeddingImageState);
@@ -144,10 +145,11 @@ const Image = styled.div`
   background-size: cover;
   display: flex;
   justify-content: flex-end;
-  @media screen and (max-width: 768px) {
-    width: 500px;
+
+  ${media.mobile`
+  width: 500px;
     height: 500px;
-  }
+  `}
 `;
 
 const Imageinput = styled.div`
@@ -174,7 +176,7 @@ const Imageinput = styled.div`
     width: 20px;
     height: 20px;
   }
-  @media screen and (max-width: 768px) {
-    width: 700px;
-  }
+  ${media.mobile`
+    width: 700px;   
+  `}
 `;

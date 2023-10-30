@@ -3,6 +3,7 @@
   background-size: "cover";
   background-attachment: fixed;
   font-family: Inter;
+  height: 100vh;
 }
 
 .datePicker {

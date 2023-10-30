@@ -10,7 +10,10 @@ import {
   getGallerySupportUUID,
 } from "../../services/guestWedding/GuestWeddungImgSerivce";
 import { useLocation } from "react-router";
-import { Mobile, PC } from "../../components/media/gallery/Wedding";
+import {
+  Mobile,
+  PC,
+} from "../../components/media/responsivePoint/ResPonsiveWeddingBreak";
 import MobileWedding from "../../components/mobile/wedding/MobileGuestWedding";
 // Import Swiper styles
 
@@ -18,7 +21,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-import "../style/styles.css";
+import "../../style/styles.css";
 import ImageSilder from "../../components/imageSilder/ImageSilder";
 
 export default function GallerySupportContainer() {

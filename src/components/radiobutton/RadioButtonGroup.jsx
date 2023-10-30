@@ -6,6 +6,7 @@ import {
   getWeddingAttendList,
   postWeddingAttendList,
 } from "../../services/gustGoods/GuestMarriedService";
+import { media } from "../../style/media";
 
 //라디오 버튼
 export default function RadioButtonGroup({ guestToken }) {
@@ -89,4 +90,10 @@ const WeddingYn = styled.div`
   position: absolute;
   top: 25%;
   left: 3%;
+  ${media.mobile`
+    display: flex;
+    position: absolute;
+    top: 20%;
+    left: 3%;
+  `}
 `;
