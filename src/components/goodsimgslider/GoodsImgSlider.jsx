@@ -3,13 +3,11 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Box from "@/components/box/Box";
 
-import { RiArrowDropLeftLine } from "@react-icons/all-files/ri/RiArrowDropLeftLine";
 import { RiArrowDropRightLine } from "@react-icons/all-files/ri/RiArrowDropRightLine";
 
 import GoodsSupportModal from "../../components/goodssupportmodal/GoodsSupportModal";
 
 import GoodsElementList from "../../components/goodsElementList/GoodsElementList";
-import { media } from "../../style/media";
 
 export default function GoodsImgSlider({
   goodsSupportData,
@@ -21,7 +19,7 @@ export default function GoodsImgSlider({
   const [isOpen, setIsOpen] = useState(false);
   const [usersGoodsId, setUsersGoodsId] = useState("");
   const slideRef = useRef(null);
-  const TOTAL_SLIDES = 1;
+  const TOTAL_SLIDES = 10;
   const arrayLength = goodsSupportData ? goodsSupportData.length : 0;
   const FIX_SIZE = 10;
 
@@ -33,13 +31,13 @@ export default function GoodsImgSlider({
       setCurrentSlide(currentSlide + 1);
     }
   };
-  const prevSlide = () => {
-    if (currentSlide === 0) {
-      setCurrentSlide(TOTAL_SLIDES);
-    } else {
-      setCurrentSlide(currentSlide - 1);
-    }
-  };
+  // const prevSlide = () => {
+  //   if (currentSlide === 0) {
+  //     setCurrentSlide(TOTAL_SLIDES);
+  //   } else {
+  //     setCurrentSlide(currentSlide - 1);
+  //   }
+  // };
 
   useEffect(() => {
     slideRef.current.style.transition = "all 0.5s ease-in-out";
@@ -48,7 +46,6 @@ export default function GoodsImgSlider({
 
   return (
     <BoxContainer>
-      <RiArrowDropLeftLine onClick={prevSlide} size="40" />
       <BoxSlider>
         <BoxWapper ref={slideRef}>
           {goodsSupportData &&
@@ -96,40 +93,17 @@ const BoxWapper = styled.div`
   height: 50vh;
   margin-top: 20px;
   width: 100%;
-  ${media.mobile`
-    display: flex;
-    height: 60vh;
-    margin-top: 20px;
-    width: 100%;
-  `}
 `;
 
 const BoxContainer = styled.div`
   display: flex;
   margin-top: 20px;
   width: 100%;
-  ${media.mobile`
-    display: flex;        
-    justify-content: center;
-    align-items: center;
-    
-  `}
 `;
 
 const BoxItem = styled.div`
   display: flex;
-  &:nth-child(odd) {
-    margin-top: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  &:nth-child(even) {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-bottom: 150px;
-  }
+  width: 100%;
 `;
 
 const ItemDiv = styled.div`
@@ -159,10 +133,10 @@ const ValueItem = styled.div`
   width: 116.5px;
   display: inline-block;
   font-style: normal;
-  font-weight: 400px;
-  font-size: 14px;
-  line-height: 17px;
-  height: 80px;
+  font-weight: 200px;
+  font-size: 10px;
+  line-height: 13px;
+  height: 50px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -173,9 +147,4 @@ const BoxSlider = styled.div`
   height: 50%;
   overflow-x: hidden;
   margin-bottom: 10%;
-  ${media.mobile`
-    width:100%;
-    height:50%;
-    
-  `}
 `;

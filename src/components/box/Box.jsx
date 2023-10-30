@@ -26,6 +26,9 @@ export default function Box({ url }) {
 const Boxcontainer = styled.div`
   display: flex;
   margin-right: 6px;
+  ${media.mobile`
+    width:300px;
+  `}
 `;
 
 // //Box 모양
@@ -41,7 +44,7 @@ const Divbox = styled.div`
   ${media.mobile`
     background-color: #d9d9d9;
     width: 202px;
-    height: 261px;
+    height: 201px;
     border-radius: 150px;
     display: flex;
     justify-content: center;
