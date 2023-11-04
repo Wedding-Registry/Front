@@ -559,18 +559,19 @@ const BoxItem = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  // &:nth-child(odd) {
-  //   margin-top: auto;
-  //   display: flex;
-  //   justify-content: center;
-  //   align-items: center;
-  // }
-  // &:nth-child(even) {
-  //   display: flex;
-  //   justify-content: flex-start;
-  //   align-items: center;
-  //   margin-bottom: 150px;
-  // }
+
+  &:nth-child(odd) {
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  &:nth-child(even) {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 150px;
+  }
 `;
 
 const ItemDiv = styled.div`

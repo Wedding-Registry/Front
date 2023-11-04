@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { getGoodsSupportItemsList } from "../../../services/gustGoods/GuestGoodsProductSerivce";
 
 import MarriedInforMation from "../../married/MarriedInformation";
-import GoodsImgSlider from "../../goodsimgslider/GoodsImgSlider";
+import MobileGoodsImgSilder from "../../goodsimgslider/MobileGoodsImgSilder";
 
 export default function MobileGuestGoods({ guestToken }) {
   const [goodsSupportData, setGoodsSupportData] = useState([]);
@@ -32,7 +32,7 @@ export default function MobileGuestGoods({ guestToken }) {
     <>
       <GoodsContainer>
         <MarriedInforMation guestToken={guestToken} />
-        <GoodsImgSlider
+        <MobileGoodsImgSilder
           goodsSupportData={goodsSupportData}
           guestToken={guestToken}
           setGoodsSupportData={setGoodsSupportData}

@@ -27,7 +27,7 @@ const Boxcontainer = styled.div`
   display: flex;
   margin-right: 6px;
   ${media.mobile`
-    width:300px;
+    width:70vw;
   `}
 `;
 
@@ -43,8 +43,8 @@ const Divbox = styled.div`
   margin: 0 auto;
   ${media.mobile`
     background-color: #d9d9d9;
-    width: 202px;
-    height: 201px;
+    width: 182px;
+    height: 181px;
     border-radius: 150px;
     display: flex;
     justify-content: center;

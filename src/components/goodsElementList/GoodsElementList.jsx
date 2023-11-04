@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import Box from "@/components/box/Box";
+import { media } from "../../style/media";
 
 const GoodsElementList = ({ FIX_SIZE, arrayLength, setIsOpen }) => {
   let element = [];
@@ -11,7 +12,6 @@ const GoodsElementList = ({ FIX_SIZE, arrayLength, setIsOpen }) => {
   for (let i = 0; i < FIX_SIZE - arrayLength; i++) {
     element.push(
       <BoxItem
-        style={{ width: "100%", marginRight: "150px" }}
         onClick={() =>
           setIsOpen === undefined
             ? alertHandler()
@@ -33,19 +33,42 @@ const BoxItem = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
   &:nth-child(odd) {
     margin-top: auto;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    margin-right: 150px;
   }
   &:nth-child(even) {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     margin-bottom: 150px;
+    margin-right: 150px;
   }
+
+  ${media.mobile`      
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    &:nth-child(odd) {
+    margin-top: auto;
+    display: flex;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-right: 67px;
+  }
+  &:nth-child(even) {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 150px;
+    margin-right: 105px;
+  }
+        
+  `}
 `;
 
 const ItemDiv = styled.div`

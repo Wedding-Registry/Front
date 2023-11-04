@@ -89,7 +89,7 @@ export default function MarriedInforMation({ guestToken }) {
         <WapperCenterTextdiv>
           <RadioButtonGroup guestToken={guestToken} />
           {merriedHusbandNameData && merriedWifeNameData && (
-            <div key={merriedWifeNameData}>
+            <ValueGroupDiv key={merriedWifeNameData}>
               <CenterTextdiv>
                 <GoodsWeddingText
                   disabled={true}
@@ -125,7 +125,7 @@ export default function MarriedInforMation({ guestToken }) {
                   placeholder="신랑 계좌번호"
                 />
               </div>
-            </div>
+            </ValueGroupDiv>
           )}
         </WapperCenterTextdiv>
       </>
@@ -152,6 +152,13 @@ const GoodsWeddingText = styled.input`
   `}
 `;
 
+const ValueGroupDiv = styled.div`
+  flex: "1 0 auto";
+  ${media.mobile`
+    margin-top:20px;
+  `}
+`;
+
 const GoodsWeddingbank = styled.input`
   outline: none;
   border: none;
@@ -168,7 +175,7 @@ const GoodsWeddingbank = styled.input`
     border-radius: 10px 0 0 10px;
     height: 22px;
     text-align: center;
-`}
+  `}
 `;
 
 const GoodsWeddingaccountnumber = styled.input`
@@ -193,11 +200,14 @@ const GoodsWeddingaccountnumber = styled.input`
 `;
 
 const WapperCenterTextdiv = styled.div`
-  margin-bottom: 1%;
+  display: flex;
+
+  width: 100%;
   ${media.mobile`
     justify-content:flex-end;
     display:flex;
     width:100%
+    margin-top:20%;
     
 `}
 `;

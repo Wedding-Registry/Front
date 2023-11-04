@@ -4,11 +4,9 @@ import styled from "styled-components";
 import Box from "@/components/box/Box";
 import { RiArrowDropRightLine } from "@react-icons/all-files/ri/RiArrowDropRightLine";
 import GoodsSupportModal from "../../components/goodssupportmodal/GoodsSupportModal";
-
 import GoodsElementList from "../../components/goodsElementList/GoodsElementList";
-import { RiArrowDropLeftLine } from "@react-icons/all-files/ri/RiArrowDropLeftLine";
 
-export default function GoodsImgSlider({
+export default function MobileGoodsImgSilder({
   goodsSupportData,
   guestToken,
   setGoodsSupportData,
@@ -18,7 +16,7 @@ export default function GoodsImgSlider({
   const [isOpen, setIsOpen] = useState(false);
   const [usersGoodsId, setUsersGoodsId] = useState("");
   const slideRef = useRef(null);
-  const TOTAL_SLIDES = 1;
+  const TOTAL_SLIDES = 9;
   const arrayLength = goodsSupportData ? goodsSupportData.length : 0;
   const FIX_SIZE = 10;
 
@@ -30,13 +28,6 @@ export default function GoodsImgSlider({
       setCurrentSlide(currentSlide + 1);
     }
   };
-  const prevSlide = () => {
-    if (currentSlide === 0) {
-      setCurrentSlide(TOTAL_SLIDES);
-    } else {
-      setCurrentSlide(currentSlide - 1);
-    }
-  };
 
   useEffect(() => {
     slideRef.current.style.transition = "all 0.5s ease-in-out";
@@ -45,7 +36,6 @@ export default function GoodsImgSlider({
 
   return (
     <BoxContainer>
-      <RiArrowDropLeftLine onClick={prevSlide} size="40" />
       <BoxSlider>
         <BoxWapper ref={slideRef}>
           {goodsSupportData &&
@@ -99,26 +89,15 @@ const BoxContainer = styled.div`
   display: flex;
   margin-top: 20px;
   width: 100%;
+  justify-content: center;
+  align-items: center;
 `;
 
 const BoxItem = styled.div`
   display: flex;
-  width: 100%;
-  &:nth-child(odd) {
-    margin-top: auto;
-    display: flex;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-right: 150px;
-  }
-  &:nth-child(even) {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-bottom: 150px;
-    margin-right: 150px;
-  }
+  justify-content: center;
+  align-items: center;
+  margin-right: 20px;
 `;
 
 const ItemDiv = styled.div`
@@ -145,7 +124,7 @@ const StyledRange = styled.div`
 `;
 
 const ValueItem = styled.div`
-  width: 116.5px;
+  width: 100%;
   display: inline-block;
   font-style: normal;
   font-weight: 200px;
