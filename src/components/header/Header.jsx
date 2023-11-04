@@ -48,28 +48,27 @@ export default function Header({ border }) {
   const [guestState, setGuestState] = useState(false);
 
   const path = useLocation();
-  const uuid1 = path.pathname.trim().split("/")[2];
-  const uuid2 = path.pathname.trim().split("/")[3];
+  const urlPathName = path.pathname.trim().split("/")[1];
+  const uuidFirst = path.pathname.trim().split("/")[2];
+  const uuidSecound = path.pathname.trim().split("/")[3];
   const token = getAccessToken();
-
   useEffect(() => {
     if (
-      uuid1 === "GallerySupport" ||
-      uuid1 === "GoodsSupport" ||
-      uuid1 === "Guest"
+      urlPathName === "GallerySupport" ||
+      urlPathName === "GoodsSupport" ||
+      urlPathName === "Guest"
     ) {
       setGuestState(true);
     }
-  }, [uuid1]);
-
+  }, [uuidFirst]);
   return (
     <>
       <HeaderDiv isBoolean={border}>
         <HeaderLogoDiv>
           <div>
-            {uuid1 !== undefined ? (
+            {uuidFirst !== undefined ? (
               <Link
-                to={`/Guest/${uuid1}/${uuid2}`}
+                to={`/Guest/${uuidFirst}/${uuidSecound}`}
                 onClick={() => setNavbar(false)}
               >
                 <Logo src={logo} />
@@ -91,7 +90,7 @@ export default function Header({ border }) {
         <Navbar
           setNavbar={setNavbar}
           token={token}
-          uuid1={uuid1}
+          uuidFirst={uuidFirst}
           guestState={guestState}
         />
       ) : null}

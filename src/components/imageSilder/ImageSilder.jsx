@@ -9,7 +9,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-import "../../containers/style/styles.css";
+import "../../style/styles.css";
 
 export default function ImageSilder({
   imgData,

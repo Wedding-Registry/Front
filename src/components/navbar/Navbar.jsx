@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+
 import { AiOutlineShoppingCart } from "@react-icons/all-files/ai/AiOutlineShoppingCart";
 import { AiOutlineFileSync } from "@react-icons/all-files/ai/AiOutlineFileSync";
 import { AiOutlinePicture } from "@react-icons/all-files/ai/AiOutlinePicture";
@@ -8,12 +9,12 @@ import { BsFillEnvelopeFill } from "@react-icons/all-files/bs/BsFillEnvelopeFill
 import { MdKeyboardArrowRight } from "@react-icons/all-files/md/MdKeyboardArrowRight";
 import { FaMoneyBill } from "@react-icons/all-files/fa/FaMoneyBill";
 import { BsFillPersonFill } from "@react-icons/all-files/bs/BsFillPersonFill";
+
 import wishlist from "../../assets/icons/wishlist.png";
 import { getGoodsUrlUUID } from "../../services/uuid/UrlUuidService";
 import useTokenDecode from "../../hooks/useTokenDecode";
 import { removeAccessToken } from "../../repository/AuthTokenRepository";
 import { getAlarm } from "../../services/navbar/NavbarService";
-
 import {
   getUUid1Token,
   getUUid2Token,
@@ -33,7 +34,6 @@ function NotificationItemList({ notifications }) {
 }
 
 function NotificationItem({ data }) {
-  console.log(data.type);
   if (data === null || data === undefined) {
     return <></>;
   }
@@ -152,13 +152,13 @@ function MarriedNavbar({ token, setNavbar }) {
 
 function GuestNavbar({ setNavbar }) {
   const path = useLocation();
-  const uuid1 = path.pathname.trim().split("/")[2];
-  const uuid2 = path.pathname.trim().split("/")[3];
+  const pathUrlUuidFirst = path.pathname.trim().split("/")[2];
+  const pathUrlUuidSecound = path.pathname.trim().split("/")[3];
   return (
     <GuestTopItem>
       <TopTitleText>카테고리</TopTitleText>
       <LinkInput
-        to={`/GoodsSupport/${uuid1}/${uuid2}`}
+        to={`/GoodsSupport/${pathUrlUuidFirst}/${pathUrlUuidSecound}`}
         onClick={() => setNavbar(false)}
       >
         <AiOutlineShoppingCart
@@ -168,7 +168,7 @@ function GuestNavbar({ setNavbar }) {
         <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
       </LinkInput>
       <LinkInput
-        to={`/GallerySupport/${uuid1}/${uuid2}`}
+        to={`/GallerySupport/${pathUrlUuidFirst}/${pathUrlUuidSecound}`}
         onClick={() => setNavbar(false)}
       >
         <AiOutlinePicture style={{ marginRight: "5px", marginLeft: "3px" }} />
@@ -182,10 +182,12 @@ function GuestNavbar({ setNavbar }) {
 export default function Navbar({
   setNavbar,
   token,
-  uuid1,
+
   guestState,
-  pathUuidFirst,
+  uuidFirst,
 }) {
+  console.log(guestState);
+
   const [_, nickName] = useTokenDecode(token);
   const [navbarNotification, setNavbarNotification] = useState([]);
   const navigate = useNavigate();
@@ -194,10 +196,8 @@ export default function Navbar({
   const localUuid2 = getUUid2Token();
   async function getNavibarNotificationRender() {
     const navbarData = await getAlarm();
-    console.log(navbarData.data);
     setNavbarNotification(navbarData.data);
   }
-  console.log(pathUuidFirst);
   async function getGoodsUrlUuidRender() {
     const UUID = await getGoodsUrlUUID();
 
@@ -235,7 +235,7 @@ export default function Navbar({
   };
 
   useEffect(() => {
-    if (uuid1) {
+    if (uuidFirst) {
       return;
     }
     if (!localUuid1) {
@@ -263,7 +263,6 @@ export default function Navbar({
       console.error(e);
     }
   };
-
   return (
     <>
       {!guestState ? (
