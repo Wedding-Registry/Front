@@ -7,8 +7,7 @@ import Menu from "@/assets/icons/menu.png";
 import Navbar from "../navbar/Navbar";
 import { Link, useLocation } from "react-router-dom";
 import { getAccessToken } from "../../repository/AuthTokenRepository";
-
-//import { getUUid1Token } from "../../repository/GuestUuidRespository";
+import { media } from "../../style/media";
 
 function TokenStatusLink({ token, setNavbar, navbar }) {
   if (token === null || token === undefined || token === false) {
@@ -105,6 +104,10 @@ const HeaderDiv = styled.header`
   align-items: center;
   border-bottom: ${(props) =>
     props.isBoolean ? "" : "1px solid rgba(176,176,176,0.3)"};
+  ${media.mobile`
+    display:flex;
+    justify-content: flex-end;
+  `}
 `;
 
 const HeaderLogoDiv = styled.div`
@@ -116,6 +119,9 @@ const HeaderLogoDiv = styled.div`
 const Logo = styled.img`
   width: 76px;
   height: 54px;
+  ${media.mobile`
+    display:none;
+  `};
 `;
 
 const PersonLogo = styled.img`
@@ -132,4 +138,11 @@ const RightLogo = styled.div`
   top: 1;
   right: 0;
   margin-right: 5rem;
+  ${media.mobile`
+    display:flex;
+    justify-content: flex-end;
+    width:100%;
+    gap:1em;
+    margin-right:1em;
+  `}
 `;
