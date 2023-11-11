@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import { AiOutlineShoppingCart } from "@react-icons/all-files/ai/AiOutlineShoppingCart";
 import { AiOutlineFileSync } from "@react-icons/all-files/ai/AiOutlineFileSync";
 import { AiOutlinePicture } from "@react-icons/all-files/ai/AiOutlinePicture";
-import { BsFillEnvelopeFill } from "@react-icons/all-files/bs/BsFillEnvelopeFill";
+
 import { MdKeyboardArrowRight } from "@react-icons/all-files/md/MdKeyboardArrowRight";
-import { FaMoneyBill } from "@react-icons/all-files/fa/FaMoneyBill";
 import { BsFillPersonFill } from "@react-icons/all-files/bs/BsFillPersonFill";
 
 import wishlist from "../../assets/icons/wishlist.png";
@@ -16,10 +15,12 @@ import useTokenDecode from "../../hooks/useTokenDecode";
 import { removeAccessToken } from "../../repository/AuthTokenRepository";
 import { getAlarm } from "../../services/navbar/NavbarService";
 import {
-  getUUid1Token,
-  getUUid2Token,
+  getUuidFristToken,
+  getUuidSecoundToken,
   setUUidToken,
 } from "../../repository/GuestUuidRespository";
+import NotificationItem from "./notificationItem/Notificationitem";
+import GuestNavbar from "./GuestNavbar";
 
 function NotificationItemList({ notifications }) {
   if (notifications === undefined || notifications === null) {
@@ -33,47 +34,11 @@ function NotificationItemList({ notifications }) {
   ));
 }
 
-function NotificationItem({ data }) {
-  if (data === null || data === undefined) {
-    return <></>;
-  }
-  const NAME = data.name;
-  const ATTEND = data.attend;
-  switch (data.type) {
-    case "attend":
-      return (
-        <AlarmDiv>
-          <BsFillEnvelopeFill style={{ width: "21px", height: "21px" }} />
-          <AlarmAttendText>
-            {ATTEND === "UNKNOWN" ? (
-              <span>{NAME}님이 미정에 체크하셨습니다.</span>
-            ) : (
-              <span>
-                {NAME}님이
-                {ATTEND === "NO" ? <span> 불참석</span> : <span> 참석</span>}에
-                체크하셨습니다.
-              </span>
-            )}
-          </AlarmAttendText>
-        </AlarmDiv>
-      );
-    case "donation":
-      return (
-        <AlarmDiv>
-          <FaMoneyBill style={{ width: "50px", height: "21px" }} />
-          <AlarmDonationText>
-            {NAME}님이 {data.goods}에 {data.donation}원을 후원하셨습니다.
-          </AlarmDonationText>
-        </AlarmDiv>
-      );
-  }
-}
-
 //로그인상태에따른 navbar click 행위 핸들링
-function MarriedNavbar({ token, setNavbar }) {
-  const tokenState = token === null || token === undefined;
+//로그인이 되어 있지 않는 상태에서 navbar 클릭 시 return
+function LoginStatusNavbar({ token, setNavbar }) {
   const navbarClose = () => {
-    if (tokenState) {
+    if (!token) {
       alert("로그인 정보가 올바르지 못합니다.");
       setNavbar(false);
       return;
@@ -81,143 +46,72 @@ function MarriedNavbar({ token, setNavbar }) {
     setNavbar(false);
   };
 
-  if (tokenState) {
-    return (
-      <TopItem>
-        <TopTitleText>카테고리</TopTitleText>
-        <LinkInput onClick={navbarClose}>
-          <AiOutlineShoppingCart
-            style={{ marginRight: "5px", marginLeft: "3px" }}
-          />
-          상품 리스트
-          <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
-        </LinkInput>
-        <LinkInput onClick={navbarClose}>
-          <AiOutlineFileSync
-            style={{ marginRight: "5px", marginLeft: "3px" }}
-          />
-          관리 페이지
-          <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
-        </LinkInput>
-        <LinkInput onClick={navbarClose}>
-          <AiOutlinePicture style={{ marginRight: "5px", marginLeft: "3px" }} />
-          갤러리 페이지
-          <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
-        </LinkInput>
-        <LinkInput onClick={navbarClose}>
-          <img
-            src={wishlist}
-            style={{ width: "20px", height: "20px", marginLeft: "3px" }}
-          />
-          위시 리스트/메모장
-          <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
-        </LinkInput>
-      </TopItem>
-    );
-  } else {
-    return (
-      <TopItem>
-        <TopTitleText>카테고리</TopTitleText>
-        <LinkInput to="/GoodsProduct" onClick={navbarClose}>
-          <AiOutlineShoppingCart
-            style={{ marginRight: "5px", marginLeft: "3px" }}
-          />
-          상품 리스트
-          <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
-        </LinkInput>
-        <LinkInput to="/admin" onClick={navbarClose}>
-          <AiOutlineFileSync
-            style={{ marginRight: "5px", marginLeft: "3px" }}
-          />
-          관리 페이지
-          <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
-        </LinkInput>
-        <LinkInput to="/GalleryWedding" onClick={navbarClose}>
-          <AiOutlinePicture style={{ marginRight: "5px", marginLeft: "3px" }} />
-          갤러리 페이지
-          <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
-        </LinkInput>
-        <LinkInput to="/admin/memo" onClick={navbarClose}>
-          <img
-            src={wishlist}
-            style={{ width: "20px", height: "20px", marginLeft: "3px" }}
-          />
-          위시 리스트/메모장
-          <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
-        </LinkInput>
-      </TopItem>
-    );
-  }
-}
-
-function GuestNavbar({ setNavbar }) {
-  const path = useLocation();
-  const pathUrlUuidFirst = path.pathname.trim().split("/")[2];
-  const pathUrlUuidSecound = path.pathname.trim().split("/")[3];
   return (
-    <GuestTopItem>
+    <TopItem>
       <TopTitleText>카테고리</TopTitleText>
-      <LinkInput
-        to={`/GoodsSupport/${pathUrlUuidFirst}/${pathUrlUuidSecound}`}
-        onClick={() => setNavbar(false)}
-      >
+      <LinkInput to={token ? "/GoodsProduct" : "/"} onClick={navbarClose}>
         <AiOutlineShoppingCart
           style={{ marginRight: "5px", marginLeft: "3px" }}
         />
         상품 리스트
         <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
       </LinkInput>
-      <LinkInput
-        to={`/GallerySupport/${pathUrlUuidFirst}/${pathUrlUuidSecound}`}
-        onClick={() => setNavbar(false)}
-      >
+      <LinkInput to={token ? "/admin" : "/"} onClick={navbarClose}>
+        <AiOutlineFileSync style={{ marginRight: "5px", marginLeft: "3px" }} />
+        관리 페이지
+        <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
+      </LinkInput>
+      <LinkInput to={token ? "/GalleryWedding" : "/"} onClick={navbarClose}>
         <AiOutlinePicture style={{ marginRight: "5px", marginLeft: "3px" }} />
         갤러리 페이지
         <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
       </LinkInput>
-    </GuestTopItem>
+      <LinkInput to={token ? "/admin/memo" : "/"} onClick={navbarClose}>
+        <img
+          src={wishlist}
+          style={{ width: "20px", height: "20px", marginLeft: "3px" }}
+        />
+        위시 리스트/메모장
+        <MdKeyboardArrowRight style={{ marginLeft: "auto" }} />
+      </LinkInput>
+    </TopItem>
   );
 }
 
-export default function Navbar({
-  setNavbar,
-  token,
-
-  guestState,
-  uuidFirst,
-}) {
-  console.log(guestState);
-
+export default function Navbar({ setNavbar, token, guestState }) {
   const [_, nickName] = useTokenDecode(token);
   const [navbarNotification, setNavbarNotification] = useState([]);
   const navigate = useNavigate();
-  const localUuid1 = getUUid1Token();
-  const navbarState = () => setNavbar(false);
-  const localUuid2 = getUUid2Token();
+  const handleNavbarState = () => setNavbar(false);
+
+  const uuidFirst = getUuidFristToken();
+  const uuidSecound = getUuidSecoundToken();
+
   async function getNavibarNotificationRender() {
     const navbarData = await getAlarm();
     setNavbarNotification(navbarData.data);
   }
+
   async function getGoodsUrlUuidRender() {
     const UUID = await getGoodsUrlUUID();
 
-    if (!localUuid1) {
+    if (!uuidFirst) {
       setUUidToken(UUID.data.uuidFirst, UUID.data.uuidSecond);
     }
   }
   console.log(_);
+
   function guestStateRender() {
-    const uuidState = localUuid1 || localUuid2;
-    if (uuidState) {
+    if (uuidFirst) {
       removeAccessToken();
-      navigate(`/Guest/${localUuid1}/${localUuid2}`);
+      navigate(`/Guest/${uuidFirst}/${uuidSecound}`);
       setNavbar(false);
       alert("로그아웃");
       return;
     }
   }
 
-  const removeAcctokenRender = () => {
+  const handleLogoutButton = () => {
     guestStateRender();
     if (token) {
       removeAccessToken();
@@ -238,21 +132,22 @@ export default function Navbar({
     if (uuidFirst) {
       return;
     }
-    if (!localUuid1) {
+    if (!uuidFirst) {
       getGoodsUrlUuidRender();
     }
   }, []);
+
   useEffect(() => {
     if (token) getNavibarNotificationRender();
   }, []);
 
-  const urlLinkClick = async (first, secound) => {
+  const handleShareLink = async (first, secound) => {
     if (token) {
-      await clipboardHandle(first, secound);
+      await handleClipboard(first, secound);
     }
   };
 
-  const clipboardHandle = async (first, secound) => {
+  const handleClipboard = async (first, secound) => {
     try {
       await navigator.clipboard.writeText(
         `https://zolabayo.com/GallerySupport/${first}/${secound}`
@@ -283,14 +178,14 @@ export default function Navbar({
                     textDecoration: "none",
                     border: "none",
                   }}
-                  onClick={navbarState}
+                  onClick={handleNavbarState}
                 >
                   <span>로그인을 진행해주세요.</span>
                 </Link>
               )}
             </NickNameText>
           </NickNamediv>
-          <MarriedNavbar token={token} setNavbar={setNavbar} />
+          <LoginStatusNavbar token={token} setNavbar={setNavbar} />
           <CenterItemDiv>
             <div>
               <CenterItemTitle>알림 목록</CenterItemTitle>
@@ -303,40 +198,27 @@ export default function Navbar({
           <BottomItemDiv>
             <span
               style={{ fontSize: "13px" }}
-              onClick={() => urlLinkClick(localUuid1, localUuid2)}
+              onClick={() => handleShareLink(uuidFirst, uuidSecound)}
             >
               링크 공유하기
             </span>
             {token ? (
-              <LogButton onClick={removeAcctokenRender}>Log out</LogButton>
+              <LogButton onClick={handleLogoutButton}>Log out</LogButton>
             ) : (
-              <Link to="/signin" onClick={navbarState}>
+              <Link to="/signin" onClick={handleNavbarState}>
                 <LogButton>Login</LogButton>
               </Link>
             )}
           </BottomItemDiv>
         </Base>
       ) : (
-        <GuestBase>
-          <Title>ZOLABAYO</Title>
-          <NickNamediv>
-            <NickNameText>
-              <img
-                src={wishlist}
-                style={{ width: "25px", height: "27px", marginRight: "5px" }}
-              />
-              {nickName ? (
-                <span>{nickName}님을 환영합니다.</span>
-              ) : (
-                <span>로그인을 진행해주세요.</span>
-              )}
-            </NickNameText>
-          </NickNamediv>
-          <GuestNavbar setNavbar={setNavbar} />
-          <GuestBottomItemDiv>
-            <LogButton onClick={removeAcctokenRender}>Log out</LogButton>
-          </GuestBottomItemDiv>
-        </GuestBase>
+        <GuestNavbar
+          nickName={nickName}
+          handleLogoutButton={handleLogoutButton}
+          setNavbar={setNavbar}
+          uuidFirst={uuidFirst}
+          uuidSecound={uuidSecound}
+        />
       )}
     </>
   );
@@ -346,20 +228,6 @@ const Base = styled.div`
   display: flex;
   flex-direction: column;
   height: 800px;
-  width: 250px;
-  border: 1px solid black;
-  border-radius: 10px;
-  box-shadow: 1px 1px 1px 1px;
-  z-index: 100;
-  right: 3%;
-  position: absolute;
-  background: #eaeaeb;
-`;
-
-const GuestBase = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 600px;
   width: 250px;
   border: 1px solid black;
   border-radius: 10px;
@@ -411,12 +279,6 @@ const TopItem = styled.div`
   height: 210px;
 `;
 
-const GuestTopItem = styled.div`
-  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
-  padding: 5px;
-  height: 130px;
-`;
-
 const CenterItemDiv = styled.div`
   border-bottom: 1px solid rgba(0, 0, 0, 0.5);
   height: 500px;
@@ -436,56 +298,6 @@ const BottomItemDiv = styled.div`
   justify-content: space-around;
   height: 30px;
   align-items: center;
-`;
-
-const GuestBottomItemDiv = styled.div`
-  display: flex;
-  justify-content: space-around;
-  height: 30px;
-  align-items: center;
-  position: absolute;
-  border-top: 1px solid rgba(0, 0, 0, 0.5);
-  bottom: 0;
-  width: 100%;
-`;
-
-const AlarmDiv = styled.div`
-  width: 95%;
-  font-weight: 400;
-  font-size: 15px;
-  line-height: 27px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  height: 140px;
-  margin-left: 5px;
-`;
-const AlarmAttendText = styled.p`
-  margin-left: 5px;
-  :after {
-    content: "";
-    opacity: 0.3;
-    width: 20px;
-    border: 1px solid #000000;
-    display: flex;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 13px;
-  }
-`;
-
-const AlarmDonationText = styled.p`
-  margin-left: 5px;
-  :after {
-    content: "";
-    opacity: 0.3;
-    width: 20px;
-    border: 1px solid #000000;
-    display: flex;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 13px;
-  }
 `;
 
 const LinkInput = styled(Link)`

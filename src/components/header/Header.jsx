@@ -1,73 +1,56 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { Link, useLocation } from "react-router-dom";
 
 import logo from "@/assets/icons/logo.png";
 import Person from "@/assets/icons/person.png";
 import Menu from "@/assets/icons/menu.png";
 import Navbar from "../navbar/Navbar";
-import { Link, useLocation } from "react-router-dom";
 import { getAccessToken } from "../../repository/AuthTokenRepository";
 import { media } from "../../style/media";
 
-function TokenStatusLink({ token, setNavbar, navbar }) {
-  if (token === null || token === undefined || token === false) {
-    return (
-      <RightLogo>
-        <Link to="/signin" onClick={() => setNavbar(false)}>
-          <PersonLogo src={Person} style={{ marginRight: "1vw" }} />
-        </Link>
-        <HamberLogo
-          src={Menu}
-          onClick={() => {
-            setNavbar(!navbar);
-          }}
-        />
-      </RightLogo>
-    );
-  } else {
-    return (
-      <RightLogo>
-        <Link onClick={() => setNavbar(false)}>
-          <PersonLogo src={Person} style={{ marginRight: "1vw" }} />
-        </Link>
-        <HamberLogo
-          src={Menu}
-          onClick={() => {
-            setNavbar(!navbar);
-          }}
-        />
-      </RightLogo>
-    );
-  }
+function LoginStateSignLink({ token, setNavbar, navbar }) {
+  return (
+    <RightLogo>
+      <Link to={!token ? "/signin" : "/"} onClick={() => setNavbar(false)}>
+        <PersonLogo src={Person} style={{ marginRight: "1vw" }} />
+      </Link>
+      <HamberLogo
+        src={Menu}
+        onClick={() => {
+          setNavbar(!navbar);
+        }}
+      />
+    </RightLogo>
+  );
 }
 
 export default function Header({ border }) {
   const [navbar, setNavbar] = useState(false);
-  //true가 게스트 상태 false가 기본 상태
   const [guestState, setGuestState] = useState(false);
 
   const path = useLocation();
   const urlPathName = path.pathname.trim().split("/")[1];
-  const uuidFirst = path.pathname.trim().split("/")[2];
-  const uuidSecound = path.pathname.trim().split("/")[3];
+  const firstUuid = path.pathname.trim().split("/")[2];
+  const secoundUuid = path.pathname.trim().split("/")[3];
   const token = getAccessToken();
+
+  const GUEST_URL_PATH_LIST = ["GallerySupport", "GoodsSupport", "Guest"];
+
+  const guestDiscrimination = GUEST_URL_PATH_LIST.includes(urlPathName);
+
   useEffect(() => {
-    if (
-      urlPathName === "GallerySupport" ||
-      urlPathName === "GoodsSupport" ||
-      urlPathName === "Guest"
-    ) {
-      setGuestState(true);
-    }
-  }, [uuidFirst]);
+    if (guestDiscrimination) setGuestState(true);
+  }, [urlPathName]);
+
   return (
     <>
       <HeaderDiv isBoolean={border}>
         <HeaderLogoDiv>
           <div>
-            {uuidFirst !== undefined ? (
+            {guestDiscrimination ? (
               <Link
-                to={`/Guest/${uuidFirst}/${uuidSecound}`}
+                to={`/Guest/${firstUuid}/${secoundUuid}`}
                 onClick={() => setNavbar(false)}
               >
                 <Logo src={logo} />
@@ -78,21 +61,22 @@ export default function Header({ border }) {
               </Link>
             )}
           </div>
-          <TokenStatusLink
+          <LoginStateSignLink
             setNavbar={setNavbar}
             navbar={navbar}
             token={token}
           />
         </HeaderLogoDiv>
       </HeaderDiv>
-      {navbar ? (
+      {navbar && (
         <Navbar
           setNavbar={setNavbar}
           token={token}
-          uuidFirst={uuidFirst}
+          uuidFirst={firstUuid}
           guestState={guestState}
+          uuidSecound={secoundUuid}
         />
-      ) : null}
+      )}
     </>
   );
 }
