@@ -3,14 +3,14 @@ export function setUUidToken(uuidFrist, uuidSecond) {
   localStorage.setItem("uuidSecond", uuidSecond);
 }
 
-export function getUUid1Token() {
+export function getUuidFristToken() {
   return localStorage.getItem("uuidFrist");
 }
 
-export function getUUid2Token() {
+export function getUuidSecoundToken() {
   return localStorage.getItem("uuidSecond");
 }
 
-export function removeUUidToken() {
+export function removeUuidToken() {
   return localStorage.clear();
 }
