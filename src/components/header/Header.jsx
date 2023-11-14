@@ -1,75 +1,56 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { Link, useLocation } from "react-router-dom";
 
 import logo from "@/assets/icons/logo.png";
 import Person from "@/assets/icons/person.png";
 import Menu from "@/assets/icons/menu.png";
 import Navbar from "../navbar/Navbar";
-import { Link, useLocation } from "react-router-dom";
 import { getAccessToken } from "../../repository/AuthTokenRepository";
+import { media } from "../../style/media";
 
-//import { getUUid1Token } from "../../repository/GuestUuidRespository";
-
-function TokenStatusLink({ token, setNavbar, navbar }) {
-  if (token === null || token === undefined || token === false) {
-    return (
-      <RightLogo>
-        <Link to="/signin" onClick={() => setNavbar(false)}>
-          <PersonLogo src={Person} style={{ marginRight: "1vw" }} />
-        </Link>
-        <HamberLogo
-          src={Menu}
-          onClick={() => {
-            setNavbar(!navbar);
-          }}
-        />
-      </RightLogo>
-    );
-  } else {
-    return (
-      <RightLogo>
-        <Link onClick={() => setNavbar(false)}>
-          <PersonLogo src={Person} style={{ marginRight: "1vw" }} />
-        </Link>
-        <HamberLogo
-          src={Menu}
-          onClick={() => {
-            setNavbar(!navbar);
-          }}
-        />
-      </RightLogo>
-    );
-  }
+function LoginStateSignLink({ token, setNavbar, navbar }) {
+  return (
+    <RightLogo>
+      <Link to={!token ? "/signin" : "/"} onClick={() => setNavbar(false)}>
+        <PersonLogo src={Person} style={{ marginRight: "1vw" }} />
+      </Link>
+      <HamberLogo
+        src={Menu}
+        onClick={() => {
+          setNavbar(!navbar);
+        }}
+      />
+    </RightLogo>
+  );
 }
 
 export default function Header({ border }) {
   const [navbar, setNavbar] = useState(false);
-  //true가 게스트 상태 false가 기본 상태
   const [guestState, setGuestState] = useState(false);
 
   const path = useLocation();
-  const uuid1 = path.pathname.trim().split("/")[2];
-  const uuid2 = path.pathname.trim().split("/")[3];
+  const urlPathName = path.pathname.trim().split("/")[1];
+  const firstUuid = path.pathname.trim().split("/")[2];
+  const secoundUuid = path.pathname.trim().split("/")[3];
   const token = getAccessToken();
 
+  const GUEST_URL_PATH_LIST = ["GallerySupport", "GoodsSupport", "Guest"];
+
+  const guestDiscrimination = GUEST_URL_PATH_LIST.includes(urlPathName);
+
   useEffect(() => {
-    if (
-      uuid1 === "GallerySupport" ||
-      uuid1 === "GoodsSupport" ||
-      uuid1 === "Guest"
-    ) {
-      setGuestState(true);
-    }
-  }, [uuid1]);
+    if (guestDiscrimination) setGuestState(true);
+  }, [urlPathName]);
 
   return (
     <>
       <HeaderDiv isBoolean={border}>
         <HeaderLogoDiv>
           <div>
-            {uuid1 !== undefined ? (
+            {guestDiscrimination ? (
               <Link
-                to={`/Guest/${uuid1}/${uuid2}`}
+                to={`/Guest/${firstUuid}/${secoundUuid}`}
                 onClick={() => setNavbar(false)}
               >
                 <Logo src={logo} />
@@ -80,21 +61,22 @@ export default function Header({ border }) {
               </Link>
             )}
           </div>
-          <TokenStatusLink
+          <LoginStateSignLink
             setNavbar={setNavbar}
             navbar={navbar}
             token={token}
           />
         </HeaderLogoDiv>
       </HeaderDiv>
-      {navbar ? (
+      {navbar && (
         <Navbar
           setNavbar={setNavbar}
           token={token}
-          uuid1={uuid1}
+          uuidFirst={firstUuid}
           guestState={guestState}
+          uuidSecound={secoundUuid}
         />
-      ) : null}
+      )}
     </>
   );
 }
@@ -106,6 +88,10 @@ const HeaderDiv = styled.header`
   align-items: center;
   border-bottom: ${(props) =>
     props.isBoolean ? "" : "1px solid rgba(176,176,176,0.3)"};
+  ${media.mobile`
+    display:flex;
+    justify-content: flex-end;
+  `}
 `;
 
 const HeaderLogoDiv = styled.div`
@@ -117,6 +103,9 @@ const HeaderLogoDiv = styled.div`
 const Logo = styled.img`
   width: 76px;
   height: 54px;
+  ${media.mobile`
+    display:none;
+  `};
 `;
 
 const PersonLogo = styled.img`
@@ -133,4 +122,11 @@ const RightLogo = styled.div`
   top: 1;
   right: 0;
   margin-right: 5rem;
+  ${media.mobile`
+    display:flex;
+    justify-content: flex-end;
+    width:100%;
+    gap:1em;
+    margin-right:1em;
+  `}
 `;

@@ -6,8 +6,8 @@ import sharelink from "@/assets/icons/sharelink.png";
 import { getGoodsUrlUUID } from "../../services/uuid/UrlUuidService";
 
 import {
-  getUUid1Token,
-  getUUid2Token,
+  getUuidFristToken,
+  getUuidSecoundToken,
   setUUidToken,
 } from "../../repository/GuestUuidRespository";
 import { shareKaKaoLink } from "../../util/shareKaKaoLink";
@@ -16,20 +16,20 @@ import { marriedInformationState } from "../../state/marriedInformationState";
 
 export default function ShareBox({ setSharebox }) {
   const marriedInformationData = useRecoilValue(marriedInformationState);
-  const HUSBAND_NAME = marriedInformationData.data.account[0].name;
-  const WIFE_NAME = marriedInformationData.data.account[1].name;
-  const localUuid1 = getUUid1Token();
-  const localUuid2 = getUUid2Token();
+  const HUSBAND_NAME = marriedInformationData.data?.account[0].name;
+  const WIFE_NAME = marriedInformationData.data?.account[1].name;
+  const uuidFrist = getUuidFristToken();
+  const uuidSecound = getUuidSecoundToken();
   async function getGoodsUrlUuidRender() {
     const UUID = await getGoodsUrlUUID();
 
-    if (!localUuid1) {
+    if (!uuidFrist) {
       setUUidToken(UUID.data.uuidFirst, UUID.data.uuidSecond);
     }
   }
 
   useEffect(() => {
-    if (!localUuid1) {
+    if (!uuidFrist) {
       getGoodsUrlUuidRender();
     }
   }, []);
@@ -46,7 +46,7 @@ export default function ShareBox({ setSharebox }) {
   async function urlLinkClick() {
     try {
       await navigator.clipboard.writeText(
-        `https://zolabayo.com/GallerySupport/${localUuid1}/${localUuid2}`
+        `https://zolabayo.com/GallerySupport/${uuidFrist}/${uuidSecound}`
       );
       setSharebox(false);
       alert("링크주소가 복사되었습니다.");
@@ -61,7 +61,7 @@ export default function ShareBox({ setSharebox }) {
       <Shareboxp>
         <span
           onClick={() =>
-            shareKaKaoLink(HUSBAND_NAME, WIFE_NAME, localUuid1, localUuid2)
+            shareKaKaoLink(HUSBAND_NAME, WIFE_NAME, uuidFrist, uuidSecound)
           }
           style={{ marginRight: "12px", display: "flex", alignItems: "center" }}
         >

@@ -1,4 +1,4 @@
-/* eslint-disable react/react-in-jsx-scope */
+import React from "react";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -6,6 +6,7 @@ import {
   getWeddingAttendList,
   postWeddingAttendList,
 } from "../../services/gustGoods/GuestMarriedService";
+import { media } from "../../style/media";
 
 //라디오 버튼
 export default function RadioButtonGroup({ guestToken }) {
@@ -86,7 +87,13 @@ export default function RadioButtonGroup({ guestToken }) {
 
 const WeddingYn = styled.div`
   display: flex;
-  position: absolute;
-  top: 25%;
-  left: 3%;
+  width: 40%;
+  ${media.mobile`
+    display: flex;
+    font-size:11px;
+    margin-top:25px;
+    width:100%;
+    position: absolute;
+    top: 12%;
+  `};
 `;
