@@ -2,6 +2,20 @@ import React from "react";
 import styled from "styled-components";
 import logo from "@/assets/icons/logo.png";
 
+export default function BorderIdModal({ borderAddButton }) {
+  return (
+    <Cotainer>
+      <TitleDiv>
+        <Logo src={logo} />
+        <WeddingText>Wedding Registry</WeddingText>
+      </TitleDiv>
+      <Wapper>
+        <Button onClick={borderAddButton}>시작하기</Button>
+      </Wapper>
+    </Cotainer>
+  );
+}
+
 const Cotainer = styled.div`
   width: 100%;
   height: 100%;
@@ -49,17 +63,3 @@ const WeddingText = styled.p`
   font-weight: 600;
   font-size: 40px;
 `;
-
-export default function BorderIdModal({ borderAddButton }) {
-  return (
-    <Cotainer>
-      <TitleDiv>
-        <Logo src={logo} />
-        <WeddingText>Wedding Registry</WeddingText>
-      </TitleDiv>
-      <Wapper>
-        <Button onClick={borderAddButton}>시작하기</Button>
-      </Wapper>
-    </Cotainer>
-  );
-}
