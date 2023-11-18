@@ -10,14 +10,57 @@ import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 import imageCompression from "browser-image-compression";
 import { media } from "../../style/media";
 
+function GellayImgTrusyOrFalsy({
+  handleGalleyImg,
+  url,
+  id,
+  deleteImageOnClick,
+}) {
+  const pathUrlData = useRecoilValue(uuidState);
+  return (
+    <>
+      {url ? (
+        <>
+          <Image src={url}>
+            {!pathUrlData.uuidFirst && (
+              <AiOutlineClose
+                style={{ marginRight: "10px", marginTop: "5px" }}
+                onClick={() => deleteImageOnClick(id)}
+              />
+            )}
+          </Image>
+        </>
+      ) : (
+        <div>
+          <button
+            onClick={handleGalleyImg}
+            style={{
+              width: "300px",
+              height: "300px",
+              backgroundColor: "transparent",
+              border: "0",
+            }}
+          >
+            <img src={Plus} style={{ width: "5%", height: "5%" }} />
+          </button>
+        </div>
+      )}
+    </>
+  );
+}
+
 export default function GalleryWeddingBox({ url, id, deleteImageOnClick }) {
   const setImgData = useSetRecoilState(galleryWeddingImageState);
+
   const pathUrlData = useRecoilValue(uuidState);
+
   async function addGalleryWeddingImageRender(dataImage) {
     const postImgData = await addGalleryWeddingImage(dataImage);
     setImgData((prev) => [...prev, postImgData.data]);
   }
+
   const imageInput = useRef();
+
   const onUploadImage = useCallback(async (e) => {
     const options = {
       maxSizeMB: 2,
@@ -31,7 +74,6 @@ export default function GalleryWeddingBox({ url, id, deleteImageOnClick }) {
       let targetFile = e.target.files[0];
       try {
         const compressedFile = await imageCompression(targetFile, options);
-
         const reader = new FileReader();
         reader.readAsDataURL(compressedFile);
         reader.onloadend = () => {
@@ -48,12 +90,12 @@ export default function GalleryWeddingBox({ url, id, deleteImageOnClick }) {
   const handlingDataForm = async (dataURI) => {
     const byteString = atob(dataURI.split(",")[1]);
 
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
+    const buffer = new ArrayBuffer(byteString.length);
+    const unit = new Uint8Array(buffer);
     for (let i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
+      unit[i] = byteString.charCodeAt(i);
     }
-    const blob = new Blob([ia], {
+    const blob = new Blob([unit], {
       type: "image/jpeg",
     });
     const file = new File([blob], "image.jpg");
@@ -63,18 +105,17 @@ export default function GalleryWeddingBox({ url, id, deleteImageOnClick }) {
     addGalleryWeddingImageRender(formData);
   };
 
-  const onClickImage = useCallback(() => {
+  const handleGalleyImg = useCallback(() => {
     if (!imageInput.current) {
       return;
     }
     imageInput.current.click();
   }, []);
-
   return (
     <>
       <Base>
         <Imageinput>
-          {!pathUrlData.uuidFirst ? (
+          {!pathUrlData.uuidFirst && (
             <input
               type="file"
               name="thumbnail"
@@ -83,38 +124,14 @@ export default function GalleryWeddingBox({ url, id, deleteImageOnClick }) {
               ref={imageInput}
               onChange={onUploadImage}
             />
-          ) : (
-            <></>
           )}
         </Imageinput>
-        {url ? (
-          <>
-            <Image src={url}>
-              {!pathUrlData.uuidFirst ? (
-                <AiOutlineClose
-                  style={{ marginRight: "10px", marginTop: "5px" }}
-                  onClick={() => deleteImageOnClick(id)}
-                />
-              ) : (
-                <></>
-              )}
-            </Image>
-          </>
-        ) : (
-          <div>
-            <button
-              onClick={onClickImage}
-              style={{
-                width: "300px",
-                height: "300px",
-                backgroundColor: "transparent",
-                border: "0",
-              }}
-            >
-              <img src={Plus} style={{ width: "5%", height: "5%" }} />
-            </button>
-          </div>
-        )}
+        <GellayImgTrusyOrFalsy
+          handleGalleyImg={handleGalleyImg}
+          url={url}
+          id={id}
+          deleteImageOnClick={deleteImageOnClick}
+        />
       </Base>
     </>
   );
