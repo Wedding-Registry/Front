@@ -94,8 +94,7 @@ export default function Navbar({ setNavbar, token, guestState }) {
 
   async function getGoodsUrlUuidRender() {
     const UUID = await getGoodsUrlUUID();
-
-    if (!uuidFirst) {
+    if (!uuidFirst && token) {
       setUUidToken(UUID.data.uuidFirst, UUID.data.uuidSecond);
     }
   }

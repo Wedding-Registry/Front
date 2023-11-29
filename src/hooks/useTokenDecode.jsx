@@ -6,7 +6,6 @@ export default function useTokenDecode(token) {
     boardsId: "",
     userName: "",
   });
-
   useEffect(() => {
     if (token != null) {
       const payload = token.split(".").slice(1, 2).join("");
