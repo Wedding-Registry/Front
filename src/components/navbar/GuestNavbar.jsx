@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo, useCallback, useMemo } from "react";
 
 import styled from "styled-components";
 
@@ -9,13 +9,14 @@ import { MdKeyboardArrowRight } from "@react-icons/all-files/md/MdKeyboardArrowR
 import { AiOutlinePicture } from "@react-icons/all-files/ai/AiOutlinePicture";
 import { Link } from "react-router-dom";
 
-function GuestNavbarItem({ setNavbar, uuidFirst, uuidSecound }) {
+function GuestNavbarItem({ onNavbarOpen, uuidFirst, uuidSecound }) {
+  const handleNavbarClose = () => onNavbarOpen(false);
   return (
     <GuestTopItem>
       <TopTitleText>카테고리</TopTitleText>
       <LinkInput
         to={`/GoodsSupport/${uuidFirst}/${uuidSecound}`}
-        onClick={() => setNavbar(false)}
+        onClick={handleNavbarClose}
       >
         <AiOutlineShoppingCart
           style={{ marginRight: "5px", marginLeft: "3px" }}
@@ -25,7 +26,7 @@ function GuestNavbarItem({ setNavbar, uuidFirst, uuidSecound }) {
       </LinkInput>
       <LinkInput
         to={`/GallerySupport/${uuidFirst}/${uuidSecound}`}
-        onClick={() => setNavbar(false)}
+        onClick={handleNavbarClose}
       >
         <AiOutlinePicture style={{ marginRight: "5px", marginLeft: "3px" }} />
         갤러리 페이지
@@ -35,13 +36,27 @@ function GuestNavbarItem({ setNavbar, uuidFirst, uuidSecound }) {
   );
 }
 
-export default function GuestNavbar({
+function GuestNavbar({
   nickName,
   handleLogoutButton,
   setNavbar,
   uuidFirst,
   uuidSecound,
 }) {
+  const memizedNickname = useMemo(() => {
+    return nickName;
+  }, [nickName]);
+  const memoizeduuidFrist = useMemo(() => {
+    return uuidFirst;
+  }, [uuidFirst]);
+
+  const memoizeduuidSecound = useMemo(() => {
+    return uuidSecound;
+  }, [uuidSecound]);
+
+  const handlemomoizedCallback = useCallback(() => {
+    setNavbar(false);
+  }, []);
   return (
     <GuestBase>
       <Title>ZOLABAYO</Title>
@@ -51,17 +66,17 @@ export default function GuestNavbar({
             src={wishlist}
             style={{ width: "25px", height: "27px", marginRight: "5px" }}
           />
-          {nickName ? (
-            <span>{nickName}님을 환영합니다.</span>
+          {memizedNickname ? (
+            <span>{memizedNickname}님을 환영합니다.</span>
           ) : (
             <span>로그인을 진행해주세요.</span>
           )}
         </NickNameText>
       </NickNamediv>
       <GuestNavbarItem
-        setNavbar={setNavbar}
-        uuidFirst={uuidFirst}
-        uuidSecound={uuidSecound}
+        setNavbar={handlemomoizedCallback}
+        uuidFirst={memoizeduuidFrist}
+        uuidSecound={memoizeduuidSecound}
       />
       <GuestBottomItemDiv>
         <LogButton onClick={handleLogoutButton}>Log out</LogButton>
@@ -69,6 +84,8 @@ export default function GuestNavbar({
     </GuestBase>
   );
 }
+
+export default memo(GuestNavbar);
 
 const Title = styled.p`
   text-align: center;
