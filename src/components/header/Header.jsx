@@ -26,14 +26,14 @@ function LoginStateSignLink({ token, setNavbar, navbar }) {
 }
 
 export default function Header({ border }) {
-  const [navbar, setNavbar] = useState(false);
+  const [navbarOpen, setNavbarOpen] = useState(false);
   const [guestState, setGuestState] = useState(false);
-
   const path = useLocation();
   const urlPathName = path.pathname.trim().split("/")[1];
   const firstUuid = path.pathname.trim().split("/")[2];
   const secoundUuid = path.pathname.trim().split("/")[3];
   const token = getAccessToken();
+  const handleNavbarOpen = () => setNavbarOpen(true);
 
   const GUEST_URL_PATH_LIST = ["GallerySupport", "GoodsSupport", "Guest"];
 
@@ -51,30 +51,28 @@ export default function Header({ border }) {
             {guestDiscrimination ? (
               <Link
                 to={`/Guest/${firstUuid}/${secoundUuid}`}
-                onClick={() => setNavbar(false)}
+                onClick={handleNavbarOpen}
               >
                 <Logo src={logo} />
               </Link>
             ) : (
-              <Link to="/" onClick={() => setNavbar(false)}>
+              <Link to="/" onClick={handleNavbarOpen}>
                 <Logo src={logo} />
               </Link>
             )}
           </div>
           <LoginStateSignLink
-            setNavbar={setNavbar}
-            navbar={navbar}
+            setNavbar={setNavbarOpen}
+            navbar={navbarOpen}
             token={token}
           />
         </HeaderLogoDiv>
       </HeaderDiv>
-      {navbar && (
+      {navbarOpen && (
         <Navbar
-          setNavbar={setNavbar}
+          onNavbarOpen={setNavbarOpen}
           token={token}
-          uuidFirst={firstUuid}
           guestState={guestState}
-          uuidSecound={secoundUuid}
         />
       )}
     </>
