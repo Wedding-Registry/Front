@@ -1,7 +1,7 @@
 import HttpClient from "../../apis/HttpClient";
 
 //이름 계좌 시간 전체 조회
-async function getWeddingHall() {
+async function getMarriageInfo() {
   try {
     const response = await HttpClient.get(`weddingHall/all`);
     const data = response.data;
@@ -94,7 +94,7 @@ async function updateWeddingHallLocation(address) {
 }
 
 export {
-  getWeddingHall,
+  getMarriageInfo,
   updateWeddingHallLocation,
   addHusbandName,
   addWifeName,

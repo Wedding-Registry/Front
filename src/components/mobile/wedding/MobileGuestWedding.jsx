@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { galleryWeddingImageState } from "../../../state/galleryWeddingImageState";
 import { useRecoilState } from "recoil";
 import { getGalleryWeddingImage } from "../../../services/weddingGallery/WeddingImgService";
-import { getWeddingHall } from "../../../services/goods/GoodsMarriedService";
+import { getMarriageInfo } from "../../../services/goods/GoodsMarriedService";
 import Wedding from "../../../assets/Wedding.png";
 
 export default function MobileWedding() {
@@ -21,7 +21,7 @@ export default function MobileWedding() {
   });
 
   async function getWeddingMarried() {
-    const marriedDataList = await getWeddingHall();
+    const marriedDataList = await getMarriageInfo();
     const convertDay = dayFindWeek(marriedDataList.data.weddingDate);
     const data = convertDate(marriedDataList.data.weddingDate);
 

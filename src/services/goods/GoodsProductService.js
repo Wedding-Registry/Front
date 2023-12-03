@@ -11,7 +11,7 @@ async function addBorderId() {
 }
 
 //상품 전체 조회
-async function getGoodsProductList() {
+async function getGoodsList() {
   try {
     const response = await HttpClient.get(`usersgoods/all`);
     return response.data;
@@ -21,7 +21,7 @@ async function getGoodsProductList() {
 }
 
 //상품 등록
-async function postGoodsProductApi(url) {
+async function createGoods(url) {
   try {
     const response = await HttpClient.post(`usersgoods/add/product`, {
       url: url,
@@ -80,8 +80,8 @@ async function updateGoodsPrice(usersGoodsId, usersGoodsPrice) {
 
 export {
   addBorderId,
-  getGoodsProductList,
-  postGoodsProductApi,
+  getGoodsList,
+  createGoods,
   deleteGoods,
   updateGoodsname,
   updateGoodsPrice,

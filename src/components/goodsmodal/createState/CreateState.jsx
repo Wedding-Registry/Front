@@ -11,21 +11,23 @@ export default function CreateState({
   postGoodsListRender,
   goodsData,
   deleteGoodsRender,
+  getAllRenderProducts,
 }) {
-  const getGoodsUrl = (e) => {
+  const handleGoodsUrl = (e) => {
     setGetGoodsUrlItem(e.target.value);
   };
 
-  const okButton = () => {
+  const handleGoodsCheckButton = async () => {
     setIsOpen(false);
+    await getAllRenderProducts();
   };
 
-  const deleteButton = async (id) => {
+  const handleDeleteButton = async (id) => {
     await deleteGoodsRender(id);
     setIsOpen(false);
   };
 
-  const registerGoodsButton = async () => {
+  const handleCreateGoodsButton = async () => {
     await postGoodsListRender(getGoodsUrlItem);
   };
   return (
@@ -45,9 +47,9 @@ export default function CreateState({
             <div style={{ width: "100%" }}>
               <OkorColsebuttonDiv>
                 <div style={{ position: "absolute", top: "85%", right: "10%" }}>
-                  <ApiButton onClick={okButton}>확인</ApiButton>|
+                  <ApiButton onClick={handleGoodsCheckButton}>확인</ApiButton>|
                   <ApiButton
-                    onClick={() => deleteButton(goodsData.usersGoodsId)}
+                    onClick={() => handleDeleteButton(goodsData.usersGoodsId)}
                   >
                     취소
                   </ApiButton>
@@ -58,7 +60,7 @@ export default function CreateState({
         ) : (
           <>
             {goodsData?.length !== 0 && goodsData ? <></> : <Logo src={logo} />}
-            <Text onChange={getGoodsUrl} value={getGoodsUrlItem} />
+            <Text onChange={handleGoodsUrl} value={getGoodsUrlItem} />
             <div>
               <GoodsDonationDiv>
                 <p>
@@ -72,7 +74,9 @@ export default function CreateState({
             <div style={{ width: "100%" }}>
               <OkorColsebuttonDiv>
                 <div>
-                  <ApiButton onClick={registerGoodsButton}>등록하기</ApiButton>
+                  <ApiButton onClick={handleCreateGoodsButton}>
+                    등록하기
+                  </ApiButton>
                 </div>
               </OkorColsebuttonDiv>
             </div>

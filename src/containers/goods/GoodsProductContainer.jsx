@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, memo } from "react";
 import { RiArrowDropLeftLine } from "@react-icons/all-files/ri/RiArrowDropLeftLine";
 import { RiArrowDropRightLine } from "@react-icons/all-files/ri/RiArrowDropRightLine";
 
@@ -8,11 +8,11 @@ import ShareBox from "@/components/sharebox/ShareBox";
 import styled from "styled-components";
 import Box from "@/components/box/Box";
 import {
-  getGoodsProductList,
+  getGoodsList,
   deleteGoods,
 } from "../../services/goods/GoodsProductService";
 import {
-  getWeddingHall,
+  getMarriageInfo,
   updateWeddingHallLocation,
   addHusbandName,
   addWifeName,
@@ -28,10 +28,10 @@ import useDateTimeConver from "../../hooks/useDateTImeConver";
 import useDateTimeFormat from "../../hooks/useDateTimeFormat";
 import GoodsElementList from "../../components/goodsElementList/GoodsElementList";
 
-export default function GoodsProductContainer() {
+function GoodsProductContainer() {
   const [sharebox, setSharebox] = useState(false);
   const [didmount, setDidmount] = useState(false);
-  const [fetchData, setFetchData] = useState([]);
+  const [goodsListData, setGoodsListData] = useState([]);
   const [addressText, setAddressText] = useState("");
   const [dateText, setDateText] = useState("");
   const [wifeNameText, setWifeNameText] = useState("");
@@ -51,24 +51,24 @@ export default function GoodsProductContainer() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   //state 상태에 따른 비동기 통신중 fetchdata의 값이 undefined일때 상태를 고려한 code
-  const arrayLength = fetchData ? fetchData.length : 0;
+  const arrayLength = goodsListData ? goodsListData.length : 0;
   const TOTAL_SLIDES = 1;
   const FIX_SIZE = 10;
   const slideRef = useRef(null);
-  //상품전체조회
-  async function renderProduct() {
-    const products = await getGoodsProductList();
 
-    setFetchData(products.data);
+  //상품전체조회
+  async function getAllRenderProducts() {
+    const products = await getGoodsList();
+
+    setGoodsListData(products.data);
   }
 
   //이름 계좌 시간 전체 조회
-  async function getWeddingHallRender() {
-    const weddingHallData = await getWeddingHall();
-
+  async function getMarriageRenderInfo() {
+    const weddingHallData = await getMarriageInfo();
     setMarriedWeddingData(weddingHallData);
   }
-  //남편 이름 등록
+
   async function addHusbandNameRender(name) {
     const husbandNameData = await addHusbandName(name);
     if (husbandNameData.status === 400) {
@@ -76,7 +76,7 @@ export default function GoodsProductContainer() {
     }
     return husbandNameData.status;
   }
-  // 신부 이름 등록
+
   async function addWifeNameRender(name) {
     const wifeNameData = await addWifeName(name);
     if (wifeNameData.status === 400) {
@@ -85,7 +85,6 @@ export default function GoodsProductContainer() {
     return wifeNameData.status;
   }
 
-  // 신부 계좌,은행 등록
   async function addWifeAccountRender(account, bank) {
     const wifeAccountData = await addWifeAccount(account, bank);
     if (wifeAccountData.status === 400) {
@@ -93,7 +92,7 @@ export default function GoodsProductContainer() {
     }
     return wifeAccountData.status;
   }
-  // 신랑 계좌,은행 등록
+
   async function addHusbandAccountRender(account, bank) {
     const husbandAccountData = await addHusbandAccount(account, bank);
     if (husbandAccountData.status === 400) {
@@ -101,6 +100,7 @@ export default function GoodsProductContainer() {
     }
     return husbandAccountData.status;
   }
+
   //예식장 주소 및 날짜 변경
   async function addWeddingHallLocationRender(address) {
     return await updateWeddingHallLocation(address);
@@ -115,7 +115,7 @@ export default function GoodsProductContainer() {
     setDateText(toStringDate);
   }
   //결혼식 날짜 Change 이벤트
-  const dateTimeChange = async (date) => {
+  const handleDateTimeChange = async (date) => {
     //yyyymmdd format
     const formatData = useDateTimeFormat(date);
     if (formatData) {
@@ -125,45 +125,44 @@ export default function GoodsProductContainer() {
   };
 
   // 신부 이름 text
-  const wifeTextChange = (e) => {
+  const handleWifeNameChange = (e) => {
     const value = e.target.value;
-
     setWifeNameText(value);
   };
   // 신랑 이름 text
-  const husbandTextChange = (e) => {
+  const handleHusbandNameChange = (e) => {
     const value = e.target.value;
 
     setHusbandNameText(value);
   };
   // 신부 은행 Change 이벤트
-  const wifBankTextChange = (e) => {
+  const handleWifBankChange = (e) => {
     const value = e.target.value;
     setWifeBankText(value);
   };
   // 신부 계좌번호 Change 이벤트
-  const wifeAccountTextChange = (e) => {
+  const handleWifeAccountChange = (e) => {
     const value = e.target.value;
     setWifeAccountText(value);
   };
   // 신랑 은행 Change 이벤트
-  const hasbandBankTextChange = (e) => {
+  const handleHasbandBankChange = (e) => {
     const value = e.target.value;
     setHusbandBankText(value);
   };
   // 신랑 계좌번호 Change 이벤트
-  const husbandAccountTextChange = (e) => {
+  const handleHusbandAccountChange = (e) => {
     const value = e.target.value;
     setHusBandAccountText(value);
   };
   // 결혼식 주소 Change 이벤트
-  const addressChange = (e) => {
+  const handleAddressChange = (e) => {
     const value = e.target.value;
     setAddressText(value);
   };
 
   //이름 계좌 시간 전체 등록 버튼
-  const addMarriedInformationClick = async () => {
+  const handleAddMarriedInformation = async () => {
     //신랑 이름 등록
     const husbandData = await addHusbandNameRender(husbandNameText);
 
@@ -188,7 +187,7 @@ export default function GoodsProductContainer() {
     ) {
       alert("부부의 정보가 저장 성공되었습니다.");
     }
-    await getWeddingHallRender();
+    await getMarriageRenderInfo();
   };
 
   useEffect(() => {
@@ -197,16 +196,10 @@ export default function GoodsProductContainer() {
 
   useEffect(() => {
     if (didmount) {
-      renderProduct();
-      getWeddingHallRender();
+      getAllRenderProducts();
+      getMarriageRenderInfo();
     }
   }, [didmount]);
-
-  useEffect(() => {
-    if (!isOpen) {
-      renderProduct();
-    }
-  }, [isOpen]);
 
   const nextSlide = () => {
     if (currentSlide >= TOTAL_SLIDES) {
@@ -244,6 +237,7 @@ export default function GoodsProductContainer() {
     const marriedWeddingLocation = marriedWeddingData.data?.location;
     setAddressText(marriedWeddingLocation);
   }
+
   // 예식장 날짜 전체 조회 후 보여주는 값
   function marriedWeddingTimeHandler() {
     const weddingDate = marriedWeddingData.data?.weddingDate;
@@ -276,13 +270,16 @@ export default function GoodsProductContainer() {
   async function deleteGoodsRender(id) {
     const data = await deleteGoods(id);
     if (data.data === null) {
-      setFetchData((prev) => prev.filter((goods) => goods.usersGoodsId !== id));
+      setGoodsListData((prev) =>
+        prev.filter((goods) => goods.usersGoodsId !== id)
+      );
     }
     if (data.status === 400) {
       alert(data.message);
     }
     setIsOpen(false);
   }
+
   return (
     <>
       <GoodsContainer>
@@ -311,14 +308,14 @@ export default function GoodsProductContainer() {
                 marginBottom: "20px",
               }}
               name="wifeName"
-              onChange={(e) => wifeTextChange(e)}
+              onChange={(e) => handleWifeNameChange(e)}
               defaultValue={wifeNameText}
             />
             <br />
             <GoodsText
               placeholder="신랑 이름"
               name="husbandName"
-              onChange={(e) => husbandTextChange(e)}
+              onChange={(e) => handleHusbandNameChange(e)}
               defaultValue={husbandNameText}
             />
           </div>
@@ -328,12 +325,12 @@ export default function GoodsProductContainer() {
               style={{
                 marginBottom: "20px",
               }}
-              onChange={(e) => addressChange(e)}
+              onChange={(e) => handleAddressChange(e)}
               defaultValue={addressText || ""}
             />
             <DateTimePeicker
               dateTimeData={dateText}
-              dateTimeChange={dateTimeChange}
+              dateTimeChange={handleDateTimeChange}
             />
             <AddMarriedButton
               onClick={() => handlelocationButton()}
@@ -352,17 +349,17 @@ export default function GoodsProductContainer() {
                 placeholder="신부 이름"
                 defaultValue={wifeNameText}
                 name="wifeName"
-                onChange={(e) => wifeTextChange(e)}
+                onChange={(e) => handleWifeNameChange(e)}
               />
               <GoodsWeddingbank
                 placeholder="은행"
-                onChange={(e) => wifBankTextChange(e)}
+                onChange={(e) => handleWifBankChange(e)}
                 name="wifeBank"
                 defaultValue={wifeBankText}
               />
               <GoodsWeddingaccountnumber
                 placeholder="계좌번호"
-                onChange={(e) => wifeAccountTextChange(e)}
+                onChange={(e) => handleWifeAccountChange(e)}
                 name="wifeAccount"
                 defaultValue={wifeAccountText}
               />
@@ -373,22 +370,22 @@ export default function GoodsProductContainer() {
                 placeholder="신랑 이름"
                 defaultValue={husbandNameText}
                 name="husbandName"
-                onChange={(e) => husbandTextChange(e)}
+                onChange={(e) => handleHusbandNameChange(e)}
               />
               <GoodsWeddingbank
                 placeholder="은행"
                 name="husbandBank"
-                onChange={(e) => hasbandBankTextChange(e)}
+                onChange={(e) => handleHasbandBankChange(e)}
                 defaultValue={husbandBankText}
               />
               <GoodsWeddingaccountnumber
                 placeholder="계좌번호"
-                onChange={(e) => husbandAccountTextChange(e)}
+                onChange={(e) => handleHusbandAccountChange(e)}
                 name="husbandAccount"
                 defaultValue={husbandAccountText}
               />
               <AddMarriedButtonDiv>
-                <AddMarriedButton onClick={() => addMarriedInformationClick()}>
+                <AddMarriedButton onClick={handleAddMarriedInformation}>
                   저장하기
                 </AddMarriedButton>
               </AddMarriedButtonDiv>
@@ -400,39 +397,33 @@ export default function GoodsProductContainer() {
           <BoxSlider>
             <BoxWapper ref={slideRef}>
               <>
-                {fetchData &&
-                  fetchData.map((value, idx) => (
+                {goodsListData &&
+                  goodsListData.map((goodsData, index) => (
                     <BoxItem
-                      key={idx}
+                      key={index}
                       onClick={() => {
                         setIsOpen({
                           result: true,
                           state: "View",
-                          userGoodsId: value.usersGoodsId,
+                          userGoodsId: goodsData.usersGoodsId,
                         });
                       }}
                     >
-                      <Box
-                        url={value?.usersGoodsImgUrl}
-                        setIsOpen={setIsOpen}
-                        isOpen={isOpen}
-                        setFetchData={setFetchData}
-                        fetchData={fetchData}
-                      />
+                      <Box url={goodsData?.usersGoodsImgUrl} />
                       <ItemDiv>
                         <StyledTrack isTrue={false}>
-                          <StyledRange width={value?.usersGoodsPercent} />
+                          <StyledRange width={goodsData?.usersGoodsPercent} />
                         </StyledTrack>
                         <ValueItem>
                           <div>
-                            <p>{value?.usersGoodsName}</p>
+                            <p>{goodsData?.usersGoodsName}</p>
                           </div>
                           <div>
-                            <p>{value?.usersGoodsPrice} 원</p>
+                            <p>{goodsData?.usersGoodsPrice} 원</p>
                           </div>
                           <div>
                             <p style={{ marginTop: "50px" }}>
-                              {value?.usersGoodsTotalDonation}원 후원
+                              {goodsData?.usersGoodsTotalDonation}원 후원
                             </p>
                           </div>
                         </ValueItem>
@@ -450,11 +441,11 @@ export default function GoodsProductContainer() {
           {isOpen.result && (
             <GoodsModal
               setIsOpen={setIsOpen}
-              fetchData={fetchData}
-              setFetchData={setFetchData}
+              goodsListData={goodsListData}
               isOpen={isOpen}
-              renderProduct={renderProduct}
+              getAllRenderProducts={getAllRenderProducts}
               deleteGoodsRender={deleteGoodsRender}
+              setGoodsListData={setGoodsListData}
             />
           )}
           <RiArrowDropRightLine onClick={nextSlide} size="40" />
@@ -463,6 +454,7 @@ export default function GoodsProductContainer() {
     </>
   );
 }
+export default memo(GoodsProductContainer);
 
 const GoodsText = styled.input`
   border: 0;
