@@ -11,10 +11,10 @@ import {
 
 function UpdateState({
   isOpen,
-  fetchData,
+  goodsListData,
   setIsOpen,
-  setFetchData,
   deleteGoodsRender,
+  getAllRenderProducts,
 }) {
   const [postFilterGoodsData, setPostFilterGoodsData] = useState([]);
 
@@ -25,72 +25,62 @@ function UpdateState({
   });
 
   //상품 가격 수정
-  async function updateGoodsPriceRender(usersGoodsId, usersGoodsName) {
+  async function modifyGoodsPriceRender(usersGoodsId, usersGoodsName) {
     const priceData = await updateGoodsPrice(usersGoodsId, usersGoodsName);
     return priceData;
   }
   //상품이름 수정
-  async function updateGoodsNameRender(usersGoodsId, usersGoodsPrice) {
+  async function modifyGoodsNameRender(usersGoodsId, usersGoodsPrice) {
     const nameData = await updateGoodsname(usersGoodsId, usersGoodsPrice);
     return nameData;
   }
 
-  const updateGoodsAllClick = async (usersGoodsId, name, price) => {
-    const priceData = await updateGoodsPriceRender(usersGoodsId, price);
-    if (priceData.success) {
-      setFetchData((prev) =>
-        prev.filter(
-          (goods) => goods.usersGoodsId === priceData.data.usersGoodsId
-        )
-      );
+  const handleModifyGoodsButton = async (usersGoodsId, name, price) => {
+    if (usersGoodsId && price) {
+      await modifyGoodsPriceRender(usersGoodsId, price);
     }
-    const nameData = await updateGoodsNameRender(usersGoodsId, name);
-    if (nameData.success) {
-      setFetchData((prev) =>
-        prev.filter(
-          (goods) => goods.usersGoodsId === nameData.data.usersGoodsId
-        )
-      );
+    if (usersGoodsId && name) {
+      await modifyGoodsNameRender(usersGoodsId, name);
     }
+    getAllRenderProducts();
     setIsOpen(false);
   };
 
-  const goodsDeleteButton = async (id) => {
+  const handleGoodsDeleteButton = async (id) => {
     await deleteGoodsRender(id);
   };
-  const updateGoodsNameChange = (e) => {
+  const handleGoodsNameChange = (e) => {
     const value = e.target.value;
     setEditNameText(value);
   };
-  const updateGoodsPriceChange = (e) => {
+  const handleGoodsPriceChange = (e) => {
     const value = e.target.value;
     setEditPriceText(value);
   };
 
   useEffect(() => {
-    const filterGoodsData = fetchData?.filter(
+    const filterGoodsData = goodsListData?.filter(
       (v) => v.usersGoodsId === isOpen.userGoodsId
     );
     setEditNameText(filterGoodsData[0].usersGoodsName);
     setEditPriceText(filterGoodsData[0].usersGoodsPrice);
     setPostFilterGoodsData(filterGoodsData);
   }, []);
-
   return (
     <>
       <GoodsDiv>
         {editState.state
           ? postFilterGoodsData &&
-            postFilterGoodsData.map((v) => (
-              <div key={v.usersGoodsId}>
-                <GoodsImage url={v.usersGoodsImgUrl} />
+            postFilterGoodsData.map((goodsData) => (
+              <div key={goodsData.usersGoodsId}>
+                <GoodsImage url={goodsData.usersGoodsImgUrl} />
                 <div>
                   <p>
                     상품 이름 :{" "}
                     <GoodsNameInput
                       name="name"
                       value={editNameText}
-                      onChange={updateGoodsNameChange}
+                      onChange={handleGoodsNameChange}
                     />
                   </p>
                   <GoodsDonationDiv>
@@ -99,7 +89,7 @@ function UpdateState({
                       <GoodsDonationInput
                         name="price"
                         value={editPriceText}
-                        onChange={updateGoodsPriceChange}
+                        onChange={handleGoodsPriceChange}
                       />
                       원
                     </p>
@@ -112,8 +102,8 @@ function UpdateState({
                     >
                       <ApiButton
                         onClick={() =>
-                          updateGoodsAllClick(
-                            v.usersGoodsId,
+                          handleModifyGoodsButton(
+                            goodsData.usersGoodsId,
                             editNameText,
                             editPriceText
                           )
@@ -123,7 +113,9 @@ function UpdateState({
                       </ApiButton>
                       |
                       <ApiButton
-                        onClick={() => goodsDeleteButton(v.usersGoodsId)}
+                        onClick={() =>
+                          handleGoodsDeleteButton(goodsData.usersGoodsId)
+                        }
                       >
                         삭제하기
                       </ApiButton>
@@ -133,15 +125,15 @@ function UpdateState({
               </div>
             ))
           : postFilterGoodsData &&
-            postFilterGoodsData.map((v) => (
-              <div key={v.usersGoodsId} id={v.usersGoodsId}>
-                <GoodsImage url={v.usersGoodsImgUrl} />
+            postFilterGoodsData.map((goodsData) => (
+              <div key={goodsData.usersGoodsId} id={goodsData.usersGoodsId}>
+                <GoodsImage url={goodsData.usersGoodsImgUrl} />
                 <div>
                   <p>
                     상품 이름 :{" "}
                     <GoodsNameInput
                       value={editNameText}
-                      onChange={updateGoodsNameChange}
+                      onChange={handleGoodsNameChange}
                       name="name"
                       onFocus={() => setEditState({ state: true })}
                     />
@@ -169,7 +161,9 @@ function UpdateState({
                     >
                       <ApiButton>수정하기</ApiButton>|
                       <ApiButton
-                        onClick={() => goodsDeleteButton(v.usersGoodsId)}
+                        onClick={() =>
+                          handleGoodsDeleteButton(goodsData.usersGoodsId)
+                        }
                       >
                         삭제하기
                       </ApiButton>
