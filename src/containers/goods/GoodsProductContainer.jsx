@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, memo } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { RiArrowDropLeftLine } from "@react-icons/all-files/ri/RiArrowDropLeftLine";
 import { RiArrowDropRightLine } from "@react-icons/all-files/ri/RiArrowDropRightLine";
 
@@ -454,7 +454,7 @@ function GoodsProductContainer() {
     </>
   );
 }
-export default memo(GoodsProductContainer);
+export default GoodsProductContainer;
 
 const GoodsText = styled.input`
   border: 0;

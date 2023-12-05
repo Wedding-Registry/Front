@@ -11,13 +11,13 @@ import "swiper/css/navigation";
 
 import "../../style/styles.css";
 
-export default function ImageSilder({
+function ImageSilder({
   imgData,
   FIX_SIZE,
   arrayLength,
   invitationStatus,
   setInvitationStatus,
-  deleteImageOnClick,
+  handleDeleteImageButton,
 }) {
   const GallyElementList = () => {
     let element = [];
@@ -56,15 +56,15 @@ export default function ImageSilder({
       style={{ height: "85%" }}
     >
       {imgData &&
-        imgData.map((v) => (
-          <SwiperSlide key={v.galleryImgId}>
+        imgData.map((data) => (
+          <SwiperSlide key={data.galleryImgId}>
             <GalleryWeddingBox
               className="swiper-image"
-              url={v.galleryImgUrl}
-              id={v.galleryImgId}
+              url={data.galleryImgUrl}
+              id={data.galleryImgId}
               setInvitationStatus={setInvitationStatus}
               invitationStatus={invitationStatus}
-              deleteImageOnClick={deleteImageOnClick}
+              handleDeleteImageButton={handleDeleteImageButton}
             />
           </SwiperSlide>
         ))}
@@ -72,3 +72,5 @@ export default function ImageSilder({
     </Swiper>
   );
 }
+
+export default ImageSilder;
