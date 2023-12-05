@@ -10,7 +10,7 @@ import {
 } from "../../services/weddingGallery/WeddingImgService";
 import ImageSilder from "../../components/imageSilder/ImageSilder";
 
-export default function GalleryWeddingContainer() {
+function GalleryWeddingContainer() {
   const [imgData, setImgData] = useRecoilState(galleryWeddingImageState);
   const [didMount, setDidMount] = useState(false);
   const arrayLength = imgData ? imgData.length : 0;
@@ -21,7 +21,7 @@ export default function GalleryWeddingContainer() {
     setImgData(weddingImgData.data);
   }
 
-  const deleteImageOnClick = async (id) => {
+  const handleDeleteImageButton = async (id) => {
     await deleteGalleryWeddingImage(id);
     setImgData((prev) => prev.filter((img) => img.galleryImgId !== id));
   };
@@ -35,18 +35,21 @@ export default function GalleryWeddingContainer() {
       getImageDataRender();
     }
   }, [didMount]);
+
   return (
     <Base>
       <ImageSilder
         imgData={imgData}
         FIX_SIZE={FIX_SIZE}
         arrayLength={arrayLength}
-        deleteImageOnClick={deleteImageOnClick}
+        handleDeleteImageButton={handleDeleteImageButton}
         setImgData={setImgData}
       />
     </Base>
   );
 }
+
+export default GalleryWeddingContainer;
 
 const Base = styled.div`
   height: 90.5vh;

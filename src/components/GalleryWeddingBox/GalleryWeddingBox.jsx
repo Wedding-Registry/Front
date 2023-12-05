@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, memo } from "react";
 import styled from "styled-components";
 
 import Plus from "@/assets/icons/plus.png";
@@ -14,7 +14,7 @@ function GellayImgTrusyOrFalsy({
   handleGalleyImg,
   url,
   id,
-  deleteImageOnClick,
+  handleDeleteImageButton,
 }) {
   const pathUrlData = useRecoilValue(uuidState);
   return (
@@ -25,7 +25,7 @@ function GellayImgTrusyOrFalsy({
             {!pathUrlData.uuidFirst && (
               <AiOutlineClose
                 style={{ marginRight: "10px", marginTop: "5px" }}
-                onClick={() => deleteImageOnClick(id)}
+                onClick={() => handleDeleteImageButton(id)}
               />
             )}
           </Image>
@@ -49,7 +49,7 @@ function GellayImgTrusyOrFalsy({
   );
 }
 
-export default function GalleryWeddingBox({ url, id, deleteImageOnClick }) {
+function GalleryWeddingBox({ url, id, handleDeleteImageButton }) {
   const setImgData = useSetRecoilState(galleryWeddingImageState);
 
   const pathUrlData = useRecoilValue(uuidState);
@@ -111,6 +111,7 @@ export default function GalleryWeddingBox({ url, id, deleteImageOnClick }) {
     }
     imageInput.current.click();
   }, []);
+
   return (
     <>
       <Base>
@@ -130,12 +131,14 @@ export default function GalleryWeddingBox({ url, id, deleteImageOnClick }) {
           handleGalleyImg={handleGalleyImg}
           url={url}
           id={id}
-          deleteImageOnClick={deleteImageOnClick}
+          handleDeleteImageButton={handleDeleteImageButton}
         />
       </Base>
     </>
   );
 }
+
+export default memo(GalleryWeddingBox);
 
 const Base = styled.div`
   width: 500px;
