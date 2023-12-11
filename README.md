@@ -110,9 +110,16 @@ yarn run build
 
 - 메인 페이지
 - 상품 등록 페이지
+  - 상품 등록
+  - 결혼식 날짜 및 시간 CRUD
+  - 결혼하는 부부에 대한 정보 등록,수정
 - 상품 후원 페이지
+  - 결혼식 참석 여부 체크
+  - 결혼하는 부부가 등록 상품에 대한 후원 금액 CRUD
 - 웨딩 사진 등록 페이지
+  - 사진 등록, 삭제
 - 웨딩 사진 후원 페이지
+  - 결혼하는 부부가 등록한 사진 확인
 - 회원 가입 페이지
 - 로그인 페이지
 - 관리자 페이지(메인)
@@ -198,7 +205,7 @@ export default HttpClient;
 
 ```
 
-- 리팩토링 하기 전 코드에서는 api를 호출할때마다 매개변수로 token값을 받아와여했지만 httpClient에서 token을 값을 직접 주입하기 때문에 넣어 줄 필요가 없어졌다.
+- 리팩토링 하기 전 코드에서는 api를 호출할때마다 매개변수로 token값을 받아와야했지만 httpClient에서 token을 값을 직접 주입하기 때문에 넣어 줄 필요가 없어졌다.
 - axios Interceptors를 활용하여 http 통신 단계에서 중간에 가로채서 token값 직접 주입하기
 
 
@@ -214,9 +221,8 @@ export default HttpClient;
 
 
 5. AWS S3를 통한 배포
-- Github actions를 통한 CI/CD
+- Github actions를 통한 자동화 배포 구현
 
-리팩토링 진행,ts 추가
 
 ---
 
