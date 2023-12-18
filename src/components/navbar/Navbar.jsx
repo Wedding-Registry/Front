@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -30,20 +30,20 @@ function NotificationItemList({ notifications }) {
     return <></>;
   }
   return notifications.map((value, index) => (
-    <NotificationItem data={value} key={index} />
+    <NotificationItem notificationData={value} key={index} />
   ));
 }
 
 //로그인상태에따른 navbar click 행위 핸들링
 //로그인이 되어 있지 않는 상태에서 navbar 클릭 시 return
-function LoginStatusNavbar({ token, setNavbar }) {
+function LoginStatusNavbar({ token, onNavbarOpen }) {
   const navbarClose = () => {
     if (!token) {
       alert("로그인 정보가 올바르지 못합니다.");
-      setNavbar(false);
+      onNavbarOpen(false);
       return;
     }
-    setNavbar(false);
+    onNavbarOpen(false);
   };
 
   return (
@@ -78,34 +78,36 @@ function LoginStatusNavbar({ token, setNavbar }) {
   );
 }
 
-export default function Navbar({ setNavbar, token, guestState }) {
-  const [_, nickName] = useTokenDecode(token);
-  const [navbarNotification, setNavbarNotification] = useState([]);
+function Navbar({ onNavbarOpen, token, guestState }) {
+  const [, nickName] = useTokenDecode(token);
+  const [notification, setNotification] = useState([]);
   const navigate = useNavigate();
-  const handleNavbarState = () => setNavbar(false);
+  const handleNavbarState = () => onNavbarOpen(false);
 
-  const uuidFirst = getUuidFristToken();
-  const uuidSecound = getUuidSecoundToken();
+  const localStorageUuidFirstValue = getUuidFristToken();
+
+  const localStorageUuidSecoundValue = getUuidSecoundToken();
 
   async function getNavibarNotificationRender() {
     const navbarData = await getAlarm();
-    setNavbarNotification(navbarData.data);
+    setNotification(navbarData.data);
   }
 
   async function getGoodsUrlUuidRender() {
     const UUID = await getGoodsUrlUUID();
 
-    if (!uuidFirst) {
+    if (!localStorageUuidFirstValue && token) {
       setUUidToken(UUID.data.uuidFirst, UUID.data.uuidSecond);
     }
   }
-  console.log(_);
 
   function guestStateRender() {
-    if (uuidFirst) {
+    if (localStorageUuidFirstValue) {
       removeAccessToken();
-      navigate(`/Guest/${uuidFirst}/${uuidSecound}`);
-      setNavbar(false);
+      navigate(
+        `/Guest/${localStorageUuidFirstValue}/${localStorageUuidSecoundValue}`
+      );
+      onNavbarOpen(false);
       alert("로그아웃");
       return;
     }
@@ -116,23 +118,23 @@ export default function Navbar({ setNavbar, token, guestState }) {
     if (token) {
       removeAccessToken();
       navigate("/");
-      setNavbar(false);
+      onNavbarOpen(false);
       alert("로그아웃");
       return;
     }
     if (!token) {
       navigate("/");
-      setNavbar(false);
+      onNavbarOpen(false);
       alert("로그인정보가 존재하지 않습니다.");
       return;
     }
   };
 
   useEffect(() => {
-    if (uuidFirst) {
+    if (localStorageUuidFirstValue) {
       return;
     }
-    if (!uuidFirst) {
+    if (!localStorageUuidFirstValue) {
       getGoodsUrlUuidRender();
     }
   }, []);
@@ -152,7 +154,7 @@ export default function Navbar({ setNavbar, token, guestState }) {
       await navigator.clipboard.writeText(
         `https://zolabayo.com/GallerySupport/${first}/${secound}`
       );
-      setNavbar(false);
+      onNavbarOpen(false);
       alert("링크주소가 복사되었습니다.");
     } catch (e) {
       console.error(e);
@@ -185,20 +187,25 @@ export default function Navbar({ setNavbar, token, guestState }) {
               )}
             </NickNameText>
           </NickNamediv>
-          <LoginStatusNavbar token={token} setNavbar={setNavbar} />
+          <LoginStatusNavbar token={token} onNavbarOpen={onNavbarOpen} />
           <CenterItemDiv>
             <div>
               <CenterItemTitle>알림 목록</CenterItemTitle>
             </div>
             <NotificationItemList
-              notifications={navbarNotification}
-              setNavbar={setNavbar}
+              notifications={notification}
+              onNavbarOpen={onNavbarOpen}
             />
           </CenterItemDiv>
           <BottomItemDiv>
             <span
               style={{ fontSize: "13px" }}
-              onClick={() => handleShareLink(uuidFirst, uuidSecound)}
+              onClick={() =>
+                handleShareLink(
+                  localStorageUuidFirstValue,
+                  localStorageUuidSecoundValue
+                )
+              }
             >
               링크 공유하기
             </span>
@@ -215,14 +222,15 @@ export default function Navbar({ setNavbar, token, guestState }) {
         <GuestNavbar
           nickName={nickName}
           handleLogoutButton={handleLogoutButton}
-          setNavbar={setNavbar}
-          uuidFirst={uuidFirst}
-          uuidSecound={uuidSecound}
+          onNavbarOpen={onNavbarOpen}
+          uuidFirst={localStorageUuidFirstValue}
+          uuidSecound={localStorageUuidSecoundValue}
         />
       )}
     </>
   );
 }
+export default memo(Navbar);
 
 const Base = styled.div`
   display: flex;

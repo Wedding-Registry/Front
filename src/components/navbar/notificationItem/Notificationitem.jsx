@@ -1,16 +1,21 @@
-import React from "react";
+import React, { memo, useMemo } from "react";
 
 import { BsFillEnvelopeFill } from "@react-icons/all-files/bs/BsFillEnvelopeFill";
 import { FaMoneyBill } from "@react-icons/all-files/fa/FaMoneyBill";
 import styled from "styled-components";
 
-export default function NotificationItem({ data }) {
-  if (data === null || data === undefined) {
+function NotificationItem({ notificationData }) {
+  if (notificationData === null || notificationData === undefined) {
     return <></>;
   }
-  const NAME = data.name;
-  const ATTEND = data.attend;
-  switch (data.type) {
+
+  const memoizedData = useMemo(() => {
+    return notificationData;
+  }, [notificationData]);
+
+  const NAME = memoizedData.name;
+  const ATTEND = memoizedData.attend;
+  switch (memoizedData.type) {
     case "attend":
       return (
         <AlarmDiv>
@@ -33,12 +38,15 @@ export default function NotificationItem({ data }) {
         <AlarmDiv>
           <FaMoneyBill style={{ width: "50px", height: "21px" }} />
           <AlarmDonationText>
-            {NAME}님이 {data.goods}에 {data.donation}원을 후원하셨습니다.
+            {NAME}님이 {memoizedData.goods}에 {memoizedData.donation}
+            원을 후원하셨습니다.
           </AlarmDonationText>
         </AlarmDiv>
       );
   }
 }
+
+export default memo(NotificationItem);
 
 const AlarmDiv = styled.div`
   width: 95%;

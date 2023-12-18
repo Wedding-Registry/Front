@@ -1,35 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import styled from "styled-components";
 import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
-import { postGoodsProductApi } from "../../services/goods/GoodsProductService";
+import { createGoods } from "../../services/goods/GoodsProductService";
 
 import CreateState from "./createState/CreateState";
 import logo from "@/assets/icons/logo.png";
 import UpdateState from "./updateState/UpdateState";
 
-export default function GoodsModal({
+function GoodsModal({
   setIsOpen,
-  setFetchData,
   isOpen,
-  fetchData,
+  goodsListData,
   deleteGoodsRender,
+  getAllRenderProducts,
 }) {
   const [getGoodsUrlItem, setGetGoodsUrlItem] = useState("");
   const [goodsData, setGoodsData] = useState([]);
-
   async function postGoodsListRender(url) {
-    const goodsItems = await postGoodsProductApi(url);
+    const goodsItems = await createGoods(url);
     if (goodsItems.status === 400) {
       setGetGoodsUrlItem("");
       alert(goodsItems.message);
     }
     setGoodsData(goodsItems.data);
   }
+
   return (
     <Base>
       <Container>
         <TextDiv>
-          {fetchData && fetchData ? <></> : <Logo src={logo} />}
+          {goodsListData && goodsListData ? <></> : <Logo src={logo} />}
           <AiOutlineClose
             style={{
               marginLeft: "auto",
@@ -44,10 +44,10 @@ export default function GoodsModal({
           {isOpen.state === "View" ? (
             <UpdateState
               setIsOpen={setIsOpen}
-              setFetchData={setFetchData}
               isOpen={isOpen}
-              fetchData={fetchData}
+              goodsListData={goodsListData}
               deleteGoodsRender={deleteGoodsRender}
+              getAllRenderProducts={getAllRenderProducts}
             />
           ) : (
             <CreateState
@@ -57,6 +57,7 @@ export default function GoodsModal({
               getGoodsUrlItem={getGoodsUrlItem}
               goodsData={goodsData}
               deleteGoodsRender={deleteGoodsRender}
+              getAllRenderProducts={getAllRenderProducts}
             />
           )}
         </TextDiv>
@@ -64,6 +65,8 @@ export default function GoodsModal({
     </Base>
   );
 }
+
+export default memo(GoodsModal);
 
 const Base = styled.div`
   background: rgb(228, 230, 232);
