@@ -8,7 +8,6 @@
     <h2> Wedding Resitry</h2>  
     <p>결혼을 진행하는 부부에게 결혼 선물을 무엇이 좋을지 고민 하고 또한, 부부의 입장에서는 선뜻 말로 선물을 받고 싶어하는 물품을 말하기 부담스러운 상황이 발생할 수 있었습니다.
 부담을 줄이고 조금 더 편리하게 원하는 선물을 받을 수 있고 후원할 수 있도록 하기 위해 시스템을 만들게 되었습니다.</p>
-    <p>추후 청첩장으로 리뉴얼 할 예정입니다.</p>
     <br />    
 </div>
 
@@ -52,13 +51,14 @@
  ┣ 📂components
  ┣ 📂containers
  ┣ 📂hooks
- ┣ 📂mocks
+ ┣ 📂mocks => msw를 관련 폴더
  ┣ 📂pages
- ┣ 📂repository
+ ┣ 📂repository 
  ┣ 📂services 
  ┣ 📂state
  ┣ 📂tokens
- ┣ 📂utils
+ ┣ 📂style
+ ┣ 📂util
  ┣ App.jsx
  ┣ Main.jsx
 
@@ -106,7 +106,7 @@ yarn run build
 
 ---
 
-### 페이지
+### 기능
 
 - 메인 페이지
 - 상품 등록 페이지
